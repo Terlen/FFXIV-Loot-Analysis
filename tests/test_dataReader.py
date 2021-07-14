@@ -39,7 +39,7 @@ class Test_dataRead_Unit:
 
 class Test_dataPrint_Unit:
   
-    test_data = ['x','y','z','a','b']
+    test_data = [['x','y','z','a','b']]
 
     def test_dataPrint(self):
         assert utils.dataReader.dataPrint(self.test_data) == None
