@@ -1,3 +1,4 @@
+import builtins
 import utils.dataReader
 from collections.abc import Iterable
 import csv
@@ -35,3 +36,18 @@ class Test_dataRead_Unit:
         with patch("builtins.open", mock_open(read_data='text,text2,text3')):
             with pytest.raises(IndexError):
                 assert isinstance(utils.dataReader.dataRead(mock_nontextFileObject), Iterable)
+
+class Test_dataPrint_Unit:
+    
+    test_data = ['x','y','z','a','b']
+
+    def test_dataPrint(self, test_data):
+        assert dataPrint(test_data) == None
+    
+    def test_dataPrint_Error(self, monkeypatch, test_data):
+        def mock_exception():
+            raise RuntimeError
+        with pytest.raises(Exception):
+            monkeypatch.setattr(builtins, 'print', mock_exception)
+            assert dataPrint(test_data) == None
+    
