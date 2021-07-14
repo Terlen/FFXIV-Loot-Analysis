@@ -38,16 +38,16 @@ class Test_dataRead_Unit:
                 assert isinstance(utils.dataReader.dataRead(mock_nontextFileObject), Iterable)
 
 class Test_dataPrint_Unit:
-    
+  
     test_data = ['x','y','z','a','b']
 
-    def test_dataPrint(self, test_data):
-        assert dataPrint(test_data) == None
+    def test_dataPrint(self):
+        assert utils.dataReader.dataPrint(self.test_data) == None
     
-    def test_dataPrint_Error(self, monkeypatch, test_data):
+    def test_dataPrint_Error(self, monkeypatch):
         def mock_exception():
             raise RuntimeError
         with pytest.raises(Exception):
             monkeypatch.setattr(builtins, 'print', mock_exception)
-            assert dataPrint(test_data) == None
+            assert utils.dataReader.dataPrint(self.test_data) == None
     
