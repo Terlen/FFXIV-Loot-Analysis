@@ -19,7 +19,7 @@ class mock_nontextFileObject:
 class Test_dataRead_Unit:
     
     def test_dataRead(self, monkeypatch):
-        with patch("builtins.open", mock_open(read_data='text')):
+        with patch("builtins.open", mock_open(read_data='text,text2,text3,text4,text5,text6,text7')):
             assert isinstance(utils.dataReader.dataRead(mock_textFileObject), Iterable)
 
     def test_dataRead_fileNotExist(self):
@@ -29,4 +29,9 @@ class Test_dataRead_Unit:
     def test_dataRead_binaryFile(self):
         with pytest.raises(csv.Error):
             with patch("builtins.open", mock_open(read_data=b'text')):
+                assert isinstance(utils.dataReader.dataRead(mock_nontextFileObject), Iterable)
+    
+    def test_dataRead_wrongColumns(self):
+        with patch("builtins.open", mock_open(read_data='text,text2,text3')):
+            with pytest.raises(IndexError):
                 assert isinstance(utils.dataReader.dataRead(mock_nontextFileObject), Iterable)
