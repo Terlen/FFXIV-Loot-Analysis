@@ -64,4 +64,4 @@ class Test_encounterSplit_Unit:
         assert utils.dataReader.encounterSplitter(self.test_noEncounter) == []
     
     def test_encounterSplitter_partialEncounter(self):
-        assert isinstance(utils.dataReader.encounterSplitter(self.test_partialEncounter), Iterable)
+        assert utils.dataReader.encounterSplitter(self.test_noEncounter) == []
