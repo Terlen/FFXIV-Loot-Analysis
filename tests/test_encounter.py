@@ -7,14 +7,17 @@ class Test_Encounter_Unit:
     test_encounter = Encounter(test_data)
     row = ['7/13/2021 18:07', 'GreedLoot', 'Test Character', 'Byakko Sword', 12]
 
-    expected_loot = set(Item)
-    expected_members = set(Member)
-    expected_time = test_data[0][0]
-    expected_rolls = set(Roll)
+    member = Member(test_data[0][2])
+    item = Item(test_data[0][3])
 
-    new_loot = Item
-    new_member = Member
-    new_roll = Roll
+    expected_loot = {item}
+    expected_members = {member}
+    expected_time = test_data[0][0]
+    expected_rolls = {Roll(test_data[0][1],member, test_data[0][4],item)}
+
+    new_loot = Item(row[3])
+    new_member = Member(row[2])
+    new_roll = Roll(row[1],new_member,row[4],new_loot)
 
     def test_Encounter_instantiate(self):
         assert isinstance(self.test_encounter, Encounter)
