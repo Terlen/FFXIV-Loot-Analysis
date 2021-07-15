@@ -11,7 +11,7 @@ class Test_Encounter_Unit:
     item = Item(test_data[0][3], test_data[0][5], 0)
 
     expected_loot = {item}
-    expected_members = {member}
+    expected_members = {member.name: member}
     expected_time = test_data[0][0]
     expected_rolls = {Roll(test_data[1][1],member, test_data[1][4],item)}
 
