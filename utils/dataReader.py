@@ -20,29 +20,36 @@ def encounterSplitter(data: Iterable) -> list:
     output = []
     newEncounter = True
     for row in data:
-        if (newEncounter and row[2] == "ObtainLoot" and row[3] == "Your Character"):
+        if (newEncounter and row[1] == "ObtainLoot" and row[2] == "Your Character"):
             newEncounter = False
             encounter = []
             encounter.append(row)
             addedLoot = list()
             # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
             obtainedLoot = list()
-        elif (newEncounter and row[2] == "AddLoot" and row[3] == ''):
+            continue
+        elif (newEncounter and row[1] == "AddLoot" and row[2] == ''):
             newEncounter = False
             encounter = []
             encounter.append(row)
-            addedLoot = list(row[4])
+            addedLoot = list()
+            addedLoot.append(row[3])
             obtainedLoot = list()
-        elif (not newEncounter and row[2] == "AddLoot" and row[3] == ''):
-            addedLoot.append(row[4])
+            continue
+
+        if (not newEncounter and row[1] == "AddLoot" and row[2] == ''):
+            addedLoot.append(row[3])
             encounter.append(row)
-        elif (not newEncounter and row[2] == "ObtainLoot" and len(addedLoot) > 0):
-            obtainedLoot.append(row[4])
+        elif (not newEncounter and row[1] == "ObtainLoot" and len(addedLoot) > 0):
+            obtainedLoot.append(row[3])
             encounter.append(row)
-            if len(Counter(obtainedLoot) - Counter(addedLoot)) == 0:
+            if len(Counter(addedLoot) - Counter(obtainedLoot)) == 0:
                 newEncounter = True
                 output.append(encounter)
-        else:
+        elif (not newEncounter):
             encounter.append(row)
+        else:
+            continue
+        
     return output
 
