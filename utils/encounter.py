@@ -27,7 +27,7 @@ class Encounter:
 
     rows = []
     cleartime = ''
-    members = set()
+    members = {}
     loot = set()
     rolls = set()
 
@@ -35,7 +35,7 @@ class Encounter:
         self.cleartime = firstrow[0]
     
     def add_member(self, name):
-        self.members.add(Member(name))
+        self.members[name]= (Member(name))
         return self.members
 
     def set_members(self, data):
@@ -52,9 +52,7 @@ class Encounter:
             if row[1] == "AddLoot":
                 self.add_loot(row[3],row[5], rowNum)
         return self.loot
-        
-    
-    #def 
+
 
     def __init__(self, data):
         self.rows = data
