@@ -6,8 +6,14 @@ class Roll:
         self.item = item
 
 class Item:
-    def __init__(self, name):
+    def __init__(self, name, quantity, rowNumber):
         self.name = name
+        self.quantity = quantity
+        self.id = rowNumber
+    def __hash__(self):
+        return hash(self.name)
+    def __eq__(self, other):
+        return self.id == other.id
 
 class Member:
     def __init__(self, name):
@@ -16,7 +22,6 @@ class Member:
         return hash(self.name)
     def __eq__(self, other):
         return self.name == other.name
-
 
 class Encounter:
 
@@ -36,7 +41,17 @@ class Encounter:
     def set_members(self, data):
         for row in data:
             if row[2] != '':
-                return self.add_member(row[2])
+                self.add_member(row[2])
+        return self.members
+
+    def add_loot(self, item, quantity, rowNum):
+        self.loot.add(Item(item, quantity, rowNum))
+
+    def set_loot(self, data):
+        for rowNum, row in enumerate(data):
+            if row[1] == "AddLoot":
+                self.add_loot(row[3],row[5], rowNum)
+        return self.loot
         
     
     #def 
@@ -45,6 +60,7 @@ class Encounter:
         self.rows = data
         self.set_cleartime(self.rows[0])
         self.set_members(self.rows)
+        self.set_loot(self.rows)
 
 
 
