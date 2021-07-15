@@ -50,4 +50,16 @@ class Test_dataPrint_Unit:
         with pytest.raises(Exception):
             monkeypatch.setattr(builtins, 'print', mock_exception)
             assert utils.dataReader.dataPrint(self.test_data) == None
+
+class Test_encounterSplit_Unit:
     
+    def test_encounterSplitter():
+        assert isinstance(utils.dataReader.encounterSplitter(), Iterable)
+    
+    def test_encounterSplitter_noEncountersFound():
+        with pytest.warns(UserWarning):
+            assert isinstance(utils.dataReader.encounterSplitter(), Iterable)
+    
+    def test_encounterSplitter_partialEncounter():
+        with pytest.warns(UserWarning):
+            assert isinstance(utils.dataReader.encounterSplitter(), Iterable)
