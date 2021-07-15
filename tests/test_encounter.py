@@ -3,19 +3,19 @@ from utils.encounter import Encounter, Roll, Item, Member
 
 class Test_Encounter_Unit:
 
-    test_data = [['7/13/2021 18:07', 'GreedLoot', 'Your Character', 'Byakko Totem', 34, 1]]
+    test_data = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'GreedLoot', 'Your Character', 'Byakko Totem', 34, 1],['7/13/2021 18:07', 'ObtainLoot', 'Your Character', 'Byakko Totem', 0, 1]]
     test_encounter = Encounter(test_data)
     row = ['7/13/2021 18:07', 'GreedLoot', 'Test Character', 'Byakko Sword', 12, 1]
 
-    member = Member(test_data[0][2])
-    item = Item(test_data[0][3], test_data[0][5])
+    member = Member(test_data[1][2])
+    item = Item(test_data[0][3], test_data[0][5], 0)
 
     expected_loot = {item}
     expected_members = {member}
     expected_time = test_data[0][0]
-    expected_rolls = {Roll(test_data[0][1],member, test_data[0][4],item)}
+    expected_rolls = {Roll(test_data[1][1],member, test_data[1][4],item)}
 
-    new_loot = Item(row[3],row[5])
+    new_loot = Item(row[3],row[5],99)
     new_member = Member(row[2])
     new_roll = Roll(row[1],new_member,row[4],new_loot)
 
