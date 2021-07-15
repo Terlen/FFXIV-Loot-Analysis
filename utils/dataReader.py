@@ -5,7 +5,7 @@ from collections import Counter
 def dataRead(file: TextIO) -> list:
     with open(file, newline='') as source:
         reader = csv.reader(source)
-        data = [[row[1],row[2],row[3],row[4],row[6]] for row in reader]
+        data = [[row[1],row[2],row[3],row[4],row[6],row[5]] for row in reader]
     return data
 
 def dataPrint(data: Iterable) -> None:
@@ -14,7 +14,7 @@ def dataPrint(data: Iterable) -> None:
             if item == '':
                 row[index] = 'None'
                 
-        print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}')
+        print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}Quantity:{row[5]:25}')
 
 def encounterSplitter(data: Iterable) -> list:
     output = []
