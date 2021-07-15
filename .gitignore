@@ -1,4 +1,5 @@
 .venv
-pycache*
-pytest*
+*pycache*
+.pytest*
 docs
+*.csv
