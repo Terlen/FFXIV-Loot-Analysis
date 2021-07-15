@@ -53,13 +53,15 @@ class Test_dataPrint_Unit:
 
 class Test_encounterSplit_Unit:
     
-    def test_encounterSplitter():
-        assert isinstance(utils.dataReader.encounterSplitter(), Iterable)
+    test_validData = [['7/13/2021 18:07', 'ObtainLoot', 'Your Character', 'Byakko Totem', 0]]
+    test_noEncounter = [['7/13/2021 18:07', 'GreedLoot', 'Your Character', 'Byakko Totem', 0]]
+    test_partialEncounter = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0],['7/13/2021 18:07', 'AddLoot', '', 'Byakko Axe', 0]]
+
+    def test_encounterSplitter(self):
+        assert isinstance(utils.dataReader.encounterSplitter(self.test_validData), Iterable)
     
-    def test_encounterSplitter_noEncountersFound():
-        with pytest.warns(UserWarning):
-            assert isinstance(utils.dataReader.encounterSplitter(), Iterable)
+    def test_encounterSplitter_noEncountersFound(self):
+        assert utils.dataReader.encounterSplitter(self.test_noEncounter) == []
     
-    def test_encounterSplitter_partialEncounter():
-        with pytest.warns(UserWarning):
-            assert isinstance(utils.dataReader.encounterSplitter(), Iterable)
+    def test_encounterSplitter_partialEncounter(self):
+        assert isinstance(utils.dataReader.encounterSplitter(self.test_partialEncounter), Iterable)
