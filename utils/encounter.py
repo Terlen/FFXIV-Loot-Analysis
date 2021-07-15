@@ -28,8 +28,8 @@ class Encounter:
     rows = []
     cleartime = ''
     members = {}
-    loot = set()
-    rolls = set()
+    loot = []
+    rolls = []
 
     def set_cleartime(self, firstrow):
         self.cleartime = firstrow[0]
@@ -45,14 +45,24 @@ class Encounter:
         return self.members
 
     def add_loot(self, item, quantity, rowNum):
-        self.loot.add(Item(item, quantity, rowNum))
+        self.loot.append(Item(item, quantity, rowNum))
 
     def set_loot(self, data):
         for rowNum, row in enumerate(data):
             if row[1] == "AddLoot":
                 self.add_loot(row[3],row[5], rowNum)
         return self.loot
+    
+    def add_roll(self, rollType, member, value, item):
+        pass
 
+    def set_rolls(self, data):
+        for row in data:
+            rollType = row[1]
+            if rollType == "GreedLoot":
+                self.add_roll(rollType, )
+            elif rollType == "NeedLoot":
+                pass
 
     def __init__(self, data):
         self.rows = data
