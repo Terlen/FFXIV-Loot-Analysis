@@ -8,5 +8,9 @@ def dataRead(file: TextIO) -> list:
     return data
 
 def dataPrint(data: Iterable) -> None:
-    for item in data:
-        print(f'Time:{item[0]}, Action:{item[1]}, Member:{item[2]}, Item:{item[3]}, Roll:{item[4]}')
+    for row in data:
+        for index,item in enumerate(row):
+            if item == '':
+                row[index] = 'None'
+                
+        print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}')
