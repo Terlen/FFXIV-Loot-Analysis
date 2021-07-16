@@ -66,7 +66,7 @@ class Encounter:
     def add_roll(self, rollType, member, value, item):
         roll = Roll(rollType,member,value,item)
         self.rolls.append(roll)
-        print(item.name)
+        #print(item.name)
         item.rolls.append(roll)
 
     def set_rolls(self, data):
@@ -78,16 +78,34 @@ class Encounter:
     def get_member(self, name):
         return self.members[name]
 
+    def set_lootwins(self, items):
+        wins = []
+        for item in items:
+            values = [roll.value for roll in items[item].rolls]
+            maxValue = max(values)
+            print (maxValue)
+            winningIndex = items[item].rolls.index(maxValue)
+            print(winningIndex)
+            winningRoll = items[item].rolls[winningIndex]
+            wins.append(LootWin(items[item],winningRoll.member, winningRoll))
+        self.lootwins = wins
+
+            
+                
+
+
     def __init__(self, data=None):
         self.cleartime = ''
         self.members = {}
         self.items = {}
         self.rolls = []
+        self.lootwins = []
         self.rows = data
         self.set_cleartime(self.rows[0])
         self.set_members(self.rows)
         self.set_item(self.rows)
         self.set_rolls(self.rows)
+        self.set_lootwins(self.items)
 
 
 
