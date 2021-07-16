@@ -22,12 +22,17 @@ def random_item_gen():
     print (name, quantity)
     return Item(name, quantity)
 
-def random_roll_gen():
-    rolltype = fixedGen.randint(0,1)
+def random_roll_gen(rolltype, win):
     if rolltype:
-        return Roll("GreedLoot",random_member_gen(),fixedGen.randint(1,99),item)
+        roll = Roll("GreedLoot",random_member_gen(),fixedGen.randint(1,99),random_item_gen())
+        roll.win = win
+        print (roll.member.name, roll.type, roll.value, roll.win)
+        return roll
     elif not rolltype:
-        return Roll("NeedLoot",random_member_gen(),fixedGen.randint(1,99),item)
+        roll = Roll("NeedLoot",random_member_gen(),fixedGen.randint(1,99),random_item_gen())
+        roll.win = win
+        print (roll.member.name, roll.type, roll.value, roll.win)
+        return roll
 
 
 
