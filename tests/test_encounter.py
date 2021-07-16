@@ -10,14 +10,14 @@ class Test_Encounter_Unit:
     member = Member(test_data[1][2])
     item = Item(test_data[0][3], test_data[0][5], 0)
 
-    expected_loot = [item]
+    expected_item = [item]
     expected_members = {member.name: member}
     expected_time = test_data[0][0]
     expected_rolls = [Roll(test_data[1][1],member, test_data[1][4],item)]
 
-    new_loot = Item(row[3],row[5],99)
+    new_item = Item(row[3],row[5],99)
     new_member = Member(row[2])
-    new_roll = Roll(row[1],new_member,row[4],new_loot)
+    new_roll = Roll(row[1],new_member,row[4],new_item)
 
     def test_Encounter_instantiate(self):
         assert isinstance(self.test_encounter, Encounter)
@@ -27,8 +27,8 @@ class Test_Encounter_Unit:
         assert self.test_encounter.cleartime == self.expected_time
     def test_Encounter_init_members(self):
         assert self.test_encounter.members == self.expected_members
-    def test_Encounter_init_loot(self):
-        assert self.test_encounter.loot == self.expected_loot
+    def test_Encounter_init_items(self):
+        assert self.test_encounter.items == self.expected_item
     def test_Encounter_init_rolls(self):
         assert self.test_encounter.rolls == self.expected_rolls
     def test_Encounter_add_row(self):
@@ -39,11 +39,11 @@ class Test_Encounter_Unit:
     def test_Encounter_add_member(self):
         assert self.test_encounter.add_member(Member) == self.expected_members.add(self.new_member)
         assert self.new_member in self.test_encounter.members
-    def test_Encounter_get_loot(self):
-        assert self.test_encounter.get_loot() == self.expected_loot
-    def test_Encounter_add_loot(self):
-        assert self.test_encounter.add_loot(Item) == self.expected_loot.add(self.new_loot)
-        assert self.new_loot in self.test_encounter.loot
+    def test_Encounter_get_items(self):
+        assert self.test_encounter.get_items() == self.expected_item
+    def test_Encounter_add_item(self):
+        assert self.test_encounter.add_item(Item) == self.expected_item.append(self.new_item)
+        assert self.new_item in self.test_encounter.items
     def test_Encounter_get_rolls(self):
         assert self.test_encounter.get_rolls() == self.expected_rolls
     def test_Encounter_add_roll(self):
