@@ -1,4 +1,4 @@
-from utils.encounter import Encounter, Roll, Item, Member, LootWin
+from utils.encounter import Encounter, Roll, Item, Member
 
 
 class Test_Encounter_Unit:
@@ -20,7 +20,7 @@ class Test_Encounter_Unit:
     new_member = Member(row[2])
     new_roll = Roll(row[1],new_member,row[4],new_item)
 
-    expected_lootwin = [LootWin(item, member, roll)]
+    #expected_lootwin = [LootWin(item, member, roll)]
 
     def test_Encounter_instantiate(self):
         assert isinstance(self.test_encounter, Encounter)
@@ -53,5 +53,5 @@ class Test_Encounter_Unit:
     # def test_Encounter_add_roll(self):
     #     assert self.test_encounter.add_roll(Roll) == self.expected_rolls.add(self.new_roll)
     #     assert self.new_roll in self.test_encounter.rolls
-    def test_Encounter_get_winners(self):
-        assert self.test_encounter.get_winners() == self.expected_lootwin
+    # def test_Encounter_get_winners(self):
+    #     assert self.test_encounter.get_winners() == self.expected_lootwin
