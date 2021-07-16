@@ -25,12 +25,6 @@ class Member:
 
 class Encounter:
 
-    rows = []
-    cleartime = ''
-    members = {}
-    items = []
-    rolls = []
-
     def add_row(self, row):
         self.rows.append(row)
         return self.rows
@@ -69,6 +63,10 @@ class Encounter:
                 pass
 
     def __init__(self, data=None):
+        self.cleartime = ''
+        self.members = {}
+        self.items = []
+        self.rolls = []
         self.rows = data
         self.set_cleartime(self.rows[0])
         self.set_members(self.rows)
