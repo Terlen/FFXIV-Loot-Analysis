@@ -3,6 +3,7 @@ import random
 
 fixedseed = 5
 fixedGen = random.Random()
+fixedGen.seed(fixedseed)
 
 
 firstNames = ['Karou', 'Akiva', 'Hien', 'Yda', 'Alphinaud']
@@ -19,8 +20,8 @@ def random_member_gen():
 def random_item_gen():
     name = itemAdjective[fixedGen.randint(0,4)] + ' ' + itemNoun[fixedGen.randint(0,4)]
     quantity = fixedGen.randint(1,3)
-    print (name, quantity)
-    return Item(name, quantity)
+    item = Item(name, quantity)
+    return item
 
 def random_roll_gen(rolltype, win):
     if rolltype:
@@ -34,13 +35,20 @@ def random_roll_gen(rolltype, win):
         print (roll.member.name, roll.type, roll.value, roll.win)
         return roll
 
+def test_data_gen(maxRolls, numItems, numMembers):
+    data = []
+    
+    items = []
+    for x in range(numItems):
+        items.append(random_item_gen())
+
+    return items
 
 
 class Test_get_item_most_rolls_Unit:
 
 
 
-    test_items = Item("Test Item 1", 1)
 
 
     def test_get_item_most_rolls(self):
