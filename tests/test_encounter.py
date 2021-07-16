@@ -34,8 +34,8 @@ class Test_Encounter_Unit:
     # def test_Encounter_add_row(self):
     #     assert self.test_encounter.add_row(self.row) == self.test_data.append(self.row)
     #     assert self.test_encounter.rows[-1] == self.row
-    def test_Encounter_get_members(self):
-        assert self.test_encounter.get_members() == self.expected_members
+    def test_Encounter_get_member(self):
+        assert self.test_encounter.get_member(self.member.name) == self.member
     def test_Encounter_add_member(self):
         assert self.test_encounter.add_member(Member) == self.expected_members.add(self.new_member)
         assert self.new_member in self.test_encounter.members

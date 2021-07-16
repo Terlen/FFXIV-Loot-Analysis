@@ -64,6 +64,9 @@ class Encounter:
             if action == "GreedLoot" or action == "NeedLoot":
                 self.add_roll(action, self.members[row[2]], row[4],self.items[row[3]])
 
+    def get_member(self, name):
+        return self.members[name]
+
     def __init__(self, data=None):
         self.cleartime = ''
         self.members = {}
