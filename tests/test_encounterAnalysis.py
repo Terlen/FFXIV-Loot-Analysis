@@ -8,11 +8,19 @@ fixedGen = random.Random()
 firstNames = ['Karou', 'Akiva', 'Hien', 'Yda', 'Alphinaud']
 lastNames = ['Cookiepouch', 'Final', 'Fantasy', 'Chocobo', 'Tonberry']
 
+itemAdjective = ["Tataru's", "Kugane", "Meaty", "Rusty", "Resplendent"]
+itemNoun = ["Stick", "Lance", "Pot", "Scissors", "Sword"]
+
 def random_member_gen():
     name = firstNames[fixedGen.randint(0,4)] + ' ' + lastNames[fixedGen.randint(0,4)]
     print(name)
     return Member(name)
 
+def random_item_gen():
+    name = itemAdjective[fixedGen.randint(0,4)] + ' ' + itemNoun[fixedGen.randint(0,4)]
+    quantity = fixedGen.randint(1,3)
+    print (name, quantity)
+    return Item(name, quantity)
 
 def random_roll_gen():
     rolltype = fixedGen.randint(0,1)
