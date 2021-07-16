@@ -54,7 +54,7 @@ class Test_dataPrint_Unit:
 
 class Test_encounterSplit_Unit:
     
-    test_validData = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'ObtainLoot', 'Your Character', 'Byakko Totem', 0, 1]]
+    test_validData = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'GreedLoot', 'Your Character', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'ObtainLoot', 'Your Character', 'Byakko Totem', 0, 1]]
     test_noEncounter = [['7/13/2021 18:07', 'GreedLoot', 'Your Character', 'Byakko Totem', 0, 1]]
     test_partialEncounter = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'AddLoot', '', 'Byakko Axe', 0, 1]]
 
