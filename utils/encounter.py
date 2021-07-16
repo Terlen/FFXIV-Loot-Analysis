@@ -14,6 +14,7 @@ class Item:
     def __init__(self, name, quantity):
         self.name = name
         self.quantity = quantity
+        self.rolls = []
     def __hash__(self):
         return hash(self.name)
     def __eq__(self, other):
@@ -56,7 +57,10 @@ class Encounter:
         return self.items
     
     def add_roll(self, rollType, member, value, item):
-        self.rolls.append(Roll(rollType,member,value,item))
+        roll = Roll(rollType,member,value,item)
+        self.rolls.append(roll)
+        print(item.name)
+        item.rolls.append(roll)
 
     def set_rolls(self, data):
         for row in data:
