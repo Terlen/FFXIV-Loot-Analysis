@@ -1,4 +1,5 @@
 import builtins
+from utils.encounter import Encounter
 import utils.dataReader
 from collections.abc import Iterable
 import csv
@@ -58,7 +59,9 @@ class Test_encounterSplit_Unit:
     test_partialEncounter = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'AddLoot', '', 'Byakko Axe', 0, 1]]
 
     def test_encounterSplitter(self):
-        assert len(utils.dataReader.encounterSplitter(self.test_validData)) > 0
+        result = utils.dataReader.encounterSplitter(self.test_validData)
+        assert len(result) == 1
+        assert isinstance(result[0],Encounter)
     
     def test_encounterSplitter_noEncountersFound(self):
         assert utils.dataReader.encounterSplitter(self.test_noEncounter) == []
