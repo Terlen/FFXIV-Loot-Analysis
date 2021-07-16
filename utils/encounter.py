@@ -49,7 +49,7 @@ class Encounter:
         return self.members
 
     def add_item(self, item, quantity, rowNum):
-        self.item.append(Item(item, quantity, rowNum))
+        self.items.append(Item(item, quantity, rowNum))
 
     def set_item(self, data):
         for rowNum, row in enumerate(data):
