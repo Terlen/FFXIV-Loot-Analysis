@@ -15,6 +15,8 @@ class Test_Encounter_Unit:
     expected_members = {member.name: member}
     expected_time = test_data[0][0]
     expected_rolls = [roll]
+    expected_winner = Roll(test_data[1][1],member, test_data[1][4],item)
+    expected_winner.iswin(True)
 
     new_item = Item(row[3],row[5])
     new_member = Member(row[2])
@@ -53,5 +55,5 @@ class Test_Encounter_Unit:
     # def test_Encounter_add_roll(self):
     #     assert self.test_encounter.add_roll(Roll) == self.expected_rolls.add(self.new_roll)
     #     assert self.new_roll in self.test_encounter.rolls
-    # def test_Encounter_get_winners(self):
-    #     assert self.test_encounter.get_winners() == self.expected_lootwin
+    def test_Encounter_get_winners(self):
+        assert self.test_encounter.get_winners() == self.expected_winner
