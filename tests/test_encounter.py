@@ -8,14 +8,14 @@ class Test_Encounter_Unit:
     row = ['7/13/2021 18:07', 'GreedLoot', 'Test Character', 'Byakko Sword', 12, 1]
 
     member = Member(test_data[1][2])
-    item = Item(test_data[0][3], test_data[0][5], 0)
+    item = Item(test_data[0][3], test_data[0][5])
 
-    expected_item = {0:item}
+    expected_item = {item.name:item}
     expected_members = {member.name: member}
     expected_time = test_data[0][0]
     expected_rolls = [Roll(test_data[1][1],member, test_data[1][4],item)]
 
-    new_item = Item(row[3],row[5],99)
+    new_item = Item(row[3],row[5])
     new_member = Member(row[2])
     new_roll = Roll(row[1],new_member,row[4],new_item)
 
