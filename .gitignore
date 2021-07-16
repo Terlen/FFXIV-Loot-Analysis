@@ -4,3 +4,4 @@
 docs
 *.csv
 *.pyc
+.vscode
