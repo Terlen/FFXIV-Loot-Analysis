@@ -39,13 +39,13 @@ class Test_Encounter_Unit:
     # def test_Encounter_add_member(self):
     #     assert self.test_encounter.add_member(Member) == self.expected_members.add(self.new_member)
     #     assert self.new_member in self.test_encounter.members
-    def test_Encounter_get_items(self):
-        assert self.test_encounter.get_items() == self.expected_item
+    # def test_Encounter_get_items(self):
+    #     assert self.test_encounter.get_items() == self.expected_item
     # def test_Encounter_add_item(self):
     #     assert self.test_encounter.add_item(Item) == self.expected_item.append(self.new_item)
     #     assert self.new_item in self.test_encounter.items
-    def test_Encounter_get_rolls(self):
-        assert self.test_encounter.get_rolls() == self.expected_rolls
+    # def test_Encounter_get_rolls(self):
+    #     assert self.test_encounter.get_rolls() == self.expected_rolls
     # def test_Encounter_add_roll(self):
     #     assert self.test_encounter.add_roll(Roll) == self.expected_rolls.add(self.new_roll)
     #     assert self.new_roll in self.test_encounter.rolls
