@@ -10,14 +10,16 @@ lastNames = ['Cookiepouch', 'Final', 'Fantasy', 'Chocobo', 'Tonberry']
 
 def random_member_gen():
     name = firstNames[fixedGen.randint(0,4)] + ' ' + lastNames[fixedGen.randint(0,4)]
+    print(name)
     return Member(name)
 
 
 def random_roll_gen():
-    rolltype = random.randint(0,1)
+    rolltype = fixedGen.randint(0,1)
     if rolltype:
-        Roll("GreedLoot",)
-
+        return Roll("GreedLoot",random_member_gen(),fixedGen.randint(1,99),item)
+    elif not rolltype:
+        return Roll("NeedLoot",random_member_gen(),fixedGen.randint(1,99),item)
 
 
 
