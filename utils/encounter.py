@@ -1,19 +1,23 @@
+from operator import attrgetter
+
 class Roll:
     def __init__(self, rollType, member, rollValue, item):
         self.member = member
         self.value = rollValue
         self.type = rollType
         self.item = item
+    def __eq__(self, other):
+        attributes = attrgetter("member", "value", "type", "item")
+        return self is other or attributes(self) == attributes(other)
 
 class Item:
-    def __init__(self, name, quantity, rowNumber):
+    def __init__(self, name, quantity):
         self.name = name
         self.quantity = quantity
-        self.id = rowNumber
     def __hash__(self):
         return hash(self.name)
     def __eq__(self, other):
-        return self.id == other.id
+        return self.name == other.name
 
 class Member:
     def __init__(self, name):
@@ -42,13 +46,13 @@ class Encounter:
                 self.add_member(row[2])
         return self.members
 
-    def add_item(self, item, quantity, rowNum):
-        self.items[rowNum] = Item(item, quantity, rowNum)
+    def add_item(self, name, quantity):
+        self.items[name] = Item(name, quantity)
 
     def set_item(self, data):
-        for rowNum, row in enumerate(data):
+        for row in data:
             if row[1] == "AddLoot":
-                self.add_item(row[3],row[5], rowNum)
+                self.add_item(row[3],row[5])
         return self.items
     
     def add_roll(self, rollType, member, value, item):
@@ -58,7 +62,7 @@ class Encounter:
         for row in data:
             action = row[1]
             if action == "GreedLoot" or action == "NeedLoot":
-                self.add_roll(action, self.members[row[2]], row[4],)
+                self.add_roll(action, self.members[row[2]], row[4],self.items[row[3]])
 
     def __init__(self, data=None):
         self.cleartime = ''
@@ -69,6 +73,7 @@ class Encounter:
         self.set_cleartime(self.rows[0])
         self.set_members(self.rows)
         self.set_item(self.rows)
+        self.set_rolls(self.rows)
 
 
 
