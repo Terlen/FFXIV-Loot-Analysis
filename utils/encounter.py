@@ -9,6 +9,8 @@ class Roll:
     def __eq__(self, other):
         attributes = attrgetter("member", "value", "type", "item")
         return self is other or attributes(self) == attributes(other)
+    def iswin(self, bool):
+        self.win = bool
 
 class Item:
     def __init__(self, name, quantity):
