@@ -3,4 +3,6 @@
 .pytest*
 docs
 *.csv
+!K.csv
 *.pyc
+.vscode

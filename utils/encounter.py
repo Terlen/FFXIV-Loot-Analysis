@@ -6,14 +6,19 @@ class Roll:
         self.value = rollValue
         self.type = rollType
         self.item = item
+        self.win = False
     def __eq__(self, other):
         attributes = attrgetter("member", "value", "type", "item")
         return self is other or attributes(self) == attributes(other)
+    def iswin(self, bool):
+        self.win = bool
+        return self
 
 class Item:
     def __init__(self, name, quantity):
         self.name = name
         self.quantity = quantity
+        self.rolls = []
     def __hash__(self):
         return hash(self.name)
     def __eq__(self, other):
@@ -26,6 +31,7 @@ class Member:
         return hash(self.name)
     def __eq__(self, other):
         return self.name == other.name
+
 
 class Encounter:
 
@@ -56,7 +62,10 @@ class Encounter:
         return self.items
     
     def add_roll(self, rollType, member, value, item):
-        self.rolls.append(Roll(rollType,member,value,item))
+        roll = Roll(rollType,member,value,item)
+        self.rolls.append(roll)
+        #print(item.name)
+        item.rolls.append(roll)
 
     def set_rolls(self, data):
         for row in data:
@@ -67,16 +76,30 @@ class Encounter:
     def get_member(self, name):
         return self.members[name]
 
+    def set_winning_rolls(self):
+        for item in self.items:
+            rollValues = [roll.value for roll in self.items[item].rolls]
+            highestRollValue = max(rollValues)
+            highestRoll =  self.items[item].rolls[rollValues.index(highestRollValue)]
+            highestRoll.iswin(True)
+
+    def get_winning_rolls(self):
+        winners = [roll for roll in self.rolls if roll.win]
+        return winners
+
     def __init__(self, data=None):
         self.cleartime = ''
         self.members = {}
         self.items = {}
         self.rolls = []
+        self.lootwins = []
         self.rows = data
         self.set_cleartime(self.rows[0])
         self.set_members(self.rows)
         self.set_item(self.rows)
         self.set_rolls(self.rows)
+        #self.set_lootwins(self.items)
+        self.set_winning_rolls()
 
 
 
