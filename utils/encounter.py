@@ -30,12 +30,6 @@ class Member:
     def __eq__(self, other):
         return self.name == other.name
 
-class LootWin:
-    def __init__(self, item, member, roll):
-        self.item = item
-        self.member = member
-        self.roll = roll
-
 
 class Encounter:
 
@@ -79,22 +73,6 @@ class Encounter:
 
     def get_member(self, name):
         return self.members[name]
-
-    def set_lootwins(self, items):
-        wins = []
-        for item in items:
-            values = [roll.value for roll in items[item].rolls]
-            maxValue = max(values)
-            print (maxValue)
-            winningIndex = items[item].rolls.index(maxValue)
-            print(winningIndex)
-            winningRoll = items[item].rolls[winningIndex]
-            wins.append(LootWin(items[item],winningRoll.member, winningRoll))
-        self.lootwins = wins
-
-            
-                
-
 
     def __init__(self, data=None):
         self.cleartime = ''
