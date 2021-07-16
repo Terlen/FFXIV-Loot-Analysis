@@ -28,6 +28,13 @@ class Member:
     def __eq__(self, other):
         return self.name == other.name
 
+class LootWin:
+    def __init__(self, item, member, roll):
+        self.item = item
+        self.member = member
+        self.roll = roll
+
+
 class Encounter:
 
     # def add_row(self, row):
