@@ -29,9 +29,9 @@ class Member:
 
 class Encounter:
 
-    def add_row(self, row):
-        self.rows.append(row)
-        return self.rows
+    # def add_row(self, row):
+    #     self.rows.append(row)
+    #     return self.rows
 
     def set_cleartime(self, firstrow):
         self.cleartime = firstrow[0]
