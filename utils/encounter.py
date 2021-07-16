@@ -92,7 +92,6 @@ class Encounter:
         self.members = {}
         self.items = {}
         self.rolls = []
-        self.lootwins = []
         self.rows = data
         self.set_cleartime(self.rows[0])
         self.set_members(self.rows)
