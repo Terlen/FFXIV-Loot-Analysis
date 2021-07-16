@@ -6,11 +6,13 @@ class Roll:
         self.value = rollValue
         self.type = rollType
         self.item = item
+        self.win = False
     def __eq__(self, other):
         attributes = attrgetter("member", "value", "type", "item")
         return self is other or attributes(self) == attributes(other)
     def iswin(self, bool):
         self.win = bool
+        return self
 
 class Item:
     def __init__(self, name, quantity):
@@ -74,6 +76,17 @@ class Encounter:
     def get_member(self, name):
         return self.members[name]
 
+    def set_winning_rolls(self):
+        for item in self.items:
+            rollValues = [roll.value for roll in self.items[item].rolls]
+            highestRollValue = max(rollValues)
+            highestRoll =  self.items[item].rolls[rollValues.index(highestRollValue)]
+            highestRoll.iswin(True)
+
+    def get_winning_rolls(self):
+        winners = [roll for roll in self.rolls if roll.win]
+        return winners
+
     def __init__(self, data=None):
         self.cleartime = ''
         self.members = {}
@@ -85,7 +98,8 @@ class Encounter:
         self.set_members(self.rows)
         self.set_item(self.rows)
         self.set_rolls(self.rows)
-        self.set_lootwins(self.items)
+        #self.set_lootwins(self.items)
+        self.set_winning_rolls()
 
 
 
