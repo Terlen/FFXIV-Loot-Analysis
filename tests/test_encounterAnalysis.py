@@ -36,28 +36,28 @@ def random_roll_gen(rolltype, win):
         print (roll.member.name, roll.type, roll.value, roll.win)
         return roll
 
-def test_data_gen(maxRolls, numItems, numMembers):
-    data = []
+# def test_data_gen(maxRolls, numItems, numMembers):
+#     data = []
     
-    items = []
-    for x in range(numItems):
-        items.append(random_item_gen())
+#     items = []
+#     for x in range(numItems):
+#         items.append(random_item_gen())
 
-    return items
+#     return items
 
 
 class Test_get_item_most_rolls_Unit:
 
     items = [random_item_gen(),random_item_gen()]
 
-    items[0].rolls += random_roll_gen(1,1)
-    items[0].rolls += random_roll_gen(1,0)
+    items[0].rolls.append(random_roll_gen(1,1))
+    items[0].rolls.append(random_roll_gen(1,0))
 
-    items[1].rolls += random_roll_gen(0, 1)
-    items[1].rolls += random_roll_gen(0,0)
-    items[1].rolls += random_roll_gen(0,0)
+    items[1].rolls.append(random_roll_gen(0, 1))
+    items[1].rolls.append(random_roll_gen(0,0))
+    items[1].rolls.append(random_roll_gen(0,0))
 
-    encounter = Encounter()
+    encounter = Encounter([['18:00', 'AddLoot', '','Stick',0,1], ['18:00', 'GreedLoot', 'Test','Stick',20,1]])
     encounter.items = items
 
     def test_get_item_most_rolls(self):
