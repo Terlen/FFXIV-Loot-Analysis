@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_item_most_rolls
+from utils.encounterAnalysis import get_item_most_rolls, get_item_fewest_rolls
 from utils.encounter import Encounter, Item, Member, Roll
 import random
 
@@ -62,3 +62,6 @@ class Test_get_item_most_rolls_Unit:
 
     def test_get_item_most_rolls(self):
         assert get_item_most_rolls(self.encounter) == self.items[1]
+
+    def test_get_item_fewest_rolls(self):
+        assert get_item_fewest_rolls(self.encounter) == self.items[0]
