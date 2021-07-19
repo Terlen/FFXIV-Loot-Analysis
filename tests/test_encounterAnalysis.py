@@ -1,3 +1,4 @@
+from utils.encounterAnalysis import get_item_most_rolls
 from utils.encounter import Encounter, Item, Member, Roll
 import random
 
@@ -47,9 +48,17 @@ def test_data_gen(maxRolls, numItems, numMembers):
 
 class Test_get_item_most_rolls_Unit:
 
+    items = [random_item_gen(),random_item_gen()]
 
+    items[0].rolls += random_roll_gen(1,1)
+    items[0].rolls += random_roll_gen(1,0)
 
+    items[1].rolls += random_roll_gen(0, 1)
+    items[1].rolls += random_roll_gen(0,0)
+    items[1].rolls += random_roll_gen(0,0)
 
+    encounter = Encounter()
+    encounter.items = items
 
     def test_get_item_most_rolls(self):
-        pass
+        assert get_item_most_rolls(self.encounter) == self.items[1]
