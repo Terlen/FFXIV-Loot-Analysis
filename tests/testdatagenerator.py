@@ -2,9 +2,11 @@ import random
 from utils.encounter import Member, Item, Roll
 from operator import itemgetter
 
-fixedseed = 5
-fixedGen = random.Random()
-fixedGen.seed(fixedseed)
+#fixedseed = 5
+seed = random.randint(0,100)
+fixedGen = random.Random(seed)
+#print("the seed was: ",seed)
+
 
 firstNames = ['Karou', 'Akiva', 'Hien', 'Yda', 'Alphinaud']
 lastNames = ['Cookiepouch', 'Final', 'Fantasy', 'Chocobo', 'Tonberry']
@@ -29,6 +31,7 @@ def random_roll_gen():
     return roll
 
 def random_data_gen(numMembers, numItems):
+    print("the seed was :",seed)
     data = []
     numRolls = fixedGen.randint(0,numMembers*numItems)
     members = [random_name_gen() for x in range(numMembers)]
