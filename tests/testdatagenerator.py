@@ -13,10 +13,9 @@ itemNoun = ["Stick", "Lance", "Pot", "Scissors", "Sword"]
 
 def random_member_gen():
     name = firstNames[fixedGen.randint(0,4)] + ' ' + lastNames[fixedGen.randint(0,4)]
-    print(name)
     return Member(name)
 
-# Generate a random Item with random name and quantity between 1-3. Each item has no associated rolls.
+# Generate a random Item with random name and quantity between 1-3. Each item has no associated rolls on init
 def random_item_gen():
     name = itemAdjective[fixedGen.randint(0,4)] + ' ' + itemNoun[fixedGen.randint(0,4)]
     quantity = fixedGen.randint(1,3)
@@ -24,16 +23,16 @@ def random_item_gen():
     return item
 
 # Generate a random roll for given item. Specify if roll is Need/Greed and if it won
-def random_roll_gen(rolltype, item):
+def random_roll_gen(rolltype, item, member=random_member_gen()):
     if rolltype:
-        roll = Roll("GreedLoot",random_member_gen(),fixedGen.randint(1,99),item)
+        roll = Roll("GreedLoot",member,fixedGen.randint(1,99),item)
         item.rolls.append(roll)
-        print (roll.member.name, roll.type, roll.value)
+        #print (roll.member.name, roll.type, roll.value)
         return roll
     elif not rolltype:
-        roll = Roll("NeedLoot",random_member_gen(),fixedGen.randint(1,99),item)
+        roll = Roll("NeedLoot",member,fixedGen.randint(1,99),item)
         item.rolls.append(roll)
-        print (roll.member.name, roll.type, roll.value)
+        #print (roll.member.name, roll.type, roll.value)
         return roll
 
 
