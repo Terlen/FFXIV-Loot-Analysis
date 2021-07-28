@@ -23,14 +23,8 @@ def random_item_gen():
     return item
 
 # Generate a random roll for given item. Specify if roll is Need/Greed and if it won
-def random_roll_gen(rolltype, item, member=random_member_gen()):
-    if rolltype:
-        roll = Roll("GreedLoot",member,fixedGen.randint(1,99),item)
-        item.rolls.append(roll)
-        #print (roll.member.name, roll.type, roll.value)
-        return roll
-    elif not rolltype:
-        roll = Roll("NeedLoot",member,fixedGen.randint(1,99),item)
+def random_roll_gen(rolltype : str, item : Item, member : Member = random_member_gen()):
+        roll = Roll(rolltype,member,fixedGen.randint(1,99),item)
         item.rolls.append(roll)
         #print (roll.member.name, roll.type, roll.value)
         return roll
