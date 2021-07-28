@@ -1,5 +1,6 @@
 import random
 from utils.encounter import Member, Item, Roll
+from operator import itemgetter
 
 fixedseed = 5
 fixedGen = random.Random()
@@ -24,12 +25,36 @@ def random_item_gen():
 
 # Generate a random roll for given item. Specify if roll is Need/Greed and if it won
 def random_roll_gen():
-        rolltype = fixedGen.randint(0,2)
-        if rolltype == 1:
-            roll = ("GreedLoot", fixedGen.randint(1,99))
-        elif rolltype == 2:
-            roll = ("NeedLoot", fixedGen.randint(1,99))
-        return roll
+    roll = fixedGen.randint(1,99)
+    return roll
 
-
-
+def random_data_gen(numMembers, numItems):
+    data = []
+    numRolls = fixedGen.randint(0,numMembers*numItems)
+    members = [random_name_gen() for x in range(numMembers)]
+    items = [random_item_gen() for x in range(numItems)]
+    for item in items:
+        data.append(["8-8-08","AddLoot",'',item[0], 0, item[1]])
+    rolls = []
+    winRoll = 0
+    winner = ''
+    for item in items:
+        for member in members:
+            data.append(["8-8-08","CastLoot",member,item[0],0,item[1]])
+    for item in items:
+        if fixedGen.randint(0,1):
+            rollType = "GreedLoot"
+        else:
+            rollType = "NeedLoot"
+        for member in members:
+            if len(rolls) < numRolls:
+                while True:
+                    roll = random_roll_gen()
+                    if roll not in rolls:
+                        break
+                data.append(["8-8-08",rollType, member,item[0], roll, item[1]])
+                if roll > winRoll:
+                    winRoll = roll
+                    winner = member
+        data.append(["8-8-08","ObtainLoot", winner, item[0], winRoll, item[1]])
+    return data
