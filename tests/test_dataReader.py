@@ -5,6 +5,7 @@ from collections.abc import Iterable
 import csv
 from unittest.mock import mock_open, patch
 import pytest
+from testdatagenerator import random_data_gen
 
 class mock_textFileObject:
     def __next__(*args, **kwargs):
@@ -57,6 +58,7 @@ class Test_encounterSplit_Unit:
     test_validData = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'GreedLoot', 'Your Character', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'ObtainLoot', 'Your Character', 'Byakko Totem', 0, 1]]
     test_noEncounter = [['7/13/2021 18:07', 'GreedLoot', 'Your Character', 'Byakko Totem', 0, 1]]
     test_partialEncounter = [['7/13/2021 18:07', 'AddLoot', '', 'Byakko Totem', 0, 1],['7/13/2021 18:07', 'AddLoot', '', 'Byakko Axe', 0, 1]]
+    test_randomizedData = random_data_gen(8,3)
 
     def test_encounterSplitter(self):
         result = utils.dataReader.encounterSplitter(self.test_validData)
@@ -68,3 +70,8 @@ class Test_encounterSplit_Unit:
     
     def test_encounterSplitter_partialEncounter(self):
         assert utils.dataReader.encounterSplitter(self.test_noEncounter) == []
+    
+    def test_encounterSplitter_randomized(self):
+        result = utils.dataReader.encounterSplitter(self.test_randomizedData)
+        assert len(result) == 1
+        assert isinstance(result[0], Encounter)
