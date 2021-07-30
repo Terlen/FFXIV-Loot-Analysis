@@ -2,23 +2,23 @@ from utils.encounter import Encounter, Item, Roll, Member
 from collections import Counter
 from typing import Union
 
-def get_item_most_and_least_rolls(encounter: Encounter) -> tuple[Union[list[Item],Item],Union[list[Item],Item]]:
-    itemRollCounts = [len(item.rolls) for item in encounter.items]
-    rollCountCounter = Counter(itemRollCounts)
-    mostRolls = max(itemRollCounts)
-    leastRolls = min(itemRollCounts)
+def get_most_and_least_rolls(encounterList: list) -> tuple[Union[list[Item],Item],Union[list[Item],Item]]:
+    RollCounts = [len(instance.rolls) for instance in encounterList]
+    rollCountCounter = Counter(RollCounts)
+    mostRolls = max(RollCounts)
+    leastRolls = min(RollCounts)
     if rollCountCounter[mostRolls] > 1:
-        # identify the indicies of itemRollCounts where itemRollCount[index] == mostRolls
-        # because the indicies of itemRollCounts correspond to encounter.items, we can use those indicies to return all the items with the most rolls
-        indiciesOfItems = [index for index, count in enumerate(itemRollCounts) if count == mostRolls]
-        mostRolledItems = [encounter.items[index] for index in indiciesOfItems]
+        # identify the indicies of RollCounts where RollCount[index] == mostRolls
+        # because the indicies of RollCounts correspond to the encounterList, we can use those indicies to return all the instances with the most rolls
+        indiciesOfInstances = [index for index, count in enumerate(RollCounts) if count == mostRolls]
+        mostRolledInstances = [encounterList[index] for index in indiciesOfInstances]
     else:
-        maxRollsIndex = itemRollCounts.index(mostRolls)
-        mostRolledItems =  encounter.items[maxRollsIndex]
+        maxRollsIndex = RollCounts.index(mostRolls)
+        mostRolledInstances =  encounterList[maxRollsIndex]
     if rollCountCounter[leastRolls] > 1:
-        indiciesOfItems = [index for index, count in enumerate(itemRollCounts) if count == leastRolls]
-        leastRolledItems = [encounter.items[index] for index in indiciesOfItems]
+        indiciesOfInstances = [index for index, count in enumerate(RollCounts) if count == leastRolls]
+        leastRolledInstances = [encounterList[index] for index in indiciesOfInstances]
     else:
-        leastRollsIndex = itemRollCounts.index(leastRolls)
-        leastRolledItems =  encounter.items[leastRollsIndex]
-    return (mostRolledItems, leastRolledItems)
+        leastRollsIndex = RollCounts.index(leastRolls)
+        leastRolledInstances =  encounterList[leastRollsIndex]
+    return (mostRolledInstances, leastRolledInstances)
