@@ -2,7 +2,7 @@ from utils.encounter import Encounter, Item, Roll, Member
 from collections import Counter
 from typing import Union
 
-def get_item_most_and_least_rolls(encounter: Encounter) -> tuple:
+def get_item_most_and_least_rolls(encounter: Encounter) -> tuple[Union[list[Item],Item],Union[list[Item],Item]]:
     itemRollCounts = [len(item.rolls) for item in encounter.items]
     rollCountCounter = Counter(itemRollCounts)
     mostRolls = max(itemRollCounts)
