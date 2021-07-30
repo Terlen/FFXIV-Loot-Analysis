@@ -39,12 +39,12 @@ def random_data_gen(numMembers, numItems):
     for item in items:
         data.append(["8-8-08","AddLoot",'',item[0], 0, item[1]])
     rolls = []
-    winRoll = 0
     winner = ''
     for item in items:
         for member in members:
             data.append(["8-8-08","CastLoot",member,item[0],0,item[1]])
     for item in items:
+        winRoll = 0
         if fixedGen.randint(0,1):
             rollType = "GreedLoot"
         else:
@@ -59,5 +59,6 @@ def random_data_gen(numMembers, numItems):
                 if roll > winRoll:
                     winRoll = roll
                     winner = member
-        data.append(["8-8-08","ObtainLoot", winner, item[0], winRoll, item[1]])
+        if winner:
+            data.append(["8-8-08","ObtainLoot", winner, item[0], winRoll, item[1]])
     return data
