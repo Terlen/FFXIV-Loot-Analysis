@@ -23,3 +23,7 @@ def get_most_and_least_rolls(encounterList: list) -> tuple[Union[list[Item],Item
         leastRollsIndex = RollCounts.index(leastRolls)
         leastRolledInstances =  encounterList[leastRollsIndex]
     return (mostRolledInstances, leastRolledInstances)
+
+def get_winning_rolls(encounter: Encounter):
+        winners = [roll for roll in encounter.rolls if roll.win]
+        return winners

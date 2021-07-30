@@ -98,10 +98,6 @@ class Encounter:
                 highestRoll =  item.rolls[rollValues.index(highestRollValue)]
                 highestRoll.iswin(True)
 
-    def get_winning_rolls(self):
-        winners = [roll for roll in self.rolls if roll.win]
-        return winners
-
     def __init__(self, data=None):
         self.cleartime = ''
         self.members = []
