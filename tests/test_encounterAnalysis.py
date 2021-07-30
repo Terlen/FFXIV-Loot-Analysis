@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls
+from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_average_roll_value
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -233,3 +233,23 @@ class Test_get_winning_rolls:
         test_encounter = Encounter(self.test_data_no_winners)
         expected_winners = []
         assert expected_winners == get_winning_rolls(test_encounter)
+
+class Test_get_average_roll_value:
+    test_data = [
+        ['8-8-08', 'AddLoot', '', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'GreedLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 12, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Rusty Stick', 53, 3], 
+        ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3], 
+        ['8-8-08', 'ObtainLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3]
+        ]
+    
+    def test_get_average_roll(self):
+        test_encounter = Encounter(self.test_data)
+        assert 55.0 == get_average_roll_value(test_encounter)
