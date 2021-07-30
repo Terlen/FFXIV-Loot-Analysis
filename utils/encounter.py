@@ -43,23 +43,32 @@ class Encounter:
         self.cleartime = firstrow[0]
     
     def add_member(self, name):
-        self.members[name]= (Member(name))
+        self.members.append(Member(name))
         return self.members
 
     def set_members(self, data):
         for row in data:
-            if row[2] != '':
+            names = [member.name for member in self.members]
+            if row[2] != '' and row[2] not in names:
                 self.add_member(row[2])
         return self.members
 
     def add_item(self, name, quantity):
-        self.items[name] = Item(name, quantity)
+        item = Item(name,quantity)
+        if item not in self.items:
+            self.items.append(Item(name, quantity))
 
     def set_item(self, data):
         for row in data:
             if row[1] == "AddLoot":
                 self.add_item(row[3],row[5])
         return self.items
+    
+    def get_item(self, name):
+        for item in self.items:
+            if item.name == name:
+                return item
+        return None
     
     def add_roll(self, rollType, member, value, item):
         roll = Roll(rollType,member,value,item)
@@ -71,16 +80,19 @@ class Encounter:
         for row in data:
             action = row[1]
             if action == "GreedLoot" or action == "NeedLoot":
-                self.add_roll(action, self.members[row[2]], row[4],self.items[row[3]])
+                self.add_roll(action, self.get_member(row[2]), row[4],self.get_item(row[3]))
 
     def get_member(self, name):
-        return self.members[name]
+        for member in self.members:
+            if member.name == name:
+                return member
+        return None
 
     def set_winning_rolls(self):
         for item in self.items:
-            rollValues = [roll.value for roll in self.items[item].rolls]
+            rollValues = [roll.value for roll in item.rolls]
             highestRollValue = max(rollValues)
-            highestRoll =  self.items[item].rolls[rollValues.index(highestRollValue)]
+            highestRoll =  item.rolls[rollValues.index(highestRollValue)]
             highestRoll.iswin(True)
 
     def get_winning_rolls(self):
@@ -89,8 +101,8 @@ class Encounter:
 
     def __init__(self, data=None):
         self.cleartime = ''
-        self.members = {}
-        self.items = {}
+        self.members = []
+        self.items = []
         self.rolls = []
         self.rows = data
         self.set_cleartime(self.rows[0])
