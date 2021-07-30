@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_item_most_and_least_rolls, get_member_most_and_least_rolls
+from utils.encounterAnalysis import get_most_and_least_rolls
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -6,9 +6,9 @@ def get_instance_from_list_by_name(list, *args):
     instances = [list[nameList.index(name)] for name in args]
     return tuple(instances)
 
-class Test_get_item_most_and_least_rolls_Unit:
+class Test_get_most_and_least_rolls_Unit:
     
-    test_data_no_tie = [
+    test_data_item_no_tie = [
             ['8-8-08', 'AddLoot', '', 'Resplendent Pot', 0, 1], 
             ['8-8-08', 'AddLoot', '', 'Resplendent Stick', 0, 1], 
             ['8-8-08', 'CastLoot', 'Hien Fantasy', 'Resplendent Pot', 0, 1], 
@@ -26,7 +26,7 @@ class Test_get_item_most_and_least_rolls_Unit:
             ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Stick', 45, 1]
             ]
 
-    test_data_tie_most_and_least = [
+    test_data_item_tie_most_and_least = [
         ['8-8-08', 'AddLoot', '', 'Resplendent Pot', 0, 1], 
         ['8-8-08', 'AddLoot', '', 'Resplendent Stick', 0, 1], 
         ['8-8-08', 'CastLoot', 'Hien Fantasy', 'Resplendent Pot', 0, 1], 
@@ -45,7 +45,7 @@ class Test_get_item_most_and_least_rolls_Unit:
         ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Stick', 45, 1]
         ]
 
-    test_data_tie_most = [
+    test_data_item_tie_most = [
         ['8-8-08', 'AddLoot', '', 'Kugane Stick', 0, 1], 
         ['8-8-08', 'AddLoot', '', 'Kugane Pot', 0, 1], 
         ['8-8-08', 'AddLoot', '', "Tataru's Pot", 0, 2], 
@@ -68,7 +68,7 @@ class Test_get_item_most_and_least_rolls_Unit:
         ['8-8-08', 'ObtainLoot', 'Karou Final', "Tataru's Pot", 94, 2], 
         ]
     
-    test_data_tie_least = [
+    test_data_item_tie_least = [
         ['8-8-08', 'AddLoot', '', 'Kugane Stick', 0, 1], 
         ['8-8-08', 'AddLoot', '', 'Kugane Pot', 0, 1], 
         ['8-8-08', 'AddLoot', '', "Tataru's Pot", 0, 2], 
@@ -89,23 +89,23 @@ class Test_get_item_most_and_least_rolls_Unit:
         ]
 
     def test_get_item_most_and_least_rolls_no_tie(self):
-        test_encounter = Encounter(self.test_data_no_tie)
+        test_encounter = Encounter(self.test_data_item_no_tie)
         items = get_instance_from_list_by_name(test_encounter.items, "Resplendent Stick", "Resplendent Pot")
-        assert (items[0],items[1]) == get_item_most_and_least_rolls(test_encounter)
+        assert (items[0],items[1]) == get_most_and_least_rolls(test_encounter.items)
     def test_get_item_most_and_least_rolls_tie_most_and_least(self):
-        test_encounter = Encounter(self.test_data_tie_most_and_least)
-        assert (test_encounter.items, test_encounter.items) == get_item_most_and_least_rolls(test_encounter)
+        test_encounter = Encounter(self.test_data_item_tie_most_and_least)
+        assert (test_encounter.items, test_encounter.items) == get_most_and_least_rolls(test_encounter.items)
     def test_get_item_most_and_least_rolls_tie_most(self):
-        test_encounter = Encounter(self.test_data_tie_most)
+        test_encounter = Encounter(self.test_data_item_tie_most)
         items = get_instance_from_list_by_name(test_encounter.items,"Kugane Stick","Kugane Pot","Meaty Pot")
-        assert ([items[0],items[1]], items[2]) == get_item_most_and_least_rolls(test_encounter)
+        assert ([items[0],items[1]], items[2]) == get_most_and_least_rolls(test_encounter.items)
     def test_get_item_most_and_least_rolls_tie_least(self):
-        test_encounter = Encounter(self.test_data_tie_least)
+        test_encounter = Encounter(self.test_data_item_tie_least)
         items = get_instance_from_list_by_name(test_encounter.items,"Kugane Stick","Tataru's Pot","Meaty Pot")
-        assert (items[0], [items[1],items[2]]) == get_item_most_and_least_rolls(test_encounter)
+        assert (items[0], [items[1],items[2]]) == get_most_and_least_rolls(test_encounter.items)
 
-class Test_get_member_most_and_least_rolls_Unit:
-    test_data_no_tie = [
+
+    test_data_member_no_tie = [
             ['8-8-08', 'AddLoot', '', 'Resplendent Pot', 0, 1], 
             ['8-8-08', 'AddLoot', '', 'Resplendent Stick', 0, 1], 
             ['8-8-08', 'CastLoot', 'Hien Fantasy', 'Resplendent Pot', 0, 1], 
@@ -121,6 +121,6 @@ class Test_get_member_most_and_least_rolls_Unit:
             ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Stick', 45, 1]
             ]
     def test_get_member_most_and_least_rolls_no_tie(self):
-        test_encounter = Encounter(self.test_data_no_tie)
+        test_encounter = Encounter(self.test_data_member_no_tie)
         members = get_instance_from_list_by_name(test_encounter.members,"Akiva Chocobo","Hien Cookiepouch","Hien Fantasy")
-        assert (members[0], members[2]) == get_member_most_and_least_rolls(test_encounter)
+        assert (members[0], members[2]) == get_most_and_least_rolls(test_encounter.members)
