@@ -50,5 +50,4 @@ class Test_get_item_most_rolls_Unit:
         assert test_encounter.items[item_names.index("Resplendent Stick")] == get_item_most_rolls(test_encounter)
     def test_get_item_most_rolls_tie(self):
         test_encounter = Encounter(self.test_data_tie)
-        item_names = [item.name for item in test_encounter.items]
         assert test_encounter.items == get_item_most_rolls(test_encounter)
