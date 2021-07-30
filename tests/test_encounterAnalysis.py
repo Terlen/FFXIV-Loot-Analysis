@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value
+from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value, get_median_roll_value
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -268,3 +268,38 @@ class Test_get_mean_roll_value:
     def test_get_mean_roll_no_rolls(self):
         test_encounter = Encounter(self.test_data_no_rolls)
         assert 0 == get_mean_roll_value(test_encounter)
+
+class Test_get_median_roll_value:
+    test_data = [
+        ['8-8-08', 'AddLoot', '', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'GreedLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 12, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Rusty Stick', 53, 3], 
+        ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3], 
+        ['8-8-08', 'ObtainLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3]
+        ]
+
+    test_data_no_rolls = [
+        ['8-8-08', 'AddLoot', '', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Resplendent Scissors', 0, 1], 
+        ]
+    
+    def test_get_median_roll(self):
+        test_encounter = Encounter(self.test_data)
+        assert 57.0 == get_median_roll_value(test_encounter)
+    
+    def test_get_median_roll_no_rolls(self):
+        test_encounter = Encounter(self.test_data_no_rolls)
+        assert 0 == get_median_roll_value(test_encounter)
