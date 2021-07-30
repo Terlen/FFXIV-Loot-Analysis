@@ -234,7 +234,7 @@ class Test_get_winning_rolls:
         expected_winners = []
         assert expected_winners == get_winning_rolls(test_encounter)
 
-class Test_get_average_roll_value:
+class Test_get_mean_roll_value:
     test_data = [
         ['8-8-08', 'AddLoot', '', 'Kugane Lance', 0, 3], 
         ['8-8-08', 'AddLoot', '', 'Rusty Stick', 0, 3], 
@@ -249,7 +249,22 @@ class Test_get_average_roll_value:
         ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3], 
         ['8-8-08', 'ObtainLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3]
         ]
+
+    test_data_no_rolls = [
+        ['8-8-08', 'AddLoot', '', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Resplendent Scissors', 0, 1], 
+        ]
     
-    def test_get_average_roll(self):
+    def test_get_mean_roll(self):
         test_encounter = Encounter(self.test_data)
         assert 55.0 == get_average_roll_value(test_encounter)
+    
+    def test_get_mean_roll_no_rolls(self):
+        test_encounter = Encounter(self.test_data)
+        assert 0 == get_average_roll_value(test_encounter)
