@@ -1,9 +1,10 @@
 from utils.encounterAnalysis import get_item_most_and_least_rolls
 from utils.encounter import Encounter, Item, Member, Roll
-from testdatagenerator import random_data_gen
-from utils.dataReader import encounterSplitter
 
-
+def get_instance_from_list_by_name(list, *args):
+    nameList = [item.name for item in list]
+    instances = [list[nameList.index(name)] for name in args]
+    return tuple(instances)
 
 class Test_get_item_most_and_least_rolls_Unit:
     
@@ -89,24 +90,37 @@ class Test_get_item_most_and_least_rolls_Unit:
 
     def test_get_item_most_and_least_rolls_no_tie(self):
         test_encounter = Encounter(self.test_data_no_tie)
-        item_names = [item.name for item in test_encounter.items]
-        itemResplendentStick = test_encounter.items[item_names.index("Resplendent Stick")]
-        itemResplendentPot = test_encounter.items[item_names.index("Resplendent Pot")]
-        assert (itemResplendentStick,itemResplendentPot) == get_item_most_and_least_rolls(test_encounter)
+        items = get_instance_from_list_by_name(test_encounter.items, "Resplendent Stick", "Resplendent Pot")
+        assert (items[0],items[1]) == get_item_most_and_least_rolls(test_encounter)
     def test_get_item_most_and_least_rolls_tie_most_and_least(self):
         test_encounter = Encounter(self.test_data_tie_most_and_least)
         assert (test_encounter.items, test_encounter.items) == get_item_most_and_least_rolls(test_encounter)
     def test_get_item_most_and_least_rolls_tie_most(self):
         test_encounter = Encounter(self.test_data_tie_most)
-        item_names = [item.name for item in test_encounter.items]
-        itemKuganeStick =  test_encounter.items[item_names.index("Kugane Stick")]
-        itemKuganePot = test_encounter.items[item_names.index("Kugane Pot")]
-        itemMeatyPot = test_encounter.items[item_names.index("Meaty Pot")]
-        assert ([itemKuganeStick,itemKuganePot], itemMeatyPot) == get_item_most_and_least_rolls(test_encounter)
+        items = get_instance_from_list_by_name(test_encounter.items,"Kugane Stick","Kugane Pot","Meaty Pot")
+        assert ([items[0],items[1]], items[2]) == get_item_most_and_least_rolls(test_encounter)
     def test_get_item_most_and_least_rolls_tie_least(self):
         test_encounter = Encounter(self.test_data_tie_least)
-        item_names = [item.name for item in test_encounter.items]
-        itemKuganeStick = test_encounter.items[item_names.index("Kugane Stick")]
-        itemTatarusPot = test_encounter.items[item_names.index("Tataru's Pot")]
-        itemMeatyPot = test_encounter.items[item_names.index("Meaty Pot")]
-        assert (itemKuganeStick, [itemTatarusPot,itemMeatyPot]) == get_item_most_and_least_rolls(test_encounter)
+        items = get_instance_from_list_by_name(test_encounter.items,"Kugane Stick","Tataru's Pot","Meaty Pot")
+        assert (items[0], [items[1],items[2]]) == get_item_most_and_least_rolls(test_encounter)
+
+class Test_get_member_most_and_least_rolls_Unit:
+    test_data_no_tie = [
+            ['8-8-08', 'AddLoot', '', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'AddLoot', '', 'Resplendent Stick', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Fantasy', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Cookiepouch', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Fantasy', 'Resplendent Stick', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Resplendent Stick', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Cookiepouch', 'Resplendent Stick', 0, 1],  
+            ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Resplendent Pot', 45, 1], 
+            ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Pot', 45, 1], 
+            ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Resplendent Stick', 9, 1], 
+            ['8-8-08', 'NeedLoot', 'Hien Cookiepouch', 'Resplendent Stick', 43, 1], 
+            ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Stick', 45, 1]
+            ]
+    def test_get_member_most_and_least_rolls_no_tie(self):
+        test_encounter = Encounter(self.test_data_no_tie)
+        members = get_instance_from_list_by_name(test_encounter.members,"Akiva Chocobo","Hien Cookiepouch","Hien Fantasy")
+        assert True == True
