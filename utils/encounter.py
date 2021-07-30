@@ -91,9 +91,10 @@ class Encounter:
     def set_winning_rolls(self):
         for item in self.items:
             rollValues = [roll.value for roll in item.rolls]
-            highestRollValue = max(rollValues)
-            highestRoll =  item.rolls[rollValues.index(highestRollValue)]
-            highestRoll.iswin(True)
+            if len(rollValues) > 0:
+                highestRollValue = max(rollValues)
+                highestRoll =  item.rolls[rollValues.index(highestRollValue)]
+                highestRoll.iswin(True)
 
     def get_winning_rolls(self):
         winners = [roll for roll in self.rolls if roll.win]
