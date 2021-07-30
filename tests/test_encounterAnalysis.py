@@ -1,4 +1,12 @@
-from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value, get_median_roll_value, get_mode_roll_value, get_most_and_least_lost_rolls
+from utils.encounterAnalysis import (
+    get_most_and_least_rolls, 
+    get_winning_rolls, 
+    get_mean_roll_value, 
+    get_median_roll_value, 
+    get_mode_roll_value, 
+    get_most_and_least_lost_rolls, 
+    get_lowest_roller)
+
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -453,3 +461,35 @@ class Test_get_most_and_least_lost_rolls:
     #     assert ((members[0],3),(members[2],1)) == get_most_and_least_lost_rolls(test_encounter)
 
     
+class Test_get_lowest_roller:
+    test_data_no_tie = [
+        ['8-8-08', 'AddLoot', '', 'Kugane Pot', 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Scissors', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Meaty Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Kugane Pot', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Cookiepouch', 'Kugane Pot', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', 'Kugane Pot', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Rusty Scissors', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Hien Cookiepouch', 'Rusty Scissors', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Hien Final', 'Rusty Scissors', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Meaty Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Cookiepouch', 'Meaty Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', 'Meaty Scissors', 0, 1], 
+        ['8-8-08', 'GreedLoot', 'Alphinaud Cookiepouch', 'Kugane Pot', 36, 1], 
+        ['8-8-08', 'GreedLoot', 'Hien Cookiepouch', 'Kugane Pot', 65, 1], 
+        ['8-8-08', 'GreedLoot', 'Hien Final', 'Kugane Pot', 80, 1], 
+        ['8-8-08', 'ObtainLoot', 'Hien Final', 'Kugane Pot', 80, 1], 
+        ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Rusty Scissors', 89, 3], 
+        ['8-8-08', 'NeedLoot', 'Hien Cookiepouch', 'Rusty Scissors', 66, 3], 
+        ['8-8-08', 'NeedLoot', 'Hien Final', 'Rusty Scissors', 6, 3], 
+        ['8-8-08', 'ObtainLoot', 'Alphinaud Cookiepouch', 'Rusty Scissors', 89, 3], 
+        ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Meaty Scissors', 30, 1], 
+        ['8-8-08', 'NeedLoot', 'Hien Cookiepouch', 'Meaty Scissors', 57, 1], 
+        ['8-8-08', 'NeedLoot', 'Hien Final', 'Meaty Scissors', 20, 1], 
+        ['8-8-08', 'ObtainLoot', 'Hien Cookiepouch', 'Meaty Scissors', 57, 1]
+        ]
+
+    def test_get_lowest_roller_no_tie(self):
+        test_encounter = Encounter(self.test_data_no_tie)
+        member = get_instance_from_list_by_name(test_encounter.members, "Hien Final")
+        assert (member, (80+6+20)/3) == get_lowest_roller(test_encounter)
