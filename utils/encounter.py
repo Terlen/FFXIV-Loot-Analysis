@@ -48,12 +48,15 @@ class Encounter:
 
     def set_members(self, data):
         for row in data:
-            if row[2] != '':
+            names = [member.name for member in self.members]
+            if row[2] != '' and row[2] not in names:
                 self.add_member(row[2])
         return self.members
 
     def add_item(self, name, quantity):
-        self.items.append(Item(name, quantity))
+        item = Item(name,quantity)
+        if item not in self.items:
+            self.items.append(Item(name, quantity))
 
     def set_item(self, data):
         for row in data:
