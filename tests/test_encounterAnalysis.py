@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_most_and_least_rolls
+from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -192,3 +192,28 @@ class Test_get_most_and_least_rolls_Unit:
         output = get_most_and_least_rolls(test_encounter.members)
         assert members[0] == output[0]
         assert members[2],members[1] in output[1]
+
+class Test_get_winning_rolls:
+    test_data = [
+        ['8-8-08', 'AddLoot', '', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'NeedLoot', 'Karou Cookiepouch', "Tataru's Sword", 12, 1], 
+        ['8-8-08', 'NeedLoot', 'Hien Final', "Tataru's Sword", 28, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', "Tataru's Sword", 30, 1], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Final', "Tataru's Sword", 30, 1], 
+        ['8-8-08', 'NeedLoot', 'Karou Cookiepouch', 'Resplendent Scissors', 72, 1], 
+        ['8-8-08', 'NeedLoot', 'Hien Final', 'Resplendent Scissors', 26, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', 'Resplendent Scissors', 92, 1], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Final', 'Resplendent Scissors', 92, 1]
+        ]
+    
+    def test_get_winning_rolls(self):
+        test_encounter = Encounter(self.test_data)
+        expected_winners = [roll for roll in test_encounter.rolls if roll.win]
+        assert expected_winners == get_winning_rolls(test_encounter)
