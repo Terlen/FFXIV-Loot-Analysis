@@ -153,6 +153,21 @@ class Test_get_most_and_least_rolls_Unit:
             ['8-8-08', 'NeedLoot', 'Hien Cookiepouch', 'Resplendent Stick', 43, 1], 
             ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Stick', 45, 1]
             ]
+    
+    test_data_member_tie_least = [
+            ['8-8-08', 'AddLoot', '', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'AddLoot', '', 'Resplendent Stick', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Fantasy', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Cookiepouch', 'Resplendent Pot', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Fantasy', 'Resplendent Stick', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Resplendent Stick', 0, 1], 
+            ['8-8-08', 'CastLoot', 'Hien Cookiepouch', 'Resplendent Stick', 0, 1],  
+            ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Resplendent Pot', 45, 1], 
+            ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Pot', 45, 1], 
+            ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Resplendent Stick', 9, 1], 
+            ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Resplendent Stick', 45, 1]
+            ]
 
     def test_get_member_most_and_least_rolls_no_tie(self):
         test_encounter = Encounter(self.test_data_member_no_tie)
@@ -167,4 +182,13 @@ class Test_get_most_and_least_rolls_Unit:
     def test_get_member_most_and_least_rolls_tie_most(self):
         test_encounter = Encounter(self.test_data_member_tie_most)
         members = get_instance_from_list_by_name(test_encounter.members, "Akiva Chocobo","Hien Cookiepouch","Hien Fantasy")
-        assert ([members[0],members[1]],members[2]) == get_most_and_least_rolls(test_encounter.members)
+        output = get_most_and_least_rolls(test_encounter.members)
+        assert members[0],members[1] in output[0]
+        assert members[2] == output[1]
+
+    def test_get_member_most_and_least_rolls_tie_least(self):
+        test_encounter = Encounter(self.test_data_member_tie_least)
+        members = get_instance_from_list_by_name(test_encounter.members, "Akiva Chocobo","Hien Cookiepouch","Hien Fantasy")
+        output = get_most_and_least_rolls(test_encounter.members)
+        assert members[0] == output[0]
+        assert members[2],members[1] in output[1]
