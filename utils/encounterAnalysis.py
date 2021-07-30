@@ -1,6 +1,6 @@
 from utils.encounter import Encounter, Item, Roll, Member
 from collections import Counter
-from typing import Union
+from typing import Tuple, Union
 from statistics import mean, median, multimode
 
 def get_most_and_least_rolls(encounterList: list) -> tuple[Union[list[Item],Item],Union[list[Item],Item]]:
@@ -50,3 +50,26 @@ def get_mode_roll_value(encounter: Encounter) -> list[int]:
         return []
     else:
         return mode
+
+
+# TODO: #7 Add functionality for getting most wins/fewest wins for need and greed individually
+def get_most_and_least_lost_rolls(encounter: Encounter) -> Tuple[Union[Tuple[Member,int],Tuple[list[Member],int]] , Union[Tuple[Member,int],Tuple[list[Member],int]]]:
+    members = set(encounter.members)
+    winnerCounts = Counter([roll.member for roll in get_winning_rolls(encounter)])
+    if len(winnerCounts) > 0:
+        highestWinCount = max(winnerCounts.values())
+        fewestWins = min(winnerCounts.values())
+        noWins = members - winnerCounts.keys()
+        mostWins = [key for key, value in winnerCounts.items() if value == highestWinCount]
+        if len(noWins) > 0:
+            leastWins = list(noWins)
+        elif len(noWins) == 0:
+            leastWins = [key for key, value in winnerCounts.items() if value == fewestWins]
+        return mostWins, leastWins
+    elif len(winnerCounts) == 0:
+        return [],[]
+    
+
+
+    
+
