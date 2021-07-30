@@ -27,6 +27,7 @@ class Item:
 class Member:
     def __init__(self, name):
         self.name = name
+        self.rolls = []
     def __hash__(self):
         return hash(self.name)
     def __eq__(self, other):
@@ -75,6 +76,7 @@ class Encounter:
         self.rolls.append(roll)
         #print(item.name)
         item.rolls.append(roll)
+        member.rolls.append(roll)
 
     def set_rolls(self, data):
         for row in data:
