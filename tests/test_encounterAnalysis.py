@@ -303,3 +303,61 @@ class Test_get_median_roll_value:
     def test_get_median_roll_no_rolls(self):
         test_encounter = Encounter(self.test_data_no_rolls)
         assert 0 == get_median_roll_value(test_encounter)
+
+class Test_get_mode_roll_values:
+    test_data_no_mode = [
+        ['8-8-08', 'AddLoot', '', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'GreedLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 12, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Rusty Stick', 53, 3], 
+        ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3], 
+        ['8-8-08', 'ObtainLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3]
+        ]
+    
+    test_data_one_mode = [
+        ['8-8-08', 'AddLoot', '', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'GreedLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 12, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Rusty Stick', 94, 3], 
+        ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Rusty Stick', 94, 3]
+        ]
+    
+    test_data_multi_mode = [
+        ['8-8-08', 'AddLoot', '', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 0, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'GreedLoot', 'Alphinaud Cookiepouch', 'Kugane Lance', 61, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Kugane Lance', 94, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Rusty Stick', 94, 3], 
+        ['8-8-08', 'NeedLoot', 'Alphinaud Cookiepouch', 'Rusty Stick', 61, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Rusty Stick', 94, 3]
+        ]
+
+    def test_get_mode_roll_values_no_mode(self):
+        test_encounter = Encounter(self.test_data_no_mode)
+        assert [] == get_mode_roll_values(test_encounter)
+    
+    def test_get_mode_roll_values_one_mode(self):
+        test_encounter = Encounter(self.test_data_one_mode)
+        assert [94] == get_mode_roll_values(test_encounter)
+    
+    def test_get_mode_roll_values_multi_mode(self):
+        test_encounter = Encounter(self.test_data_multi_mode)
+        assert 61,94 in get_mode_roll_values(test_encounter)
