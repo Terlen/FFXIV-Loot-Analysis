@@ -66,6 +66,26 @@ class Test_get_item_most_and_least_rolls_Unit:
         ['8-8-08', 'NeedLoot', 'Karou Final', "Tataru's Pot", 94, 2], 
         ['8-8-08', 'ObtainLoot', 'Karou Final', "Tataru's Pot", 94, 2], 
         ]
+    
+    test_data_tie_least = [
+        ['8-8-08', 'AddLoot', '', 'Kugane Stick', 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Kugane Pot', 0, 1], 
+        ['8-8-08', 'AddLoot', '', "Tataru's Pot", 0, 2], 
+        ['8-8-08', 'AddLoot', '', 'Meaty Pot', 0, 2], 
+        ['8-8-08', 'CastLoot', 'Karou Tonberry', 'Kugane Stick', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Final', 'Kugane Stick', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Tonberry', 'Kugane Pot', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Final', 'Kugane Pot', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Tonberry', "Tataru's Pot", 0, 2], 
+        ['8-8-08', 'CastLoot', 'Karou Final', "Tataru's Pot", 0, 2], 
+        ['8-8-08', 'CastLoot', 'Karou Tonberry', 'Meaty Pot', 0, 2], 
+        ['8-8-08', 'CastLoot', 'Karou Final', 'Meaty Pot', 0, 2], 
+        ['8-8-08', 'GreedLoot', 'Karou Tonberry', 'Kugane Stick', 45, 1], 
+        ['8-8-08', 'GreedLoot', 'Karou Final', 'Kugane Stick', 30, 1], 
+        ['8-8-08', 'ObtainLoot', 'Karou Tonberry', 'Kugane Stick', 45, 1], 
+        ['8-8-08', 'NeedLoot', 'Karou Tonberry', 'Kugane Pot', 46, 1], 
+        ['8-8-08', 'ObtainLoot', 'Karou Tonberry', 'Kugane Pot', 46, 1], 
+        ]
 
     def test_get_item_most_and_least_rolls_no_tie(self):
         test_encounter = Encounter(self.test_data_no_tie)
@@ -78,3 +98,7 @@ class Test_get_item_most_and_least_rolls_Unit:
         test_encounter = Encounter(self.test_data_tie_most)
         item_names = [item.name for item in test_encounter.items]
         assert ([test_encounter.items[item_names.index("Kugane Stick")],test_encounter.items[item_names.index("Kugane Pot")]], test_encounter.items[item_names.index("Meaty Pot")]) == get_item_most_and_least_rolls(test_encounter)
+    def test_get_item_most_and_least_rolls_tie_least(self):
+        test_encounter = Encounter(self.test_data_tie_least)
+        item_names = [item.name for item in test_encounter.items]
+        assert (test_encounter.items[item_names.index("Kugane Stick")], [test_encounter.items[item_names.index("Tataru's Pot")],test_encounter.items[item_names.index("Meaty Pot")]]) == get_item_most_and_least_rolls(test_encounter)
