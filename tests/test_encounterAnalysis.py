@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value, get_median_roll_value, get_mode_roll_value
+from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value, get_median_roll_value, get_mode_roll_value, get_most_and_least_lost_rolls
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -361,3 +361,94 @@ class Test_get_mode_roll_value:
     def test_get_mode_roll_value_multi_mode(self):
         test_encounter = Encounter(self.test_data_multi_mode)
         assert 61,94 in get_mode_roll_value(test_encounter)
+
+class Test_get_most_and_least_lost_rolls:
+    test_data_need_and_greed_no_tie = [
+        ['8-8-08', 'AddLoot', '', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Yda Chocobo', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Yda Final', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Yda Chocobo', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Yda Final', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Yda Chocobo', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Yda Final', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Yda Chocobo', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Yda Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'NeedLoot', 'Yda Chocobo', "Tataru's Stick", 73, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', "Tataru's Stick", 71, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', "Tataru's Stick", 44, 1], 
+        ['8-8-08', 'NeedLoot', 'Yda Final', "Tataru's Stick", 99, 1], 
+        ['8-8-08', 'ObtainLoot', 'Yda Final', "Tataru's Stick", 99, 1], 
+        ['8-8-08', 'GreedLoot', 'Yda Chocobo', 'Rusty Pot', 72, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Final', 'Rusty Pot', 36, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Rusty Pot', 16, 3], 
+        ['8-8-08', 'GreedLoot', 'Yda Final', 'Rusty Pot', 73, 3], 
+        ['8-8-08', 'ObtainLoot', 'Yda Final', 'Rusty Pot', 73, 3], 
+        ['8-8-08', 'NeedLoot', 'Yda Chocobo', 'Meaty Pot', 53, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', 'Meaty Pot', 47, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Meaty Pot', 50, 3], 
+        ['8-8-08', 'NeedLoot', 'Yda Final', 'Meaty Pot', 38, 3], 
+        ['8-8-08', 'ObtainLoot', 'Yda Chocobo', 'Meaty Pot', 53, 3], 
+        ['8-8-08', 'NeedLoot', 'Yda Chocobo', 'Resplendent Scissors', 32, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', 'Resplendent Scissors', 92, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Resplendent Scissors', 10, 1], 
+        ['8-8-08', 'NeedLoot', 'Yda Final', 'Resplendent Scissors', 45, 1], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Final', 'Resplendent Scissors', 92, 1]
+        ]
+    
+    test_data_need_no_tie = [
+        ['8-8-08', 'AddLoot', '', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'AddLoot', '', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Yda Final', "Tataru's Stick", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Yda Final', 'Rusty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Yda Final', 'Meaty Pot', 0, 3], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Chocobo', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Yda Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', "Tataru's Stick", 71, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', "Tataru's Stick", 44, 1], 
+        ['8-8-08', 'NeedLoot', 'Yda Final', "Tataru's Stick", 99, 1], 
+        ['8-8-08', 'ObtainLoot', 'Yda Final', "Tataru's Stick", 99, 1], 
+        ['8-8-08', 'GreedLoot', 'Akiva Final', 'Rusty Pot', 36, 3], 
+        ['8-8-08', 'GreedLoot', 'Akiva Chocobo', 'Rusty Pot', 16, 3], 
+        ['8-8-08', 'GreedLoot', 'Yda Final', 'Rusty Pot', 73, 3], 
+        ['8-8-08', 'ObtainLoot', 'Yda Final', 'Rusty Pot', 73, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', 'Meaty Pot', 47, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Meaty Pot', 50, 3], 
+        ['8-8-08', 'NeedLoot', 'Yda Final', 'Meaty Pot', 38, 3], 
+        ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Meaty Pot', 50, 3], 
+        ['8-8-08', 'NeedLoot', 'Akiva Final', 'Resplendent Scissors', 45, 1], 
+        ['8-8-08', 'NeedLoot', 'Akiva Chocobo', 'Resplendent Scissors', 10, 1], 
+        ['8-8-08', 'NeedLoot', 'Yda Final', 'Resplendent Scissors', 92, 1], 
+        ['8-8-08', 'ObtainLoot', 'Yda Final', 'Resplendent Scissors', 92, 1]
+        ]
+
+    def test_get_most_and_least_lost_rolls_need_and_greed_no_tie(self):
+        test_encounter = Encounter(self.test_data_need_and_greed_no_tie)
+        members = get_instance_from_list_by_name(test_encounter.members,'Yda Chocobo','Akiva Final','Akiva Chocobo','Yda Final')
+        assert ((members[2],4),(members[3],2)) == get_most_and_least_lost_rolls(test_encounter)
+    
+    def test_get_most_and_least_lost_rolls_need_no_tie(self):
+        test_encounter = Encounter(self.test_data_need_no_tie)
+        members = get_instance_from_list_by_name(test_encounter.members,'Akiva Final','Akiva Chocobo','Yda Final')
+        assert ((members[0],3),(members[2],1)) == get_most_and_least_lost_rolls(test_encounter)
+
+    
