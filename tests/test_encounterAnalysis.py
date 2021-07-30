@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_item_most_and_least_rolls
+from utils.encounterAnalysis import get_item_most_and_least_rolls, get_member_most_and_least_rolls
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -123,4 +123,4 @@ class Test_get_member_most_and_least_rolls_Unit:
     def test_get_member_most_and_least_rolls_no_tie(self):
         test_encounter = Encounter(self.test_data_no_tie)
         members = get_instance_from_list_by_name(test_encounter.members,"Akiva Chocobo","Hien Cookiepouch","Hien Fantasy")
-        assert True == True
+        assert (members[0], members[2]) == get_member_most_and_least_rolls(test_encounter)
