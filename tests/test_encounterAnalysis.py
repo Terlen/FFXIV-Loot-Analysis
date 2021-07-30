@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_average_roll_value
+from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -263,8 +263,8 @@ class Test_get_mean_roll_value:
     
     def test_get_mean_roll(self):
         test_encounter = Encounter(self.test_data)
-        assert 55.0 == get_average_roll_value(test_encounter)
+        assert 55.0 == get_mean_roll_value(test_encounter)
     
     def test_get_mean_roll_no_rolls(self):
-        test_encounter = Encounter(self.test_data)
-        assert 0 == get_average_roll_value(test_encounter)
+        test_encounter = Encounter(self.test_data_no_rolls)
+        assert 0 == get_mean_roll_value(test_encounter)
