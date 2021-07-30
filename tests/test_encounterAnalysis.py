@@ -90,15 +90,23 @@ class Test_get_item_most_and_least_rolls_Unit:
     def test_get_item_most_and_least_rolls_no_tie(self):
         test_encounter = Encounter(self.test_data_no_tie)
         item_names = [item.name for item in test_encounter.items]
-        assert (test_encounter.items[item_names.index("Resplendent Stick")],test_encounter.items[item_names.index("Resplendent Pot")]) == get_item_most_and_least_rolls(test_encounter)
+        itemResplendentStick = test_encounter.items[item_names.index("Resplendent Stick")]
+        itemResplendentPot = test_encounter.items[item_names.index("Resplendent Pot")]
+        assert (itemResplendentStick,itemResplendentPot) == get_item_most_and_least_rolls(test_encounter)
     def test_get_item_most_and_least_rolls_tie_most_and_least(self):
         test_encounter = Encounter(self.test_data_tie_most_and_least)
         assert (test_encounter.items, test_encounter.items) == get_item_most_and_least_rolls(test_encounter)
     def test_get_item_most_and_least_rolls_tie_most(self):
         test_encounter = Encounter(self.test_data_tie_most)
         item_names = [item.name for item in test_encounter.items]
-        assert ([test_encounter.items[item_names.index("Kugane Stick")],test_encounter.items[item_names.index("Kugane Pot")]], test_encounter.items[item_names.index("Meaty Pot")]) == get_item_most_and_least_rolls(test_encounter)
+        itemKuganeStick =  test_encounter.items[item_names.index("Kugane Stick")]
+        itemKuganePot = test_encounter.items[item_names.index("Kugane Pot")]
+        itemMeatyPot = test_encounter.items[item_names.index("Meaty Pot")]
+        assert ([itemKuganeStick,itemKuganePot], itemMeatyPot) == get_item_most_and_least_rolls(test_encounter)
     def test_get_item_most_and_least_rolls_tie_least(self):
         test_encounter = Encounter(self.test_data_tie_least)
         item_names = [item.name for item in test_encounter.items]
-        assert (test_encounter.items[item_names.index("Kugane Stick")], [test_encounter.items[item_names.index("Tataru's Pot")],test_encounter.items[item_names.index("Meaty Pot")]]) == get_item_most_and_least_rolls(test_encounter)
+        itemKuganeStick = test_encounter.items[item_names.index("Kugane Stick")]
+        itemTatarusPot = test_encounter.items[item_names.index("Tataru's Pot")]
+        itemMeatyPot = test_encounter.items[item_names.index("Meaty Pot")]
+        assert (itemKuganeStick, [itemTatarusPot,itemMeatyPot]) == get_item_most_and_least_rolls(test_encounter)
