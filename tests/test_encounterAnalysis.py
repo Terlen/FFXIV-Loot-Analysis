@@ -212,8 +212,24 @@ class Test_get_winning_rolls:
         ['8-8-08', 'NeedLoot', 'Akiva Final', 'Resplendent Scissors', 92, 1], 
         ['8-8-08', 'ObtainLoot', 'Akiva Final', 'Resplendent Scissors', 92, 1]
         ]
+
+    test_data_no_winners = [
+        ['8-8-08', 'AddLoot', '', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'AddLoot', '', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', "Tataru's Sword", 0, 1], 
+        ['8-8-08', 'CastLoot', 'Karou Cookiepouch', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Hien Final', 'Resplendent Scissors', 0, 1], 
+        ['8-8-08', 'CastLoot', 'Akiva Final', 'Resplendent Scissors', 0, 1], 
+        ]
     
     def test_get_winning_rolls(self):
         test_encounter = Encounter(self.test_data)
         expected_winners = [roll for roll in test_encounter.rolls if roll.win]
+        assert expected_winners == get_winning_rolls(test_encounter)
+
+    def test_get_winning_rolls_no_winners(self):
+        test_encounter = Encounter(self.test_data_no_winners)
+        expected_winners = []
         assert expected_winners == get_winning_rolls(test_encounter)
