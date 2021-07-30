@@ -1,7 +1,7 @@
 from utils.encounter import Encounter, Item, Roll, Member
 from collections import Counter
 from typing import Union
-from statistics import mean, median
+from statistics import mean, median, multimode
 
 def get_most_and_least_rolls(encounterList: list) -> tuple[Union[list[Item],Item],Union[list[Item],Item]]:
     """Function to return the Member(s)/Item(s) with the most and fewest rolls"""
@@ -43,3 +43,10 @@ def get_median_roll_value(encounter: Encounter) -> Union[float, int]:
     else:
         return 0
     
+def get_mode_roll_value(encounter: Encounter) -> list[int]:
+    values = [roll.value for roll in encounter.rolls]
+    mode = multimode(values)
+    if len(mode) == len(values):
+        return []
+    else:
+        return mode

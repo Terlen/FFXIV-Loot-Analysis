@@ -1,4 +1,4 @@
-from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value, get_median_roll_value
+from utils.encounterAnalysis import get_most_and_least_rolls, get_winning_rolls, get_mean_roll_value, get_median_roll_value, get_mode_roll_value
 from utils.encounter import Encounter, Item, Member, Roll
 
 def get_instance_from_list_by_name(list, *args):
@@ -304,7 +304,7 @@ class Test_get_median_roll_value:
         test_encounter = Encounter(self.test_data_no_rolls)
         assert 0 == get_median_roll_value(test_encounter)
 
-class Test_get_mode_roll_values:
+class Test_get_mode_roll_value:
     test_data_no_mode = [
         ['8-8-08', 'AddLoot', '', 'Kugane Lance', 0, 3], 
         ['8-8-08', 'AddLoot', '', 'Rusty Stick', 0, 3], 
@@ -350,14 +350,14 @@ class Test_get_mode_roll_values:
         ['8-8-08', 'ObtainLoot', 'Akiva Chocobo', 'Rusty Stick', 94, 3]
         ]
 
-    def test_get_mode_roll_values_no_mode(self):
+    def test_get_mode_roll_value_no_mode(self):
         test_encounter = Encounter(self.test_data_no_mode)
-        assert [] == get_mode_roll_values(test_encounter)
+        assert [] == get_mode_roll_value(test_encounter)
     
-    def test_get_mode_roll_values_one_mode(self):
+    def test_get_mode_roll_value_one_mode(self):
         test_encounter = Encounter(self.test_data_one_mode)
-        assert [94] == get_mode_roll_values(test_encounter)
+        assert [94] == get_mode_roll_value(test_encounter)
     
-    def test_get_mode_roll_values_multi_mode(self):
+    def test_get_mode_roll_value_multi_mode(self):
         test_encounter = Encounter(self.test_data_multi_mode)
-        assert 61,94 in get_mode_roll_values(test_encounter)
+        assert 61,94 in get_mode_roll_value(test_encounter)
