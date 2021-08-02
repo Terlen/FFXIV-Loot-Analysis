@@ -30,7 +30,7 @@ def get_winning_rolls(encounter: Encounter):
         return winners
 
 def get_mean_roll_value(encounter: Encounter) -> Union[float,int]:
-    values = [roll.value for roll in encounter.rolls]
+    values = [int(roll.value) for roll in encounter.rolls]
     if len(values) > 0:
         return mean(values)
     else:
@@ -69,7 +69,8 @@ def get_most_and_least_lost_rolls(encounter: Encounter) -> Tuple[Union[Tuple[Mem
     elif len(winnerCounts) == 0:
         return [],[]
     
-
+def get_lowest_roller(encounter: Encounter) -> Tuple[Member, float]:
+    pass
 
     
 
