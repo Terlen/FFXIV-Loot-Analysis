@@ -3,6 +3,64 @@ from typing import Iterable, TextIO
 from collections import Counter
 from utils.encounter import Encounter
 
+specialUnicodeChar = u'\ue0bb'
+stringList = ["added to the loot list","casts his lot","casts her lot","cast your lot","You roll Greed","You roll Need","rolls Greed","rolls Need", "obtains", "You obtain"]
+
+def logLineFilter(lines: list) -> list:
+    filteredLog = []
+    for line in lines:
+        if any(substring in line for substring in stringList):
+            filteredLog.append(line)
+    return filteredLog
+
+def findCapitalLetters(string):
+    return [index for index, character in enumerate(string) if character.isupper()]
+
+def cleanItemName(line, lineFormat):
+    if lineFormat == "AddLoot":
+        startIndexofItemName = line.find(specialUnicodeChar)
+        endIndexofItemName =line.find(" has")
+        substring = line[startIndexofItemName+1:endIndexofItemName]
+        firstCapitalIndex = findCapitalLetters(substring)[0]
+        return substring[firstCapitalIndex:]
+    if lineFormat == 'CastLoot':
+        startIndexofItemName = line.find(specialUnicodeChar)
+        endIndexofItemName = line.find(".")
+        substring = line[startIndexofItemName+1: endIndexofItemName]
+        firstCapitalIndex = findCapitalLetters(substring)[0]
+        return substring[firstCapitalIndex:]
+
+def getCharacterName(line, lineFormat):
+    if lineFormat == "CastLoot":
+        words = line.split(" ")
+        return words[0] + " " + words[1]
+
+
+def stringsToCSV(lines: list, logger: str) -> list:
+    for line in lines:
+        if stringList[0] in line:
+            lineType = "AddLoot"
+            print(["0:0:0", lineType, "", cleanItemName(line, lineType), 1, 0])
+        if stringList[1] in line or stringList[2] in line:
+            lineType = "CastLoot"
+            print(["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), 1, 0])
+        if stringList[3] in line:
+            lineType = "CastLoot"
+            print(["0:0:0", lineType, logger, cleanItemName(line, lineType), 1, 0])
+
+
+
+
+
+def textParser(file: TextIO, logger: str) -> list:
+    data = []
+    with open(file, encoding= "utf-8",newline='') as source:
+        lines = [line for line in source]
+        filteredLines = logLineFilter(lines)
+        stringsToCSV(filteredLines, logger)
+
+
+
 def dataRead(file: TextIO) -> list:
     with open(file, newline='') as source:
         reader = csv.reader(source)
