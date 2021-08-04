@@ -80,25 +80,26 @@ class Test_textParser_Unit:
     testfile = "testChatLog.txt"
 
     expected_output = [
-        ['0:0:0', 'AddLoot', '', 'Axe of Crags', 1, 0],
-        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'Axe of Crags', 1, 0],
-        ['0:0:0', 'CastLoot', 'Luwu Xp', 'Axe of Crags', 1, 0],
-        ['0:0:0', 'CastLoot', 'Your Character', 'Axe of Crags', 1, 0],
-        ['0:0:0', 'GreedLoot', 'Your Character', 'Axe of Crags', 1, 33],
-        ['0:0:0', 'GreedLoot', 'Ares Asterlight', 'Axe of Crags', 1, 25],
-        ['0:0:0', 'GreedLoot', 'Luwu Xp', 'Axe of Crags', 1, 78],
-        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Axe of Crags', 1, 0],
-        ['0:0:0', 'AddLoot', '', 'Culverin of Crags', 1, 0],
-        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'Culverin of Crags', 1, 0],
-        ['0:0:0', 'CastLoot', 'Luwu Xp', 'Culverin of Crags', 1, 0],
-        ['0:0:0', 'CastLoot', 'Your Character', 'Culverin of Crags', 1, 0],
-        ['0:0:0', 'NeedLoot', 'Luwu Xp', 'Culverin of Crags', 1, 43],
-        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Culverin of Crags', 1, 0],
-        ['0:0:0', 'AddLoot', '', 'Dark Divinity brok', 1, 0],
-        ['0:0:0', 'CastLoot', 'Your Character', 'Dark Divinity brok', 1, 0],
-        ['0:0:0', 'CastLoot', 'Akiva Cookiepouch', 'Dark Divinity brok', 1, 0],
-        ['0:0:0', 'GreedLoot', 'Your Character', 'Dark Divinity brok', 1, 49],
-        ['0:0:0', 'ObtainLoot', 'Your Character', 'Dark Divinity brok', 1, 0]
+        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'Allagan tomestones of poetics', '12', '0'],
+        ['0:0:0', 'AddLoot', '', 'Axe of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'Axe of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Luwu Xp', 'Axe of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Axe of Crags', '1', '0'],
+        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'Axe of Crags', '1', '33'],
+        ['0:0:0', 'GreedLoot', 'Ares Asterlight', 'Axe of Crags', '1', '25'],
+        ['0:0:0', 'GreedLoot', 'Luwu Xp', 'Axe of Crags', '1', '78'],
+        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Axe of Crags', '1', '0'],
+        ['0:0:0', 'AddLoot', '', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Luwu Xp', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'NeedLoot', 'Luwu Xp', 'Culverin of Crags', '1', '43'],
+        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'AddLoot', '', 'Dark Divinity brok', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Dark Divinity brok', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Akiva Cookiepouch', 'Dark Divinity brok', '1', '0'],
+        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'Dark Divinity brok', '1', '49'],
+        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'Dark Divinity brok', '1', '0']
     ]
 
     def test_textParser(self):
