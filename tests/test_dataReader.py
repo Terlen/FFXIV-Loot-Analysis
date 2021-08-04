@@ -102,4 +102,4 @@ class Test_textParser_Unit:
     ]
 
     def test_textParser(self):
-        assert utils.dataReader.textParser(self.testfile) == self.expected_output
+        assert utils.dataReader.textParser(self.testfile, "Karou Cookiepouch") == self.expected_output
