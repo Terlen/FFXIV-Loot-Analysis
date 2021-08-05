@@ -33,10 +33,6 @@ def cleanItemName(line, lineFormat):
         else:
             endIndexofItemName = -1
             substring = line[startIndexofItemName+1: endIndexofItemName]
-            #firstCapitalIndex = findCapitalLetters(substring)[0]
-            # return substring[firstCapitalIndex:]
-            print(type(substring))
-            print(substring)
             return substring
     elif lineFormat == "GreedLoot" or lineFormat == "NeedLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
@@ -44,9 +40,6 @@ def cleanItemName(line, lineFormat):
         endIndexofItemName = len(line) - 1 - reversedString.find(".")
 
         substring = line[startIndexofItemName+1: endIndexofItemName]
-        # firstCapitalIndex = findCapitalLetters(substring)[0]
-        # return substring[firstCapitalIndex:]
-        print(substring)
         return substring
 
 def getItemQuantity(line):
@@ -91,10 +84,8 @@ def stringsToCSV(lines: list, logger: str, data : list) -> list:
             lineType = "CastLoot"
             itemName = cleanItemName(line, lineType)
             if itemName in items:
-                print(itemName + " is already in items!")
                 formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
             elif itemName not in items:
-                print(itemName + " is not in items!")
                 addLoot(data, itemName, index)
                 formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
                 items.append(itemName)
