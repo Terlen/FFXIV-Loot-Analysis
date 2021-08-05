@@ -3,7 +3,7 @@ from typing import Iterable, TextIO
 from collections import Counter
 from utils.encounter import Encounter
 
-specialUnicodeChar = u'\ue0bb'
+specialUnicodeChar = u"\ue0bb"
 stringList = ["added to the loot list","casts his lot","casts her lot","cast your lot","You roll Greed","You roll Need","rolls Greed","rolls Need", "obtains", "You obtain"]
 
 def logLineFilter(lines: list) -> list:
@@ -17,14 +17,13 @@ def findCapitalLetters(string):
     return [index for index, character in enumerate(string) if character.isupper()]
 
 def cleanItemName(line, lineFormat):
-    print(line)
     if lineFormat == "AddLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         endIndexofItemName =line.find(" has")
         substring = line[startIndexofItemName+1:endIndexofItemName]
         firstCapitalIndex = findCapitalLetters(substring)[0]
         return substring[firstCapitalIndex:]
-    elif lineFormat == 'CastLoot' or lineFormat == "ObtainLoot":
+    elif lineFormat == "CastLoot" or lineFormat == "ObtainLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         if startIndexofItemName == -1:
             itemCapitalIndex = findCapitalLetters(line)[1]
@@ -34,9 +33,10 @@ def cleanItemName(line, lineFormat):
         else:
             endIndexofItemName = -1
             substring = line[startIndexofItemName+1: endIndexofItemName]
-            print(substring)
             #firstCapitalIndex = findCapitalLetters(substring)[0]
             # return substring[firstCapitalIndex:]
+            print(type(substring))
+            print(substring)
             return substring
     elif lineFormat == "GreedLoot" or lineFormat == "NeedLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
@@ -46,6 +46,7 @@ def cleanItemName(line, lineFormat):
         substring = line[startIndexofItemName+1: endIndexofItemName]
         # firstCapitalIndex = findCapitalLetters(substring)[0]
         # return substring[firstCapitalIndex:]
+        print(substring)
         return substring
 
 def getItemQuantity(line):
@@ -55,7 +56,7 @@ def getItemQuantity(line):
         words = substring.split(' ')
         return words[-1]
     else:
-        return '1'
+        return "1"
 
 
 def getRollValue(line):
@@ -64,65 +65,74 @@ def getRollValue(line):
 
 
 def getCharacterName(line, lineFormat):
-    if line.find(']') == -1:
+    if line.find("]") == -1:
         words = line.split(" ")
         return words[0] + " " + words[1]
     else:
-        noTimestamp = line[line.find(']')+1:]
+        noTimestamp = line[line.find("]")+1:]
         words = noTimestamp.split(" ")
         return words[0] + " " + words[1]
 
 def addLoot(data, itemName, index):
     lineType = "AddLoot"
-    formattedLine = ["0:0:0", lineType, "", itemName, '1', '0']
+    formattedLine = ["0:0:0", lineType, "", itemName, "1", "0"]
     data.insert(len(data), formattedLine)
 
 
-def stringsToCSV(lines: list, logger: str, data : list, items:list) -> list:
-
+def stringsToCSV(lines: list, logger: str, data : list) -> list:
+    items = []
     for index,line in enumerate(lines):
         if stringList[0] in line:
             lineType = "AddLoot"
             itemName = cleanItemName(line, lineType)
-            formattedLine = ["0:0:0", lineType, "", itemName, '1', '0']
+            formattedLine = ["0:0:0", lineType, "", itemName, "1", "0"]
             items.append(itemName)
         elif stringList[1] in line or stringList[2] in line:
             lineType = "CastLoot"
             itemName = cleanItemName(line, lineType)
             if itemName in items:
-                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, '1', '0']
+                print(itemName + " is already in items!")
+                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
             elif itemName not in items:
+                print(itemName + " is not in items!")
                 addLoot(data, itemName, index)
-                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, '1', '0']
+                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
                 items.append(itemName)
                 
         elif stringList[3] in line:
             lineType = "CastLoot"
             itemName = cleanItemName(line, lineType)
             if itemName in items:
-                formattedLine = ["0:0:0", lineType, logger, itemName, '1', '0']
+                formattedLine = ["0:0:0", lineType, logger, itemName, "1", "0"]
             elif itemName not in items:
                 addLoot(data, itemName, index)
-                formattedLine = ["0:0:0", lineType, logger, itemName, '1', '0']
+                formattedLine = ["0:0:0", lineType, logger, itemName, "1", "0"]
                 items.append(itemName)
         elif stringList[4] in line:
             lineType = "GreedLoot"
-            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), '1', getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), "1", getRollValue(line)]
         elif stringList[5] in line:
             lineType = "NeedLoot"
-            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), '1', getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), "1", getRollValue(line)]
         elif stringList[6] in line:
             lineType = "GreedLoot"
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), '1', getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), "1", getRollValue(line)]
         elif stringList[7] in line:
             lineType = "NeedLoot"
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), '1', getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), "1", getRollValue(line)]
         elif stringList[8] in line:
             lineType = "ObtainLoot"
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), '1', '0']
+            itemName = cleanItemName(line, lineType)
+            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
+            if itemName in items:
+                items.remove(itemName)
+
         elif stringList[9] in line:
             lineType = "ObtainLoot"
-            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), getItemQuantity(line), '0']
+            itemName = cleanItemName(line, lineType)
+            formattedLine = ["0:0:0", lineType, logger, itemName, getItemQuantity(line), "0"]
+            if itemName in items:
+                items.remove(itemName)
         yield formattedLine
 
 
@@ -133,8 +143,7 @@ def textParser(file: TextIO, logger: str) -> list:
     with open(file, encoding= "utf-8",newline='') as source:
         lines = [line for line in source]
         filteredLines = logLineFilter(lines)
-        items = []
-        for line in stringsToCSV(filteredLines, logger, data,items):
+        for line in stringsToCSV(filteredLines, logger, data):
             data.append(line)
     return data
 
