@@ -73,14 +73,14 @@ def getCharacterName(line, lineFormat):
         words = noTimestamp.split(" ")
         return words[0] + " " + words[1]
 
-def addLoot(data, itemName):
+def addLoot(data, itemName, index):
     lineType = "AddLoot"
     formattedLine = ["0:0:0", lineType, "", itemName, '1', '0']
-    data.append(formattedLine)
+    data.insert(len(data), formattedLine)
 
 
-def stringsToCSV(lines: list, logger: str, data : list) -> list:
-    items = []
+def stringsToCSV(lines: list, logger: str, data : list, items:list) -> list:
+
     for index,line in enumerate(lines):
         if stringList[0] in line:
             lineType = "AddLoot"
@@ -93,12 +93,19 @@ def stringsToCSV(lines: list, logger: str, data : list) -> list:
             if itemName in items:
                 formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, '1', '0']
             elif itemName not in items:
-                addLoot(data, itemName)
+                addLoot(data, itemName, index)
                 formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, '1', '0']
+                items.append(itemName)
                 
         elif stringList[3] in line:
             lineType = "CastLoot"
-            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), '1', '0']
+            itemName = cleanItemName(line, lineType)
+            if itemName in items:
+                formattedLine = ["0:0:0", lineType, logger, itemName, '1', '0']
+            elif itemName not in items:
+                addLoot(data, itemName, index)
+                formattedLine = ["0:0:0", lineType, logger, itemName, '1', '0']
+                items.append(itemName)
         elif stringList[4] in line:
             lineType = "GreedLoot"
             formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), '1', getRollValue(line)]
@@ -127,7 +134,8 @@ def textParser(file: TextIO, logger: str) -> list:
     with open(file, encoding= "utf-8",newline='') as source:
         lines = [line for line in source]
         filteredLines = logLineFilter(lines)
-        for line in stringsToCSV(filteredLines, logger, data):
+        items = []
+        for line in stringsToCSV(filteredLines, logger, data,items):
             data.append(line)
     return data
 
