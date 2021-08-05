@@ -10,7 +10,7 @@ def logLineFilter(lines: list) -> list:
     filteredLog = []
     for line in lines:
         if any(substring in line for substring in stringList):
-            filteredLog.append(line)
+            filteredLog.append(line.rstrip())
     return filteredLog
 
 def findCapitalLetters(string):
@@ -26,14 +26,13 @@ def cleanItemName(line, lineFormat):
         return substring[firstCapitalIndex:]
     elif lineFormat == 'CastLoot' or lineFormat == "ObtainLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
-        print(startIndexofItemName)
         if startIndexofItemName == -1:
             itemCapitalIndex = findCapitalLetters(line)[1]
             endIndexofItemName = -1
             substring = line[itemCapitalIndex: endIndexofItemName]
             return substring
         else:
-            endIndexofItemName = -2
+            endIndexofItemName = -1
             substring = line[startIndexofItemName+1: endIndexofItemName]
             print(substring)
             #firstCapitalIndex = findCapitalLetters(substring)[0]
