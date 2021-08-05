@@ -17,6 +17,7 @@ def findCapitalLetters(string):
     return [index for index, character in enumerate(string) if character.isupper()]
 
 def cleanItemName(line, lineFormat):
+    print(line)
     if lineFormat == "AddLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         endIndexofItemName =line.find(" has")
@@ -25,21 +26,28 @@ def cleanItemName(line, lineFormat):
         return substring[firstCapitalIndex:]
     elif lineFormat == 'CastLoot' or lineFormat == "ObtainLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
+        print(startIndexofItemName)
         if startIndexofItemName == -1:
             itemCapitalIndex = findCapitalLetters(line)[1]
-            endIndexofItemName = line.find(".")
+            endIndexofItemName = -1
             substring = line[itemCapitalIndex: endIndexofItemName]
             return substring
-        endIndexofItemName = line.find(".")
-        substring = line[startIndexofItemName+1: endIndexofItemName]
-        firstCapitalIndex = findCapitalLetters(substring)[0]
-        return substring[firstCapitalIndex:]
+        else:
+            endIndexofItemName = -2
+            substring = line[startIndexofItemName+1: endIndexofItemName]
+            print(substring)
+            #firstCapitalIndex = findCapitalLetters(substring)[0]
+            # return substring[firstCapitalIndex:]
+            return substring
     elif lineFormat == "GreedLoot" or lineFormat == "NeedLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
-        endIndexofItemName = line.find(".")
+        reversedString = line[::-1]
+        endIndexofItemName = len(line) - 1 - reversedString.find(".")
+
         substring = line[startIndexofItemName+1: endIndexofItemName]
-        firstCapitalIndex = findCapitalLetters(substring)[0]
-        return substring[firstCapitalIndex:]
+        # firstCapitalIndex = findCapitalLetters(substring)[0]
+        # return substring[firstCapitalIndex:]
+        return substring
 
 def getItemQuantity(line):
     if line.find(specialUnicodeChar) == -1:
@@ -57,18 +65,37 @@ def getRollValue(line):
 
 
 def getCharacterName(line, lineFormat):
-    words = line.split(" ")
-    return words[0] + " " + words[1]
+    if line.find(']') == -1:
+        words = line.split(" ")
+        return words[0] + " " + words[1]
+    else:
+        noTimestamp = line[line.find(']')+1:]
+        words = noTimestamp.split(" ")
+        return words[0] + " " + words[1]
+
+def addLoot(data, itemName):
+    lineType = "AddLoot"
+    formattedLine = ["0:0:0", lineType, "", itemName, '1', '0']
+    data.append(formattedLine)
 
 
-def stringsToCSV(lines: list, logger: str) -> list:
-    for line in lines:
+def stringsToCSV(lines: list, logger: str, data : list) -> list:
+    items = []
+    for index,line in enumerate(lines):
         if stringList[0] in line:
             lineType = "AddLoot"
-            formattedLine = ["0:0:0", lineType, "", cleanItemName(line, lineType), '1', '0']
+            itemName = cleanItemName(line, lineType)
+            formattedLine = ["0:0:0", lineType, "", itemName, '1', '0']
+            items.append(itemName)
         elif stringList[1] in line or stringList[2] in line:
             lineType = "CastLoot"
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), '1', '0']
+            itemName = cleanItemName(line, lineType)
+            if itemName in items:
+                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, '1', '0']
+            elif itemName not in items:
+                addLoot(data, itemName)
+                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, '1', '0']
+                
         elif stringList[3] in line:
             lineType = "CastLoot"
             formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), '1', '0']
@@ -100,7 +127,7 @@ def textParser(file: TextIO, logger: str) -> list:
     with open(file, encoding= "utf-8",newline='') as source:
         lines = [line for line in source]
         filteredLines = logLineFilter(lines)
-        for line in stringsToCSV(filteredLines, logger):
+        for line in stringsToCSV(filteredLines, logger, data):
             data.append(line)
     return data
 
