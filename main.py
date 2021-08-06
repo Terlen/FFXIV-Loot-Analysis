@@ -5,8 +5,8 @@ import utils.encounterAnalysis as analysis
 from collections import Counter
 from statistics import mean, median, multimode
 
-data = reader.dataRead("b.csv")
-encounters = reader.encounterSplitter(data)
+data = reader.textParser("hades.txt", "Kame Ha")
+encounters = reader.encounterSplitter(data, "Kame Ha")
 encounters = [encounter for encounter in encounters]
 
 members = []
@@ -64,8 +64,12 @@ memberNeedWinRatios = {}
 for member in members:
     memberAttempts = [roll for roll in needrolls if roll.member.name == member]
     memberWins = [roll for roll in needrolls if roll.member.name == member and roll.win]
-    winRatio = len(memberWins) / len(memberAttempts)
-    memberNeedWinRatios[member] = (len(memberWins),len(memberAttempts),winRatio)
+    try:
+        winRatio = len(memberWins) / len(memberAttempts)
+        memberNeedWinRatios[member] = (len(memberWins),len(memberAttempts),winRatio)
+    except ZeroDivisionError:
+        continue
+    
 
 ratios = [item[2] for item in memberNeedWinRatios.values()]
 maxRatio = max(ratios)
