@@ -135,7 +135,9 @@ def textParser(file: TextIO, logger: str) -> list:
         lines = [line for line in source]
         filteredLines = logLineFilter(lines)
         for line in stringsToCSV(filteredLines, logger, data):
-            data.append(line)
+            # print(line)
+            swapItemandQuantity = [line[0],line[1],line[2],line[3],line[5],line[4]] 
+            data.append(swapItemandQuantity)
     return data
 
 
@@ -152,14 +154,16 @@ def dataPrint(data: Iterable) -> None:
             if item == '':
                 row[index] = 'None'
                 
-        print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}Quantity:{row[5]:25}')
+        # print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}Quantity:{row[5]:25}')
 
-def encounterSplitter(data: Iterable) -> list:
+def encounterSplitter(data: Iterable, logger) -> list:
     output = []
     newEncounter = True
     for row in data:
-        if (newEncounter and row[1] == "ObtainLoot" and row[2] == "Your Character"):
+        # print(row)
+        if (newEncounter and row[1] == "ObtainLoot" and row[2] == logger):
             newEncounter = False
+            # print("NEW ENCOUNTER")
             encounterData = []
             encounterData.append(row)
             addedLoot = list()
@@ -179,14 +183,33 @@ def encounterSplitter(data: Iterable) -> list:
             addedLoot.append(row[3])
             encounterData.append(row)
         elif (not newEncounter and row[1] == "ObtainLoot" and len(addedLoot) > 0):
-            obtainedLoot.append(row[3])
-            encounterData.append(row)
-            if len(Counter(addedLoot) - Counter(obtainedLoot)) == 0:
-                newEncounter = True
-                output.append(Encounter(encounterData))
-        elif (not newEncounter):
+            # Catch possibility where logger leaves instance prematurely before loot is handed out
+            if (row[2] == logger and (row[3] not in addedLoot and len(addedLoot) > 0)):
+                newEncounter = False
+                # print("NEW ENCOUNTER")
+                encounterData = []
+                encounterData.append(row)
+                addedLoot = list()
+                # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
+                obtainedLoot = list()
+                continue
+            else:
+                obtainedLoot.append(row[3])
+                # print(addedLoot, obtainedLoot)
+                encounterData.append(row)
+                if len(Counter(addedLoot) - Counter(obtainedLoot)) == 0:
+                    newEncounter = True
+                    output.append(Encounter(encounterData))
+        
+        # elif (not newEncounter and row[1] == "ObtainLoot" and ):
+            
+
+        elif (not newEncounter and (row[1] == "NeedLoot" or row[1] == "GreedLoot" or row[1] == "CastLoot")):
+            # print("GREED OR NEED",row)
             encounterData.append(row)
         else:
+            # print("CONTINUING")
+            # print(row)
             continue
         
     return output
