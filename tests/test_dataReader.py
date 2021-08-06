@@ -75,3 +75,32 @@ class Test_encounterSplit_Unit:
         result = utils.dataReader.encounterSplitter(self.test_randomizedData)
         assert len(result) == 1
         assert isinstance(result[0], Encounter)
+
+class Test_textParser_Unit:
+    testfile = "testChatLog.txt"
+
+    expected_output = [
+        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'Allagan tomestones of poetics', '12', '0'],
+        ['0:0:0', 'AddLoot', '', 'the Axe of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'the Axe of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Luwu Xp', 'the Axe of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'the Axe of Crags', '1', '0'],
+        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'the Axe of Crags', '1', '33'],
+        ['0:0:0', 'GreedLoot', 'Ares Asterlight', 'the Axe of Crags', '1', '25'],
+        ['0:0:0', 'GreedLoot', 'Luwu Xp', 'the Axe of Crags', '1', '78'],
+        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'the Axe of Crags', '1', '0'],
+        ['0:0:0', 'AddLoot', '', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Luwu Xp', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'NeedLoot', 'Luwu Xp', 'Culverin of Crags', '1', '43'],
+        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Culverin of Crags', '1', '0'],
+        ['0:0:0', 'AddLoot', '', 'pair of Dark Divinity brok', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '1', '0'],
+        ['0:0:0', 'CastLoot', 'Akiva Cookiepouch', 'pair of Dark Divinity brok', '1', '0'],
+        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '1', '49'],
+        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '1', '0']
+    ]
+
+    def test_textParser(self):
+        assert utils.dataReader.textParser(self.testfile, "Karou Cookiepouch") == self.expected_output

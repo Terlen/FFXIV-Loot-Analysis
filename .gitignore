@@ -6,3 +6,4 @@ docs
 !K.csv
 *.pyc
 .vscode
+testScript.py
