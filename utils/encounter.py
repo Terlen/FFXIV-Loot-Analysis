@@ -57,7 +57,7 @@ class Encounter:
     def add_item(self, name, quantity):
         item = Item(name,quantity)
         if item not in self.items:
-            self.items.append(Item(name, quantity))
+            self.items.append(item)
 
     def set_item(self, data):
         for row in data:
@@ -74,7 +74,6 @@ class Encounter:
     def add_roll(self, rollType, member, value, item):
         roll = Roll(rollType,member,value,item)
         self.rolls.append(roll)
-        #print(item.name)
         item.rolls.append(roll)
         member.rolls.append(roll)
 
