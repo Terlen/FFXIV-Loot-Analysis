@@ -56,7 +56,7 @@ class Encounter:
 
     def add_item(self, name, quantity):
         item = Item(name,quantity)
-        print(item.name)
+        # print(item.name)
         if item not in self.items:
             self.items.append(item)
 
