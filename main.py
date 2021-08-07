@@ -6,8 +6,8 @@ from collections import Counter
 from statistics import mean, median, multimode
 
 # TODO #9 Remove hardcoded input file and logger name and replace with argparse?
-data = reader.textParser("hades.txt", "Kame Ha")
-encounters = reader.encounterSplitter(data, "Kame Ha")
+data = reader.textParser("maps.txt", "Akiva Cookiepouch")
+encounters = reader.encounterSplitter(data, "Akiva Cookiepouch")
 encounters = [encounter for encounter in encounters]
 
 members = []
