@@ -17,6 +17,7 @@ def findCapitalLetters(string):
     return [index for index, character in enumerate(string) if character.isupper()]
 
 def cleanItemName(line, lineFormat):
+    print(line)
     if lineFormat == "AddLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         endIndexofItemName =line.find(" has")
@@ -26,10 +27,32 @@ def cleanItemName(line, lineFormat):
     elif lineFormat == "CastLoot" or lineFormat == "ObtainLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         if startIndexofItemName == -1:
-            itemCapitalIndex = findCapitalLetters(line)[1]
-            endIndexofItemName = -1
-            substring = line[itemCapitalIndex: endIndexofItemName]
-            return substring
+            itemCapitalIndex = findCapitalLetters(line)
+            print(itemCapitalIndex)
+            # Handle case where item has no captial letters (gil, crafting materials)
+            if itemCapitalIndex == [7]:
+                reversedLine = line[::-1]
+                indexOfObtain = reversedLine.find("niatbo")
+                reversedSlice = reversedLine[:indexOfObtain]
+                if reversedSlice[-1] == ' ':
+                    indexOfItem = indexOfObtain -1
+                    substring = line[len(line)-indexOfItem:]
+                    if len(substring.split(' ')) == 2:
+                        return substring.split(' ')[1]
+                    else:
+                        return substring
+                elif reversedSlice[-1] == 's':
+                    indexOfItem = indexOfObtain -2
+                    substring = line[len(line)-indexOfItem:]
+                    if len(substring.split(' ')) == 2:
+                        return substring.split(' ')[1]
+                    else:
+                        return substring
+            else:
+                itemCapitalIndex = itemCapitalIndex[1]
+                endIndexofItemName = -1
+                substring = line[itemCapitalIndex: endIndexofItemName]
+                return substring
         else:
             endIndexofItemName = -1
             substring = line[startIndexofItemName+1: endIndexofItemName]
@@ -44,10 +67,14 @@ def cleanItemName(line, lineFormat):
 
 def getItemQuantity(line):
     if line.find(specialUnicodeChar) == -1:
-        itemCapitalIndex = findCapitalLetters(line)[1]
-        substring = line[:itemCapitalIndex-1]
-        words = substring.split(' ')
-        return words[-1]
+        itemCapitalIndex = findCapitalLetters(line)
+        if itemCapitalIndex == [7]:
+            words = line.split(' ')
+            return words[-2]
+        else:
+            substring = line[:itemCapitalIndex[1]-1]
+            words = substring.split(' ')
+            return words[-1]
     else:
         return "1"
 
@@ -160,27 +187,32 @@ def encounterSplitter(data: Iterable, logger) -> list:
     output = []
     newEncounter = True
     for row in data:
-        # print(row)
+        print(row)
         if (newEncounter and row[1] == "ObtainLoot" and row[2] == logger):
             newEncounter = False
-            # print("NEW ENCOUNTER")
+            print("NEW ENCOUNTER")
             encounterData = []
             encounterData.append(row)
             addedLoot = list()
+            castLoot = list()
             # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
-            obtainedLoot = list()
+            obtainedRolledLoot = list()
             continue
         elif (newEncounter and row[1] == "AddLoot" and row[2] == ''):
             newEncounter = False
             encounterData = []
             encounterData.append(row)
             addedLoot = list()
+            castLoot = list()
             addedLoot.append(row[3])
-            obtainedLoot = list()
+            obtainedRolledLoot = list()
             continue
 
         if (not newEncounter and row[1] == "AddLoot" and row[2] == ''):
             addedLoot.append(row[3])
+            encounterData.append(row)
+        elif (not newEncounter and row[1] == "CastLoot"):
+            castLoot.append(row[3])
             encounterData.append(row)
         elif (not newEncounter and row[1] == "ObtainLoot" and len(addedLoot) > 0):
             # Catch possibility where logger leaves instance prematurely before loot is handed out
@@ -191,13 +223,14 @@ def encounterSplitter(data: Iterable, logger) -> list:
                 encounterData.append(row)
                 addedLoot = list()
                 # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
-                obtainedLoot = list()
+                obtainedRolledLoot = list()
                 continue
             else:
-                obtainedLoot.append(row[3])
+                obtainedRolledLoot.append(row[3])
                 # print(addedLoot, obtainedLoot)
                 encounterData.append(row)
-                if len(Counter(addedLoot) - Counter(obtainedLoot)) == 0:
+                if len(Counter(addedLoot) - Counter(obtainedRolledLoot)) <= 0:
+                    print(addedLoot,obtainedRolledLoot)
                     newEncounter = True
                     output.append(Encounter(encounterData))
         
