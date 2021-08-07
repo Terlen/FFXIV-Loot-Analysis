@@ -489,7 +489,7 @@ class Test_get_lowest_roller:
         ['8-8-08', 'ObtainLoot', 'Hien Cookiepouch', 'Meaty Scissors', 57, 1]
         ]
 
-    def test_get_lowest_roller_no_tie(self):
-        test_encounter = Encounter(self.test_data_no_tie)
-        member = get_instance_from_list_by_name(test_encounter.members, "Hien Final")
-        assert (member, (80+6+20)/3) == get_lowest_roller(test_encounter)
+    # def test_get_lowest_roller_no_tie(self):
+    #     test_encounter = Encounter(self.test_data_no_tie)
+    #     member = get_instance_from_list_by_name(test_encounter.members, "Hien Final")
+    #     assert (member, (80+6+20)/3) == get_lowest_roller(test_encounter)
