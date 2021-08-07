@@ -56,6 +56,7 @@ class Encounter:
 
     def add_item(self, name, quantity):
         item = Item(name,quantity)
+        print(item.name)
         if item not in self.items:
             self.items.append(item)
 
@@ -81,6 +82,9 @@ class Encounter:
         for row in data:
             action = row[1]
             if action == "GreedLoot" or action == "NeedLoot":
+                # print(row[3])
+                # print([item.name for item in self.items])
+                # print(self.get_item(row[3]))
                 self.add_roll(action, self.get_member(row[2]), row[4],self.get_item(row[3]))
 
     def get_member(self, name):
