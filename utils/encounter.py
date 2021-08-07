@@ -56,7 +56,7 @@ class Encounter:
         return self.members
 
     def add_item(self, name, quantity, member=None):
-        quantity = quantity.translate({ord(char): None for char in ','})
+        quantity = str(quantity).translate({ord(char): None for char in ','})
         item = Item(name,int(quantity))
         # print(item.name)
         if item not in self.items and member is None:
