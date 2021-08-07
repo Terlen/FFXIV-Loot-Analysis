@@ -28,6 +28,7 @@ class Member:
     def __init__(self, name):
         self.name = name
         self.rolls = []
+        self.loot = []
     def __hash__(self):
         return hash(self.name)
     def __eq__(self, other):
@@ -54,16 +55,25 @@ class Encounter:
                 self.add_member(row[2])
         return self.members
 
-    def add_item(self, name, quantity):
-        item = Item(name,quantity)
+    def add_item(self, name, quantity, member=None):
+        quantity = quantity.translate({ord(char): None for char in ','})
+        item = Item(name,int(quantity))
         # print(item.name)
-        if item not in self.items:
+        if item not in self.items and member is None:
             self.items.append(item)
+        if member is not None:
+            if item not in member.loot:
+                member.loot.append(item)
+            else:
+                index = member.loot.index(item)
+                member.loot[index].quantity += item.quantity
 
     def set_item(self, data):
         for row in data:
             if row[1] == "AddLoot":
                 self.add_item(row[3],row[5])
+            elif row[1] == "ObtainLoot" and row[3] not in [item.name for item in self.items]:
+                self.add_item(row[3], row[5], self.get_member(row[2]))
         return self.items
     
     def get_item(self, name):
