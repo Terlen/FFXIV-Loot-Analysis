@@ -17,7 +17,7 @@ def findCapitalLetters(string):
     return [index for index, character in enumerate(string) if character.isupper()]
 
 def cleanItemName(line, lineFormat):
-    print(line)
+    # print(line)
     if lineFormat == "AddLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         endIndexofItemName =line.find(" has")
@@ -66,8 +66,11 @@ def cleanItemName(line, lineFormat):
         return substring
 
 def getItemQuantity(line):
-    if line.find(specialUnicodeChar) == -1:
+    itemCharacterIndex = line.find(specialUnicodeChar)
+    if itemCharacterIndex == -1:
         itemCapitalIndex = findCapitalLetters(line)
+        # If the only capital letter present is the first non-timestamp character (*Y*ou), quantity is penultimate word
+        # EX: [18:06]You obtain 9,000 gil.
         if itemCapitalIndex == [7]:
             words = line.split(' ')
             return words[-2]
@@ -76,7 +79,14 @@ def getItemQuantity(line):
             words = substring.split(' ')
             return words[-1]
     else:
-        return "1"
+        substring = line[:itemCharacterIndex -1]
+        words = substring.split(' ')
+        # if words[-1] is a number, return it. If it's not a number, just return 1.
+        try:
+            b = int(words[-1])
+            return words[-1]
+        except ValueError:
+            return '1'
 
 
 def getRollValue(line):
@@ -141,7 +151,7 @@ def stringsToCSV(lines: list, logger: str, data : list) -> list:
         elif stringList[8] in line:
             lineType = "ObtainLoot"
             itemName = cleanItemName(line, lineType)
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
+            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, getItemQuantity(line), "0"]
             if itemName in items:
                 items.remove(itemName)
 
