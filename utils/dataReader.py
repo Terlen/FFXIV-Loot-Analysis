@@ -38,14 +38,14 @@ def cleanItemName(line, lineFormat):
                     indexOfItem = indexOfObtain -1
                     substring = line[len(line)-indexOfItem:]
                     if len(substring.split(' ')) == 2:
-                        return substring.split(' ')[1]
+                        return substring.split(' ')[1][:-1]
                     else:
                         return substring
                 elif reversedSlice[-1] == 's':
                     indexOfItem = indexOfObtain -2
                     substring = line[len(line)-indexOfItem:]
                     if len(substring.split(' ')) == 2:
-                        return substring.split(' ')[1]
+                        return substring.split(' ')[1][:-1]
                     else:
                         return substring
             else:
@@ -185,65 +185,72 @@ def dataPrint(data: Iterable) -> None:
 
 def encounterSplitter(data: Iterable, logger) -> list:
     output = []
-    newEncounter = True
-    for row in data:
-        print(row)
-        if (newEncounter and row[1] == "ObtainLoot" and row[2] == logger):
-            newEncounter = False
-            print("NEW ENCOUNTER")
-            encounterData = []
-            encounterData.append(row)
-            addedLoot = list()
-            castLoot = list()
-            # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
-            obtainedRolledLoot = list()
-            continue
-        elif (newEncounter and row[1] == "AddLoot" and row[2] == ''):
-            newEncounter = False
-            encounterData = []
-            encounterData.append(row)
-            addedLoot = list()
-            castLoot = list()
-            addedLoot.append(row[3])
-            obtainedRolledLoot = list()
-            continue
+    newEncounter = False
+    startIndex = 0
+    while True:
+        if startIndex >= len(data)-1:
+            break
+        else:
+            print(startIndex)
+            # pass
+        encounterData = []
+        addedLoot = list()
+        obtainedRolledLoot = list()
+        for row in data[startIndex:]:
+            print(startIndex,row)
+            # if (newEncounter and row[1] == "ObtainLoot" and row[2] == logger):
+            #     newEncounter = False
+            #     print("NEW ENCOUNTER")
+            #     encounterData = []
+            #     encounterData.append(row)
+            #     addedLoot = list()
+            #     castLoot = list()
+            #     # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
+            #     obtainedRolledLoot = list()
+            #     continue
+            
 
-        if (not newEncounter and row[1] == "AddLoot" and row[2] == ''):
-            addedLoot.append(row[3])
-            encounterData.append(row)
-        elif (not newEncounter and row[1] == "CastLoot"):
-            castLoot.append(row[3])
-            encounterData.append(row)
-        elif (not newEncounter and row[1] == "ObtainLoot" and len(addedLoot) > 0):
-            # Catch possibility where logger leaves instance prematurely before loot is handed out
-            if (row[2] == logger and (row[3] not in addedLoot and len(addedLoot) > 0)):
+            if (newEncounter):
                 newEncounter = False
-                # print("NEW ENCOUNTER")
                 encounterData = []
                 encounterData.append(row)
                 addedLoot = list()
-                # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
+                castLoot = list()
+                # addedLoot.append(row[3])
                 obtainedRolledLoot = list()
+                startIndex += 1
                 continue
-            else:
+
+            if (not newEncounter and row[1] == "AddLoot" and row[2] == ''):
+                addedLoot.append(row[3])
+                encounterData.append(row)
+            # elif (not newEncounter and row[1] == "CastLoot"):
+            #     castLoot.append(row[3])
+            #     encounterData.append(row)
+            elif (not newEncounter and row[1] == "ObtainLoot"):
+                # Catch possibility where logger leaves instance prematurely before loot is handed out
                 obtainedRolledLoot.append(row[3])
                 # print(addedLoot, obtainedLoot)
                 encounterData.append(row)
-                if len(Counter(addedLoot) - Counter(obtainedRolledLoot)) <= 0:
+                if len(addedLoot) > 0 and all(item in obtainedRolledLoot for item in addedLoot):
                     print(addedLoot,obtainedRolledLoot)
                     newEncounter = True
+                    print("NEW ENCOUNTER")
                     output.append(Encounter(encounterData))
-        
-        # elif (not newEncounter and row[1] == "ObtainLoot" and ):
+                    startIndex += 1
+                    break
             
+            # elif (not newEncounter and row[1] == "ObtainLoot" and ):
+                
 
-        elif (not newEncounter and (row[1] == "NeedLoot" or row[1] == "GreedLoot" or row[1] == "CastLoot")):
-            # print("GREED OR NEED",row)
-            encounterData.append(row)
-        else:
-            # print("CONTINUING")
-            # print(row)
-            continue
-        
+            elif (not newEncounter and (row[1] == "NeedLoot" or row[1] == "GreedLoot" or row[1] == "CastLoot")):
+                # print("GREED OR NEED",row)
+                encounterData.append(row)
+            else:
+                # print("CONTINUING")
+                # print(row)
+                continue
+            startIndex += 1
+            
     return output
 
