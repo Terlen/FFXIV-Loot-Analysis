@@ -95,7 +95,7 @@ def getCharacterName(line, lineFormat):
 
 def addLoot(data, itemName, index):
     lineType = "AddLoot"
-    formattedLine = ["0:0:0", lineType, "", itemName, "1", "0"]
+    formattedLine = ["0:0:0", lineType, "", itemName, "0", "1"]
     data.insert(len(data), formattedLine)
 
 
@@ -181,7 +181,7 @@ def dataPrint(data: Iterable) -> None:
             if item == '':
                 row[index] = 'None'
                 
-        # print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}Quantity:{row[5]:25}')
+        print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}Quantity:{row[5]:25}')
 
 def encounterSplitter(data: Iterable, logger) -> list:
     output = []
