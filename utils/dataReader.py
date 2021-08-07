@@ -1,6 +1,5 @@
 import csv
 from typing import Iterable, TextIO
-from collections import Counter
 from utils.encounter import Encounter
 
 specialUnicodeChar = u"\ue0bb"
@@ -231,17 +230,26 @@ def encounterSplitter(data: Iterable, logger) -> list:
                 startIndex += 1
                 continue
 
-            if (not newEncounter and row[1] == "AddLoot" and row[2] == ''):
+            if (not newEncounter and row[1] == "AddLoot" and row[2] == '' and len(obtainedRolledLoot) == 0):
                 addedLoot.append(row[3])
                 encounterData.append(row)
+            # If loot has started to be obtained from a roll, new loot shouldn't be getting added. This indicates there may be an error in the data collection
+            elif (not newEncounter and row[1] == "AddLoot" and row[2] == '' and len(obtainedRolledLoot) > 0):
+                print(obtainedRolledLoot)
+                print("POSSIBLE CORRUPT DATA, DROPPING ENCOUNTER")
+                newEncounter == True
+                break
             # elif (not newEncounter and row[1] == "CastLoot"):
             #     castLoot.append(row[3])
             #     encounterData.append(row)
             elif (not newEncounter and row[1] == "ObtainLoot"):
-                # Catch possibility where logger leaves instance prematurely before loot is handed out
-                obtainedRolledLoot.append(row[3])
-                # print(addedLoot, obtainedLoot)
-                encounterData.append(row)
+                # If the obtained loot is loot that was rolled on, note that
+                if row[3] in addedLoot:
+                    obtainedRolledLoot.append(row[3])
+                    encounterData.append(row)
+                # If obtained loot was given directly to player, it won't help determine if an encounter is resolved
+                else:
+                    encounterData.append(row)
                 if len(addedLoot) > 0 and all(item in obtainedRolledLoot for item in addedLoot):
                     print(addedLoot,obtainedRolledLoot)
                     newEncounter = True
