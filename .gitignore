@@ -7,3 +7,4 @@ docs
 *.pyc
 .vscode
 testScript.py
+output.md
