@@ -1,7 +1,5 @@
 from statistics import mean
 import utils.dataReader as reader
-import utils.encounter
-import utils.encounterAnalysis as analysis
 from collections import Counter
 from statistics import mean, median, multimode
 
