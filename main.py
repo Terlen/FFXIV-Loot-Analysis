@@ -62,7 +62,11 @@ for encounter in encounters:
 # print([(roll.member.name, roll.value) for roll in needrolls])
 needCount = Counter([roll.member.name for roll in needrolls])
 # print(needCount)
-maxCount = max(needCount.values())
+try:
+    maxCount = max(needCount.values())
+except ValueError:
+    maxCount = 0
+    print("Nobody rolled need!")
 neediestPlayers  = [key for key, value in needCount.items() if value == maxCount]
 
 needWins = list(Counter([roll.member.name for roll in needrolls if roll.win]))
