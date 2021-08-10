@@ -27,7 +27,7 @@ def cleanItemName(line, lineFormat):
         startIndexofItemName = line.find(specialUnicodeChar)
         if startIndexofItemName == -1:
             itemCapitalIndex = findCapitalLetters(line)
-            print(itemCapitalIndex)
+            # print(itemCapitalIndex)
             # Handle case where item has no captial letters (gil, crafting materials)
             if itemCapitalIndex == [7]:
                 reversedLine = line[::-1]
@@ -200,13 +200,13 @@ def encounterSplitter(data: Iterable, logger) -> list:
         if startIndex >= len(data)-1:
             break
         else:
-            print(startIndex)
-            # pass
+            # print(startIndex)
+            pass
         encounterData = []
         addedLoot = list()
         obtainedRolledLoot = list()
         for row in data[startIndex:]:
-            print(startIndex,row)
+            # print(startIndex,row)
             # if (newEncounter and row[1] == "ObtainLoot" and row[2] == logger):
             #     newEncounter = False
             #     print("NEW ENCOUNTER")
@@ -235,7 +235,7 @@ def encounterSplitter(data: Iterable, logger) -> list:
                 encounterData.append(row)
             # If loot has started to be obtained from a roll, new loot shouldn't be getting added. This indicates there may be an error in the data collection
             elif (not newEncounter and row[1] == "AddLoot" and row[2] == '' and len(obtainedRolledLoot) > 0):
-                print(obtainedRolledLoot)
+                # print(obtainedRolledLoot)
                 print("POSSIBLE CORRUPT DATA, DROPPING ENCOUNTER")
                 newEncounter == True
                 break
@@ -251,9 +251,9 @@ def encounterSplitter(data: Iterable, logger) -> list:
                 else:
                     encounterData.append(row)
                 if len(addedLoot) > 0 and all(item in obtainedRolledLoot for item in addedLoot):
-                    print(addedLoot,obtainedRolledLoot)
+                    # print(addedLoot,obtainedRolledLoot)
                     newEncounter = True
-                    print("NEW ENCOUNTER")
+                    # print("NEW ENCOUNTER")
                     output.append(Encounter(encounterData))
                     startIndex += 1
                     break
