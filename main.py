@@ -45,7 +45,11 @@ for encounter in encounters:
         if roll.type == "GreedLoot":
             greedrolls.append(roll)
 greedCount = Counter([roll.member.name for roll in greedrolls])
-maxCount = max(greedCount.values())
+try:
+    maxCount = max(greedCount.values())
+except ValueError:
+    maxCount = 0
+    print("Nobody rolled greed!")
 greediestPlayers  = [key for key, value in greedCount.items() if value == maxCount]
 # print("\nGREEDIEST!")
 # print(greediestPlayers, maxCount)
@@ -55,7 +59,9 @@ for encounter in encounters:
     for roll in encounter.rolls:
         if roll.type == "NeedLoot":
             needrolls.append(roll)
+# print([(roll.member.name, roll.value) for roll in needrolls])
 needCount = Counter([roll.member.name for roll in needrolls])
+# print(needCount)
 maxCount = max(needCount.values())
 neediestPlayers  = [key for key, value in needCount.items() if value == maxCount]
 
@@ -70,7 +76,8 @@ for member in members:
         memberNeedWinRatios[member] = (len(memberWins),len(memberAttempts),winRatio)
     except ZeroDivisionError:
         continue
-    
+
+# print(memberNeedWinRatios)
 
 ratios = [item[2] for item in memberNeedWinRatios.values()]
 maxRatio = max(ratios)
@@ -80,7 +87,7 @@ minWins = min([item[0] for item in memberNeedWinRatios.values()])
 badNeeders = [(key,value[0],value[1]) for key, value in memberNeedWinRatios.items() if value[0] == minWins]
 
 mostTries = max([value[2] for value in badNeeders])
-
+# print(badNeeders)
 worstNeeders = [value for value in badNeeders if value[2] == mostTries]
 bestNeeders = [(key,value) for key, value in memberNeedWinRatios.items() if value[2] == maxRatio]
 
