@@ -63,7 +63,7 @@ try:
     maxCount = max(needCount.values())
 except ValueError:
     maxCount = 0
-    noNeed = "\nNobody rolled need!"
+    noNeed = "\nNo Need roll-offs!"
 neediestPlayers  = [key for key, value in needCount.items() if value == maxCount]
 
 needWins = list(Counter([roll.member.name for roll in needrolls if roll.win]))
@@ -85,7 +85,7 @@ try:
     # print("\nWORST NEEDER")
     # print(worstNeeders)
 except ValueError:
-    bestNeeders = "\nNobody rolled Need"
+    bestNeeders = "\nNo Need roll-offs"
 
 
 ratios = [item[2] for item in greedRatios.values()]
@@ -102,7 +102,7 @@ try:
     # print("\nWORST GREEDER")
     # print(worstGreeders)
 except ValueError:
-    bestGreeders = "\nNobody rolled Greed"
+    bestGreeders = "\nNo Greed roll-offs"
 
 
 
