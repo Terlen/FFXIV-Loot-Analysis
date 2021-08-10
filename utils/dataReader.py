@@ -1,6 +1,5 @@
 import csv
 from typing import Iterable, TextIO
-from collections import Counter
 from utils.encounter import Encounter
 
 specialUnicodeChar = u"\ue0bb"
@@ -17,6 +16,7 @@ def findCapitalLetters(string):
     return [index for index, character in enumerate(string) if character.isupper()]
 
 def cleanItemName(line, lineFormat):
+    # print(line)
     if lineFormat == "AddLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         endIndexofItemName =line.find(" has")
@@ -26,10 +26,32 @@ def cleanItemName(line, lineFormat):
     elif lineFormat == "CastLoot" or lineFormat == "ObtainLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         if startIndexofItemName == -1:
-            itemCapitalIndex = findCapitalLetters(line)[1]
-            endIndexofItemName = -1
-            substring = line[itemCapitalIndex: endIndexofItemName]
-            return substring
+            itemCapitalIndex = findCapitalLetters(line)
+            print(itemCapitalIndex)
+            # Handle case where item has no captial letters (gil, crafting materials)
+            if itemCapitalIndex == [7]:
+                reversedLine = line[::-1]
+                indexOfObtain = reversedLine.find("niatbo")
+                reversedSlice = reversedLine[:indexOfObtain]
+                if reversedSlice[-1] == ' ':
+                    indexOfItem = indexOfObtain -1
+                    substring = line[len(line)-indexOfItem:]
+                    if len(substring.split(' ')) == 2:
+                        return substring.split(' ')[1][:-1]
+                    else:
+                        return substring
+                elif reversedSlice[-1] == 's':
+                    indexOfItem = indexOfObtain -2
+                    substring = line[len(line)-indexOfItem:]
+                    if len(substring.split(' ')) == 2:
+                        return substring.split(' ')[1][:-1]
+                    else:
+                        return substring
+            else:
+                itemCapitalIndex = itemCapitalIndex[1]
+                endIndexofItemName = -1
+                substring = line[itemCapitalIndex: endIndexofItemName]
+                return substring
         else:
             endIndexofItemName = -1
             substring = line[startIndexofItemName+1: endIndexofItemName]
@@ -43,13 +65,27 @@ def cleanItemName(line, lineFormat):
         return substring
 
 def getItemQuantity(line):
-    if line.find(specialUnicodeChar) == -1:
-        itemCapitalIndex = findCapitalLetters(line)[1]
-        substring = line[:itemCapitalIndex-1]
-        words = substring.split(' ')
-        return words[-1]
+    itemCharacterIndex = line.find(specialUnicodeChar)
+    if itemCharacterIndex == -1:
+        itemCapitalIndex = findCapitalLetters(line)
+        # If the only capital letter present is the first non-timestamp character (*Y*ou), quantity is penultimate word
+        # EX: [18:06]You obtain 9,000 gil.
+        if itemCapitalIndex == [7]:
+            words = line.split(' ')
+            return words[-2]
+        else:
+            substring = line[:itemCapitalIndex[1]-1]
+            words = substring.split(' ')
+            return words[-1]
     else:
-        return "1"
+        substring = line[:itemCharacterIndex -1]
+        words = substring.split(' ')
+        # if words[-1] is a number, return it. If it's not a number, just return 1.
+        try:
+            b = int(words[-1])
+            return words[-1]
+        except ValueError:
+            return '1'
 
 
 def getRollValue(line):
@@ -68,7 +104,7 @@ def getCharacterName(line, lineFormat):
 
 def addLoot(data, itemName, index):
     lineType = "AddLoot"
-    formattedLine = ["0:0:0", lineType, "", itemName, "1", "0"]
+    formattedLine = ["0:0:0", lineType, "", itemName, "0", "1"]
     data.insert(len(data), formattedLine)
 
 
@@ -114,7 +150,7 @@ def stringsToCSV(lines: list, logger: str, data : list) -> list:
         elif stringList[8] in line:
             lineType = "ObtainLoot"
             itemName = cleanItemName(line, lineType)
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
+            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, getItemQuantity(line), "0"]
             if itemName in items:
                 items.remove(itemName)
 
@@ -135,7 +171,9 @@ def textParser(file: TextIO, logger: str) -> list:
         lines = [line for line in source]
         filteredLines = logLineFilter(lines)
         for line in stringsToCSV(filteredLines, logger, data):
-            data.append(line)
+            # print(line)
+            swapItemandQuantity = [line[0],line[1],line[2],line[3],line[5],line[4]] 
+            data.append(swapItemandQuantity)
     return data
 
 
@@ -154,40 +192,83 @@ def dataPrint(data: Iterable) -> None:
                 
         print(f'Time:{row[0]:25}Action:{row[1]:25}Member:{row[2]:25}Item:{row[3]:25}Roll:{row[4]:25}Quantity:{row[5]:25}')
 
-def encounterSplitter(data: Iterable) -> list:
+def encounterSplitter(data: Iterable, logger) -> list:
     output = []
-    newEncounter = True
-    for row in data:
-        if (newEncounter and row[1] == "ObtainLoot" and row[2] == "Your Character"):
-            newEncounter = False
-            encounterData = []
-            encounterData.append(row)
-            addedLoot = list()
-            # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
-            obtainedLoot = list()
-            continue
-        elif (newEncounter and row[1] == "AddLoot" and row[2] == ''):
-            newEncounter = False
-            encounterData = []
-            encounterData.append(row)
-            addedLoot = list()
-            addedLoot.append(row[3])
-            obtainedLoot = list()
-            continue
-
-        if (not newEncounter and row[1] == "AddLoot" and row[2] == ''):
-            addedLoot.append(row[3])
-            encounterData.append(row)
-        elif (not newEncounter and row[1] == "ObtainLoot" and len(addedLoot) > 0):
-            obtainedLoot.append(row[3])
-            encounterData.append(row)
-            if len(Counter(addedLoot) - Counter(obtainedLoot)) == 0:
-                newEncounter = True
-                output.append(Encounter(encounterData))
-        elif (not newEncounter):
-            encounterData.append(row)
+    newEncounter = False
+    startIndex = 0
+    while True:
+        if startIndex >= len(data)-1:
+            break
         else:
-            continue
-        
+            print(startIndex)
+            # pass
+        encounterData = []
+        addedLoot = list()
+        obtainedRolledLoot = list()
+        for row in data[startIndex:]:
+            print(startIndex,row)
+            # if (newEncounter and row[1] == "ObtainLoot" and row[2] == logger):
+            #     newEncounter = False
+            #     print("NEW ENCOUNTER")
+            #     encounterData = []
+            #     encounterData.append(row)
+            #     addedLoot = list()
+            #     castLoot = list()
+            #     # Loot obtained without an AddLoot is personal loot and should be not be considered to be obtainedLoot
+            #     obtainedRolledLoot = list()
+            #     continue
+            
+
+            if (newEncounter):
+                newEncounter = False
+                encounterData = []
+                encounterData.append(row)
+                addedLoot = list()
+                castLoot = list()
+                # addedLoot.append(row[3])
+                obtainedRolledLoot = list()
+                startIndex += 1
+                continue
+
+            if (not newEncounter and row[1] == "AddLoot" and row[2] == '' and len(obtainedRolledLoot) == 0):
+                addedLoot.append(row[3])
+                encounterData.append(row)
+            # If loot has started to be obtained from a roll, new loot shouldn't be getting added. This indicates there may be an error in the data collection
+            elif (not newEncounter and row[1] == "AddLoot" and row[2] == '' and len(obtainedRolledLoot) > 0):
+                print(obtainedRolledLoot)
+                print("POSSIBLE CORRUPT DATA, DROPPING ENCOUNTER")
+                newEncounter == True
+                break
+            # elif (not newEncounter and row[1] == "CastLoot"):
+            #     castLoot.append(row[3])
+            #     encounterData.append(row)
+            elif (not newEncounter and row[1] == "ObtainLoot"):
+                # If the obtained loot is loot that was rolled on, note that
+                if row[3] in addedLoot:
+                    obtainedRolledLoot.append(row[3])
+                    encounterData.append(row)
+                # If obtained loot was given directly to player, it won't help determine if an encounter is resolved
+                else:
+                    encounterData.append(row)
+                if len(addedLoot) > 0 and all(item in obtainedRolledLoot for item in addedLoot):
+                    print(addedLoot,obtainedRolledLoot)
+                    newEncounter = True
+                    print("NEW ENCOUNTER")
+                    output.append(Encounter(encounterData))
+                    startIndex += 1
+                    break
+            
+            # elif (not newEncounter and row[1] == "ObtainLoot" and ):
+                
+
+            elif (not newEncounter and (row[1] == "NeedLoot" or row[1] == "GreedLoot" or row[1] == "CastLoot")):
+                # print("GREED OR NEED",row)
+                encounterData.append(row)
+            else:
+                # print("CONTINUING")
+                # print(row)
+                continue
+            startIndex += 1
+            
     return output
 

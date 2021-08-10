@@ -27,6 +27,8 @@ class Item:
 class Member:
     def __init__(self, name):
         self.name = name
+        self.rolls = []
+        self.loot = []
     def __hash__(self):
         return hash(self.name)
     def __eq__(self, other):
@@ -53,15 +55,25 @@ class Encounter:
                 self.add_member(row[2])
         return self.members
 
-    def add_item(self, name, quantity):
-        item = Item(name,quantity)
-        if item not in self.items:
+    def add_item(self, name, quantity, member=None):
+        quantity = str(quantity).translate({ord(char): None for char in ','})
+        item = Item(name,int(quantity))
+        # print(item.name)
+        if item not in self.items and member is None:
             self.items.append(item)
+        if member is not None:
+            if item not in member.loot:
+                member.loot.append(item)
+            else:
+                index = member.loot.index(item)
+                member.loot[index].quantity += item.quantity
 
     def set_item(self, data):
         for row in data:
             if row[1] == "AddLoot":
                 self.add_item(row[3],row[5])
+            elif row[1] == "ObtainLoot" and row[3] not in [item.name for item in self.items]:
+                self.add_item(row[3], row[5], self.get_member(row[2]))
         return self.items
     
     def get_item(self, name):
@@ -74,11 +86,15 @@ class Encounter:
         roll = Roll(rollType,member,value,item)
         self.rolls.append(roll)
         item.rolls.append(roll)
+        member.rolls.append(roll)
 
     def set_rolls(self, data):
         for row in data:
             action = row[1]
             if action == "GreedLoot" or action == "NeedLoot":
+                # print(row[3])
+                # print([item.name for item in self.items])
+                # print(self.get_item(row[3]))
                 self.add_roll(action, self.get_member(row[2]), row[4],self.get_item(row[3]))
 
     def get_member(self, name):
@@ -90,13 +106,10 @@ class Encounter:
     def set_winning_rolls(self):
         for item in self.items:
             rollValues = [roll.value for roll in item.rolls]
-            highestRollValue = max(rollValues)
-            highestRoll =  item.rolls[rollValues.index(highestRollValue)]
-            highestRoll.iswin(True)
-
-    def get_winning_rolls(self):
-        winners = [roll for roll in self.rolls if roll.win]
-        return winners
+            if len(rollValues) > 0:
+                highestRollValue = max(rollValues)
+                highestRoll =  item.rolls[rollValues.index(highestRollValue)]
+                highestRoll.iswin(True)
 
     def __init__(self, data=None):
         self.cleartime = ''

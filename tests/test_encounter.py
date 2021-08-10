@@ -55,5 +55,3 @@ class Test_Encounter_Unit:
     # def test_Encounter_add_roll(self):
     #     assert self.test_encounter.add_roll(Roll) == self.expected_rolls.add(self.new_roll)
     #     assert self.new_roll in self.test_encounter.rolls
-    def test_Encounter_get_winning_rolls(self):
-        assert self.test_encounter.get_winning_rolls() == [self.expected_winner]

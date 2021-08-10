@@ -61,18 +61,18 @@ class Test_encounterSplit_Unit:
     test_randomizedData = random_data_gen(8,3)
 
     def test_encounterSplitter(self):
-        result = utils.dataReader.encounterSplitter(self.test_validData)
+        result = utils.dataReader.encounterSplitter(self.test_validData, "Akiva Cookiepouch")
         assert len(result) == 1
         assert isinstance(result[0],Encounter)
     
     def test_encounterSplitter_noEncountersFound(self):
-        assert utils.dataReader.encounterSplitter(self.test_noEncounter) == []
+        assert utils.dataReader.encounterSplitter(self.test_noEncounter, "Akiva Cookiepouch") == []
     
     def test_encounterSplitter_partialEncounter(self):
-        assert utils.dataReader.encounterSplitter(self.test_noEncounter) == []
+        assert utils.dataReader.encounterSplitter(self.test_noEncounter, "Akiva Cookiepouch") == []
     
     def test_encounterSplitter_randomized(self):
-        result = utils.dataReader.encounterSplitter(self.test_randomizedData)
+        result = utils.dataReader.encounterSplitter(self.test_randomizedData, "Akiva Cookiepouch")
         assert len(result) == 1
         assert isinstance(result[0], Encounter)
 
@@ -80,26 +80,26 @@ class Test_textParser_Unit:
     testfile = "testChatLog.txt"
 
     expected_output = [
-        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'Allagan tomestones of poetics', '12', '0'],
-        ['0:0:0', 'AddLoot', '', 'the Axe of Crags', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'the Axe of Crags', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Luwu Xp', 'the Axe of Crags', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'the Axe of Crags', '1', '0'],
-        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'the Axe of Crags', '1', '33'],
-        ['0:0:0', 'GreedLoot', 'Ares Asterlight', 'the Axe of Crags', '1', '25'],
-        ['0:0:0', 'GreedLoot', 'Luwu Xp', 'the Axe of Crags', '1', '78'],
-        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'the Axe of Crags', '1', '0'],
-        ['0:0:0', 'AddLoot', '', 'Culverin of Crags', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'Culverin of Crags', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Luwu Xp', 'Culverin of Crags', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Culverin of Crags', '1', '0'],
-        ['0:0:0', 'NeedLoot', 'Luwu Xp', 'Culverin of Crags', '1', '43'],
-        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Culverin of Crags', '1', '0'],
-        ['0:0:0', 'AddLoot', '', 'pair of Dark Divinity brok', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '1', '0'],
-        ['0:0:0', 'CastLoot', 'Akiva Cookiepouch', 'pair of Dark Divinity brok', '1', '0'],
-        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '1', '49'],
-        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '1', '0']
+        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'Allagan tomestones of poetics', '0', '12'],
+        ['0:0:0', 'AddLoot', '', 'the Axe of Crags', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'the Axe of Crags', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Luwu Xp', 'the Axe of Crags', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'the Axe of Crags', '0', '1'],
+        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'the Axe of Crags', '33', '1'],
+        ['0:0:0', 'GreedLoot', 'Ares Asterlight', 'the Axe of Crags', '25', '1'],
+        ['0:0:0', 'GreedLoot', 'Luwu Xp', 'the Axe of Crags', '78', '1'],
+        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'the Axe of Crags', '0', '1'],
+        ['0:0:0', 'AddLoot', '', 'Culverin of Crags', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Ares Asterlight', 'Culverin of Crags', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Luwu Xp', 'Culverin of Crags', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Culverin of Crags', '0', '1'],
+        ['0:0:0', 'NeedLoot', 'Luwu Xp', 'Culverin of Crags', '43', '1'],
+        ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Culverin of Crags', '0', '1'],
+        ['0:0:0', 'AddLoot', '', 'pair of Dark Divinity brok', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Akiva Cookiepouch', 'pair of Dark Divinity brok', '0', '1'],
+        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '49', '1'],
+        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '0', '1']
     ]
 
     def test_textParser(self):
