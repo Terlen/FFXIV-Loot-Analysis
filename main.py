@@ -28,7 +28,7 @@ for encounter in encounters:
     for roll in encounter.rolls:
         rolls.append(int(roll.value))
 print("\nMEAN ROLL!")
-print(mean(rolls))
+print(f'{mean(rolls):.2f}')
 print("\nMEDIAN ROLL!")
 print(median(rolls))
 print("\nMODE ROLL!")
