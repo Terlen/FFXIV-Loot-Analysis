@@ -48,10 +48,7 @@ try:
     maxCount = max(greedCount.values())
 except ValueError:
     maxCount = 0
-    print("Nobody rolled greed!")
 greediestPlayers  = [key for key, value in greedCount.items() if value == maxCount]
-# print("\nGREEDIEST!")
-# print(greediestPlayers, maxCount)
 
 needrolls = []
 for encounter in encounters:
@@ -74,21 +71,38 @@ needRatios = aggregate.winRatios(members, needrolls)
 greedRatios = aggregate.winRatios(members, greedrolls)
 
 ratios = [item[2] for item in needRatios.values()]
-maxRatio = max(ratios)
+try:
+    maxRatio = max(ratios)
+    minWins = min([item[0] for item in needRatios.values()])
+    badNeeders = [(key,value[0],value[1]) for key, value in needRatios.items() if value[0] == minWins]
+    mostTries = max([value[2] for value in badNeeders])
+    worstNeeders = [value for value in badNeeders if value[2] == mostTries]
+    bestNeeders = [(key,value) for key, value in needRatios.items() if value[2] == maxRatio]
+    print("\nBEST NEEDER")
+    print(bestNeeders)
 
-minWins = min([item[0] for item in needRatios.values()])
-
-badNeeders = [(key,value[0],value[1]) for key, value in needRatios.items() if value[0] == minWins]
-
-mostTries = max([value[2] for value in badNeeders])
-# print(badNeeders)
-worstNeeders = [value for value in badNeeders if value[2] == mostTries]
-bestNeeders = [(key,value) for key, value in needRatios.items() if value[2] == maxRatio]
+    print("\nWORST NEEDER")
+    print(worstNeeders)
+except ValueError:
+    print("\nNobody rolled Need")
 
 
+ratios = [item[2] for item in greedRatios.values()]
+try:
+    maxRatio = max(ratios)
+    minWins = min([item[0] for item in greedRatios.values()])
+    badGreeders = [(key,value[0],value[1]) for key, value in greedRatios.items() if value[0] == minWins]
+    mostTries = max([value[2] for value in badGreeders])
+    worstGreeders = [value for value in badGreeders if value[2] == mostTries]
+    bestGreeders = [(key,value) for key, value in greedRatios.items() if value[2] == maxRatio]
+    print("\nBEST GREEDER")
+    print(bestGreeders)
 
-print("\nBEST NEEDER")
-print(bestNeeders)
+    print("\nWORST GREEDER")
+    print(worstGreeders)
+except ValueError:
+    print("\nNobody rolled Greed")
 
-print("\nWORST NEEDER")
-print(worstNeeders)
+
+
+
