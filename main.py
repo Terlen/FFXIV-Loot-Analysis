@@ -1,7 +1,8 @@
 from statistics import mean
 import utils.dataReader as reader
 from collections import Counter
-from statistics import mean, median, multimode
+from statistics import mean, median
+import utils.aggregateAnalysis as aggregate
 
 # TODO #9 Remove hardcoded input file and logger name and replace with argparse?
 data = reader.textParser("maps.txt", "Akiva Cookiepouch")
@@ -69,29 +70,20 @@ neediestPlayers  = [key for key, value in needCount.items() if value == maxCount
 
 needWins = list(Counter([roll.member.name for roll in needrolls if roll.win]))
 
-memberNeedWinRatios = {}
-for member in members:
-    memberAttempts = [roll for roll in needrolls if roll.member.name == member]
-    memberWins = [roll for roll in needrolls if roll.member.name == member and roll.win]
-    try:
-        winRatio = len(memberWins) / len(memberAttempts)
-        memberNeedWinRatios[member] = (len(memberWins),len(memberAttempts),winRatio)
-    except ZeroDivisionError:
-        continue
+needRatios = aggregate.winRatios(members, needrolls)
+greedRatios = aggregate.winRatios(members, greedrolls)
 
-# print(memberNeedWinRatios)
-
-ratios = [item[2] for item in memberNeedWinRatios.values()]
+ratios = [item[2] for item in needRatios.values()]
 maxRatio = max(ratios)
 
-minWins = min([item[0] for item in memberNeedWinRatios.values()])
+minWins = min([item[0] for item in needRatios.values()])
 
-badNeeders = [(key,value[0],value[1]) for key, value in memberNeedWinRatios.items() if value[0] == minWins]
+badNeeders = [(key,value[0],value[1]) for key, value in needRatios.items() if value[0] == minWins]
 
 mostTries = max([value[2] for value in badNeeders])
 # print(badNeeders)
 worstNeeders = [value for value in badNeeders if value[2] == mostTries]
-bestNeeders = [(key,value) for key, value in memberNeedWinRatios.items() if value[2] == maxRatio]
+bestNeeders = [(key,value) for key, value in needRatios.items() if value[2] == maxRatio]
 
 
 
@@ -100,8 +92,3 @@ print(bestNeeders)
 
 print("\nWORST NEEDER")
 print(worstNeeders)
-
-
-
-# print("\nNEEDIEST!")
-# print(neediestPlayers, maxCount)
