@@ -21,7 +21,7 @@ members = []
 for encounter in encounters:
     for member in encounter.members:
         members.append(member.name)
-members = set(members)
+uniqueMembers = set(members)
 
 loot = []
 for encounter in encounters:
@@ -108,8 +108,8 @@ neediestPlayers  = [key for key, value in needCount.items() if value == maxCount
 
 needWins = list(Counter([roll.member.name for roll in needrolls if roll.win]))
 
-needRatios = aggregate.winRatios(members, needrolls)
-greedRatios = aggregate.winRatios(members, greedrolls)
+needRatios = aggregate.winRatios(uniqueMembers, needrolls)
+greedRatios = aggregate.winRatios(uniqueMembers, greedrolls)
 
 ratios = [item[2] for item in needRatios.values()]
 try:
@@ -181,7 +181,9 @@ outputHeader = """# FFXIV Loot Analyzer Report
 ## Logged By: {}
 """.format(file, logger)
 
-outputPersonalLoot = """# Personal Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalPrivateLoot.items())
+outputMembers = """# Participating Members""" + ''.join('\n- {}'.format(member) for member in uniqueMembers)
+
+outputPersonalLoot = """\n# Personal Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalPrivateLoot.items())
 
 outputRolledLoot ="""\n# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedLoot)
 
@@ -210,5 +212,5 @@ else:
     outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
 
 with open(outputFolder+'report.md', 'w') as f:
-    f.write(outputHeader + outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
+    f.write(outputHeader + outputMembers +outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
     f.close()
