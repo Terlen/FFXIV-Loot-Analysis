@@ -65,8 +65,9 @@ minorTickLabels.append(102)
 values = [rollCount[x] if x in rollCount else 0 for x in possibleRolls]
 plt.figure(figsize=(15,4),dpi=100)
 plt.bar(column_names, values)
-plt.axvline(meanRolls, color='red', label='Mean Roll')
-plt.axvline(medianRolls, color='black', label='Median Roll')
+# Unclear why, but have to shift median and mean lines left 1 due to unexplainable offset
+plt.axvline(meanRolls-1, color='red', label='Mean Roll')
+plt.axvline(medianRolls-1, color='black', label='Median Roll')
 plt.legend()
 ax = plt.gca()
 ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
