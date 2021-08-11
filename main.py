@@ -3,6 +3,8 @@ import utils.dataReader as reader
 from collections import Counter
 from statistics import mean, median
 import utils.aggregateAnalysis as aggregate
+import matplotlib.pyplot as plt
+from matplotlib import ticker
 
 # TODO #9 Remove hardcoded input file and logger name and replace with argparse?
 file = "maps.txt"
@@ -10,6 +12,9 @@ logger = "Akiva Cookiepouch"
 data = reader.textParser(file, logger)
 encounters = reader.encounterSplitter(data, logger)
 encounters = [encounter for encounter in encounters]
+outputFolder = 'output/'
+rollGraphFile = 'rolldistribution.png'
+
 
 members = []
 for encounter in encounters:
@@ -36,8 +41,41 @@ for encounter in encounters:
 # print("\nMODE ROLL!")
 rollCount = Counter(rolls)
 maxRollCount = max(rollCount.values())
+meanRolls = mean(rolls)
+medianRolls = median(rolls)
 modeRolls = [roll[0] for roll in rollCount.items() if roll[1] == maxRollCount]
 # print(modeRolls, maxRollCount)
+
+# Plot roll distribution
+column_names = [str(x) for x in range(1,100)]
+possibleRolls = list(range(1,100))
+# values = []
+# for x in possibleRolls:
+#     if x in rollCount:
+#         values.append(rollCount[x])
+#     else:
+#         values.append(0)
+def tickFormatter(x, pos):
+    return minorTickLabels[pos]
+formatter = ticker.FuncFormatter(tickFormatter)
+# Because minor labels start at x=-1, add an extra 0 to the start of the label list
+minorTickLabels = [0]+possibleRolls[1::2]
+minorTickLabels.append(100)
+minorTickLabels.append(102)
+values = [rollCount[x] if x in rollCount else 0 for x in possibleRolls]
+plt.figure(figsize=(15,4),dpi=100)
+plt.bar(column_names, values)
+plt.axvline(meanRolls, color='red', label='Mean Roll')
+plt.axvline(medianRolls, color='black', label='Median Roll')
+plt.legend()
+ax = plt.gca()
+ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
+ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
+ax.xaxis.set_minor_formatter(formatter)
+ax.tick_params(axis='x', which='minor', length=15)
+ax.autoscale(enable=True, axis='x',tight=True)
+
+plt.savefig(outputFolder+rollGraphFile, transparent=True)
 
 greedrolls = []
 for encounter in encounters:
@@ -114,11 +152,13 @@ outputHeader = """# FFXIV Loot Analyzer Report
 
 outputLoot ="""# Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedLoot)
 
-outputMean = """\n# Mean Roll""" + ''.join('\n{:.2f}').format(mean(rolls))
+outputMean = """\n# Mean Roll""" + ''.join('\n{:.2f}').format(meanRolls)
 
-outputMedian = """\n# Median Roll""" + ''.join('\n{:.2f}').format(median(rolls))
+outputMedian = """\n# Median Roll""" + ''.join('\n{:.2f}').format(medianRolls)
 
 outputMode = """\n# Mode Rolls""" + ''.join('\n- {}'.format(roll) for roll in modeRolls) + """\n\nRolled {} times""".format(maxRollCount)
+
+outputRollGraph = """\n![Graph of roll distributions]({})""".format(rollGraphFile)
 
 if type(bestNeeders) == str:
     outputBestNeeders = """\n # Best Greeders""" + bestNeeders
@@ -134,6 +174,6 @@ else:
     outputBestGreeders = """\n# Best Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in bestGreeders)
     outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
 
-with open('output.md', 'w') as f:
-    f.write(outputHeader + outputLoot + outputMean + outputMedian + outputMode + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
+with open(outputFolder+'report.md', 'w') as f:
+    f.write(outputHeader + outputLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
     f.close()
