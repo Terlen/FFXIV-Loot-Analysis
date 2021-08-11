@@ -11,7 +11,7 @@ def winRatios(members, rolls):
     return memberWinRatios
 
 def percentWins(members, rolls):
-    winPercentages = ()
+    winPercentages = {}
     totalWins = [roll for roll in rolls if roll.win]
     for member in members:
         memberWins = len([roll for roll in totalWins if roll.member.name == member])
@@ -21,3 +21,25 @@ def percentWins(members, rolls):
         except ZeroDivisionError:
             continue
     return winPercentages
+
+def getMembersBestRatio(ratios):
+    items = ratios.items()
+    stats = ratios.values()
+    ratioValues = [item[2] for item in ratios.values()]
+    try:
+        maxRatio = max(ratioValues)
+        bestGreeders = [(key,value[0],value[1],value[2]) for key, value in items if value[2] == maxRatio]
+        return bestGreeders
+    except ValueError:
+        return None
+
+def getMembersWorstRatio(ratios):
+    items = ratios.items()
+    stats = ratios.values()
+    ratioValues = [item[2] for item in ratios.values()]
+    try:
+        minRatio = min(ratioValues)
+        worstGreeders = [value for value in items if value[2] == minRatio]
+        return worstGreeders
+    except ValueError:
+        return None
