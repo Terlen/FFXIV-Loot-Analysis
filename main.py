@@ -111,38 +111,12 @@ needWins = list(Counter([roll.member.name for roll in needrolls if roll.win]))
 needRatios = aggregate.winRatios(uniqueMembers, needrolls)
 greedRatios = aggregate.winRatios(uniqueMembers, greedrolls)
 
-ratios = [item[2] for item in needRatios.values()]
-try:
-    maxRatio = max(ratios)
-    minWins = min([item[0] for item in needRatios.values()])
-    badNeeders = [(key,value) for key, value in needRatios.items() if value[0] == minWins]
-    mostTries = max([value[1][2] for value in badNeeders])
-    worstNeeders = [value for value in badNeeders if value[1][2] == mostTries]
-    bestNeeders = [(key,value[0],value[1],value[2]) for key, value in needRatios.items() if value[2] == maxRatio]
-    # print("\nBEST NEEDER")
-    # print(bestNeeders)
-
-    # print("\nWORST NEEDER")
-    # print(worstNeeders)
-except ValueError:
-    bestNeeders = "\nNo Need roll-offs"
+bestNeeders = aggregate.getMembersBestRatio(needRatios)
+worstNeeders = aggregate.getMembersWorstRatio(needRatios)
 
 
-ratios = [item[2] for item in greedRatios.values()]
-try:
-    maxRatio = max(ratios)
-    minWins = min([item[0] for item in greedRatios.values()])
-    badGreeders = [(key,value) for key, value in greedRatios.items() if value[0] == minWins]
-    mostTries = max([value[1][2] for value in badGreeders])
-    worstGreeders = [value for value in badGreeders if value[1][2] == mostTries]
-    bestGreeders = [(key,value) for key, value in greedRatios.items() if value[2] == maxRatio]
-    # print("\nBEST GREEDER")
-    # print(bestGreeders)
-
-    # print("\nWORST GREEDER")
-    # print(worstGreeders)
-except ValueError:
-    bestGreeders = "\nNo Greed roll-offs"
+bestGreeders = aggregate.getMembersBestRatio(greedRatios)
+worstGreeders = aggregate.getMembersWorstRatio(greedRatios)
 
 # Convert unicode char indicating HQ to 'HQ'
 def translate_HQ(string, translation= u'HQ'):
@@ -208,18 +182,19 @@ outputRollGraph = """\n![Graph of roll distributions]({})""".format(rollGraphFil
 # If bestNeeders/bestGreeders is a str, it means there were no need/greed roll-offs.
 # TODO #11
 
-if type(bestNeeders) == str:
-    outputBestNeeders = """\n # Best Needers""" + bestNeeders
-    outputWorstNeeders = """\n # Worst Needers""" + bestNeeders
+noRolls = "\nThere were no need roll-offs!"
+if bestNeeders == None:
+    outputBestNeeders = """\n # Best Needers""" + noRolls
+    outputWorstNeeders = """\n # Worst Needers""" + noRolls
 else:
-    outputBestNeeders = """\n# Best Needers\n## Best need roll win rate (wins/attempts)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{}'.format(*needer) for needer in bestNeeders)
-    outputBestNeedPercentage = """\n## Most Need wins (individual wins / total need wins)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{}'.format(*needer) for needer in bestNeeders)
+    outputBestNeeders = """\n# Best Needers\n## Best need roll win rate (wins/attempts)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2f}'.format(*needer) for needer in bestNeeders)
+    outputBestNeedPercentage = """\n## Most Need wins (individual wins / total need wins)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2f}'.format(*needer) for needer in bestNeeders)
 
-    outputWorstNeeders = """\n# Worst Needers""" + ''.join('\n- {} {}'.format(*needer) for needer in worstNeeders)
+    outputWorstNeeders = """\n# Worst Needers""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2f}'.format(*needer) for needer in worstNeeders)
 
-if type(bestGreeders) == str:
-    outputBestGreeders = """\n# Best Greeders""" + bestGreeders
-    outputWorstGreeders = """\n# Worst Greeders""" + bestGreeders
+if bestGreeders == None:
+    outputBestGreeders = """\n# Best Greeders""" + noRolls
+    outputWorstGreeders = """\n# Worst Greeders""" + noRolls
 else:
     outputBestGreeders = """\n# Best Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in bestGreeders)
     outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
