@@ -28,8 +28,8 @@ def getMembersBestRatio(ratios):
     ratioValues = [item[2] for item in ratios.values()]
     try:
         maxRatio = max(ratioValues)
-        bestGreeders = [(key,value[0],value[1],value[2]) for key, value in items if value[2] == maxRatio]
-        return bestGreeders
+        best = [(key,value[0],value[1],value[2]) for key, value in items if value[2] == maxRatio]
+        return best
     except ValueError:
         return None
 
@@ -39,7 +39,7 @@ def getMembersWorstRatio(ratios):
     ratioValues = [item[2] for item in ratios.values()]
     try:
         minRatio = min(ratioValues)
-        worstGreeders = [value for value in items if value[2] == minRatio]
-        return worstGreeders
+        worst = [(key,value[0],value[1],value[2]) for key, value in items if value[2] == minRatio]
+        return worst
     except ValueError:
         return None
