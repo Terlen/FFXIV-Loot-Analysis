@@ -155,7 +155,8 @@ needWinPercents = aggregate.percentWins(uniqueMembers, needrolls)
 greedWinPercents = aggregate.percentWins(uniqueMembers, greedrolls)
 
 
-
+bestNeedWinPercentage = aggregate.getMembersBestRatio(needWinPercents)
+worstNeedWinPercentage = aggregate.getMembersWorstRatio(needWinPercents)
 
 
 outputHeader = """# FFXIV Loot Analyzer Report
@@ -182,15 +183,18 @@ outputRollGraph = """\n![Graph of roll distributions]({})""".format(rollGraphFil
 # If bestNeeders/bestGreeders is a str, it means there were no need/greed roll-offs.
 # TODO #11
 
+bestNeedersHeader = """\n # Best Needers"""
+
 noRolls = "\nThere were no need roll-offs!"
 if bestNeeders == None:
-    outputBestNeeders = """\n # Best Needers""" + noRolls
-    outputWorstNeeders = """\n # Worst Needers""" + noRolls
+    outputBestNeeders, outputWorstNeeders =  (noRolls,noRolls)
 else:
-    outputBestNeeders = """\n# Best Needers\n## Best need roll win rate (wins/attempts)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2f}'.format(*needer) for needer in bestNeeders)
-    outputBestNeedPercentage = """\n## Most Need wins (individual wins / total need wins)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2f}'.format(*needer) for needer in bestNeeders)
+    BestNeedWinRate = """\n## Best win rate (wins/attempts)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2%}'.format(*needer) for needer in bestNeeders)
+    BestNeedPercentage = """\n## Most Need wins (individual wins / total need wins)""" + ''.join('\n- {} Wins:{} Total Wins:{} Win Percentage:{:.2%}'.format(*needer) for needer in bestNeedWinPercentage)
 
-    outputWorstNeeders = """\n# Worst Needers""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2f}'.format(*needer) for needer in worstNeeders)
+    outputBestNeeders = bestNeedersHeader + BestNeedWinRate + BestNeedPercentage
+
+    outputWorstNeeders = """\n# Worst Needers""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2%}'.format(*needer) for needer in worstNeeders)
 
 if bestGreeders == None:
     outputBestGreeders = """\n# Best Greeders""" + noRolls
