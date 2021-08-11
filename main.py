@@ -118,7 +118,7 @@ try:
     badNeeders = [(key,value) for key, value in needRatios.items() if value[0] == minWins]
     mostTries = max([value[1][2] for value in badNeeders])
     worstNeeders = [value for value in badNeeders if value[1][2] == mostTries]
-    bestNeeders = [(key,value) for key, value in needRatios.items() if value[2] == maxRatio]
+    bestNeeders = [(key,value[0],value[1],value[2]) for key, value in needRatios.items() if value[2] == maxRatio]
     # print("\nBEST NEEDER")
     # print(bestNeeders)
 
@@ -150,7 +150,7 @@ def translate_HQ(string, translation= u'HQ'):
     translate_table = dict((ord(char), translation) for char in hqChar)
     return string.translate(translate_table)
 
-# Show individual member loot, IE loot that wasn't rolled for
+# Show loot that wasn't rolled for
 members = []
 for encounter in encounters:
     for member in encounter.members:
@@ -176,6 +176,14 @@ for item in privateLoot:
 sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=True)}
 sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=True)}
 
+# Calculate what percentage of greed/need wins each member has won
+needWinPercents = aggregate.percentWins(uniqueMembers, needrolls)
+greedWinPercents = aggregate.percentWins(uniqueMembers, greedrolls)
+
+
+
+
+
 outputHeader = """# FFXIV Loot Analyzer Report
 ## File: {}
 ## Logged By: {}
@@ -197,11 +205,16 @@ outputMode = """\n# Mode Rolls""" + ''.join('\n- {}'.format(roll) for roll in mo
 
 outputRollGraph = """\n![Graph of roll distributions]({})""".format(rollGraphFile)
 
+# If bestNeeders/bestGreeders is a str, it means there were no need/greed roll-offs.
+# TODO #11
+
 if type(bestNeeders) == str:
-    outputBestNeeders = """\n # Best Greeders""" + bestNeeders
-    outputWorstNeeders = """\n # Worst Greeders""" + bestNeeders
+    outputBestNeeders = """\n # Best Needers""" + bestNeeders
+    outputWorstNeeders = """\n # Worst Needers""" + bestNeeders
 else:
-    outputBestNeeders = """\n# Best Needers""" + ''.join('\n- {} {}'.format(*needer) for needer in bestNeeders)
+    outputBestNeeders = """\n# Best Needers\n## Best need roll win rate (wins/attempts)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{}'.format(*needer) for needer in bestNeeders)
+    outputBestNeedPercentage = """\n## Most Need wins (individual wins / total need wins)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{}'.format(*needer) for needer in bestNeeders)
+
     outputWorstNeeders = """\n# Worst Needers""" + ''.join('\n- {} {}'.format(*needer) for needer in worstNeeders)
 
 if type(bestGreeders) == str:
