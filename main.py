@@ -181,7 +181,9 @@ outputHeader = """# FFXIV Loot Analyzer Report
 ## Logged By: {}
 """.format(file, logger)
 
-outputRolledLoot ="""# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedLoot)
+outputPersonalLoot = """# Personal Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalPrivateLoot.items())
+
+outputRolledLoot ="""\n# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedLoot)
 
 outputEventLoot = """\n# Dropped Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedTotalEventLoot.items())
 
@@ -208,5 +210,5 @@ else:
     outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
 
 with open(outputFolder+'report.md', 'w') as f:
-    f.write(outputHeader + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
+    f.write(outputHeader + outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
     f.close()
