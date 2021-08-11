@@ -5,6 +5,7 @@ from statistics import mean, median
 import utils.aggregateAnalysis as aggregate
 import matplotlib.pyplot as plt
 from matplotlib import ticker
+from collections import defaultdict
 
 # TODO #9 Remove hardcoded input file and logger name and replace with argparse?
 file = "maps.txt"
@@ -143,15 +144,46 @@ try:
 except ValueError:
     bestGreeders = "\nNo Greed roll-offs"
 
+# Convert unicode char indicating HQ to 'HQ'
+def translate_HQ(string, translation= u'HQ'):
+    hqChar = u'\ue03c'
+    translate_table = dict((ord(char), translation) for char in hqChar)
+    return string.translate(translate_table)
+
+# Show individual member loot, IE loot that wasn't rolled for
+members = []
+for encounter in encounters:
+    for member in encounter.members:
+        members.append(member)
+eventLoot = []
+privateLoot = []
+for member in members:
+    for item in member.loot:
+        if 'gil' not in item.name and 'tomestone' not in item.name:
+            eventLoot.append(item)
+        else:
+            privateLoot.append(item)
+
+totalEventLoot = defaultdict(int)
+for item in eventLoot:
+    name = translate_HQ(item.name)
+    totalEventLoot[name] += item.quantity
+totalPrivateLoot = defaultdict(int)
+for item in privateLoot:
+    totalPrivateLoot[item.name] += item.quantity
 
 
+sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=True)}
+sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=True)}
 
 outputHeader = """# FFXIV Loot Analyzer Report
 ## File: {}
 ## Logged By: {}
 """.format(file, logger)
 
-outputLoot ="""# Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedLoot)
+outputRolledLoot ="""# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedLoot)
+
+outputEventLoot = """\n# Dropped Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedTotalEventLoot.items())
 
 outputMean = """\n# Mean Roll""" + ''.join('\n{:.2f}').format(meanRolls)
 
@@ -176,5 +208,5 @@ else:
     outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
 
 with open(outputFolder+'report.md', 'w') as f:
-    f.write(outputHeader + outputLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
+    f.write(outputHeader + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
     f.close()
