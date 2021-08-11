@@ -10,3 +10,14 @@ def winRatios(members, rolls):
             continue
     return memberWinRatios
 
+def percentWins(members, rolls):
+    winPercentages = ()
+    totalWins = [roll for roll in rolls if roll.win]
+    for member in members:
+        memberWins = len([roll for roll in totalWins if roll.member.name == member])
+        try:
+            winPercent = memberWins / len(totalWins)
+            winPercentages[member] = (memberWins, totalWins, winPercent)
+        except ZeroDivisionError:
+            continue
+    return winPercentages
