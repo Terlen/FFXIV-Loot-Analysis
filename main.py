@@ -155,6 +155,14 @@ needWinPercents = aggregate.percentWins(uniqueMembers, needrolls)
 greedWinPercents = aggregate.percentWins(uniqueMembers, greedrolls)
 
 
+labels = sorted([key for key in needWinPercents.keys()], key= lambda key: needWinPercents[key])
+sizes = [value[2] for value in needWinPercents.values()]
+sizes.sort()
+fig2, ax2 = plt.subplots()
+ax2.pie(sizes,labels=labels, autopct='%1.0f%%', startangle=90, wedgeprops={'color':(1.0,1.0,1.0,0.0), 'edgecolor':'k'}, pctdistance=0.8, counterclock=False)
+ax2.axis('equal')
+plt.savefig(outputFolder+'pie.png', transparent=True)
+
 bestNeedWinPercentage = aggregate.getMembersBestRatio(needWinPercents)
 worstNeedWinPercentage = aggregate.getMembersWorstRatio(needWinPercents)
 
