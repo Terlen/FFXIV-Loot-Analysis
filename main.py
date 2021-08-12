@@ -1,7 +1,5 @@
-from statistics import mean
 import utils.dataReader as reader
 from collections import Counter
-from statistics import mean, median
 import utils.aggregateAnalysis as aggregate
 import matplotlib.pyplot as plt
 from matplotlib import ticker
@@ -37,16 +35,12 @@ if __name__ == "__main__":
 
     rolledItems = aggregate.getRolledItemNames(encounters)
 
-    sortedLoot = [(key, value) for key,value in Counter(rolledItems).most_common()]
+    rolledItemCounts = aggregate.countList(rolledItems)
 
     rolledNumbers = aggregate.getRolledValues(encounters)
+    rolledNumberCount = aggregate.countList(rolledNumbers)
 
-    rollCount = Counter(rolledNumbers)
-    maxRollCount = max(rollCount.values())
-    meanRolls = mean(rolledNumbers)
-    medianRolls = median(rolledNumbers)
-    modeRolls = [roll[0] for roll in rollCount.items() if roll[1] == maxRollCount]
-    # print(modeRolls, maxRollCount)
+    rollStatistics = aggregate.rollStatistics(rolledNumbers)
 
     # Plot roll distribution
     column_names = [str(x) for x in range(1,100)]
@@ -64,12 +58,12 @@ if __name__ == "__main__":
     minorTickLabels = [0]+possibleRolls[1::2]
     minorTickLabels.append(100)
     minorTickLabels.append(102)
-    values = [rollCount[x] if x in rollCount else 0 for x in possibleRolls]
+    values = [rolledNumberCount[x] if x in rolledNumberCount else 0 for x in possibleRolls]
     plt.figure(figsize=(15,4),dpi=100)
     plt.bar(column_names, values)
     # Unclear why, but have to shift median and mean lines left 1 due to unexplainable offset
-    plt.axvline(meanRolls-1, color='red', label='Mean Roll')
-    plt.axvline(medianRolls-1, color='black', label='Median Roll')
+    plt.axvline(rollStatistics.mean-1, color='red', label='Mean Roll')
+    plt.axvline(rollStatistics.median-1, color='black', label='Median Roll')
     plt.legend()
     ax = plt.gca()
     ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
@@ -177,15 +171,15 @@ if __name__ == "__main__":
 
     outputPersonalLoot = """\n# Personal Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalPrivateLoot.items())
 
-    outputRolledLoot ="""\n# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedLoot)
+    outputRolledLoot ="""\n# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in rolledItemCounts.most_common())
 
     outputEventLoot = """\n# Dropped Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedTotalEventLoot.items())
 
-    outputMean = """\n# Mean Roll""" + ''.join('\n{:.2f}').format(meanRolls)
+    outputMean = """\n# Mean Roll""" + ''.join('\n{:.2f}').format(rollStatistics.mean)
 
-    outputMedian = """\n# Median Roll""" + ''.join('\n{:.2f}').format(medianRolls)
+    outputMedian = """\n# Median Roll""" + ''.join('\n{:.2f}').format(rollStatistics.median)
 
-    outputMode = """\n# Mode Rolls""" + ''.join('\n- {}'.format(roll) for roll in modeRolls) + """\n\nRolled {} times""".format(maxRollCount)
+    outputMode = """\n# Mode Rolls""" + ''.join('\n- {}'.format(roll) for roll in rollStatistics.mode[0]) + """\n\nRolled {} times""".format(rollStatistics.mode[1])
 
     outputRollGraph = """\n![Graph of roll distributions]({})""".format(rollGraphFile)
 

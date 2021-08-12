@@ -1,3 +1,8 @@
+from collections import Counter, namedtuple
+from statistics import mean, median, multimode
+
+stats = namedtuple('rollStats', ['mean', 'median', 'mode'])
+
 def getMemberNames(encounters: list) -> set:
     members = []
     for encounter in encounters:
@@ -18,7 +23,17 @@ def getRolledValues(encounters: list) -> list:
         for roll in encounter.rolls:
             rolls.append(int(roll.value))
     return rolls
-    
+
+def countList(list: list) -> Counter:
+    return Counter(list)
+
+def rollStatistics(rolledNumbers: list) -> stats:
+    rollCount = Counter(rolledNumbers)
+    maxRollCount = max(rollCount.values())
+    meanRolls = mean(rolledNumbers)
+    medianRolls = median(rolledNumbers)
+    rollMode = multimode(rolledNumbers)
+    return stats(meanRolls,medianRolls,(rollMode, maxRollCount))
 
 
 def winRatios(members, rolls):
