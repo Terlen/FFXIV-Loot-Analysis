@@ -35,13 +35,10 @@ if __name__ == "__main__":
 
     uniqueMembers = aggregate.getMemberNames(encounters)
 
-    loot = []
-    for encounter in encounters:
-        for item in encounter.items:
-            loot.append(item.name)
+    rolledItems = aggregate.getRolledItemNames(encounters)
 
     # print("LOOT!")
-    sortedLoot = [(key, value) for key,value in Counter(loot).most_common()]
+    sortedLoot = [(key, value) for key,value in Counter(rolledItems).most_common()]
 
     rolls = []
     for encounter in encounters:

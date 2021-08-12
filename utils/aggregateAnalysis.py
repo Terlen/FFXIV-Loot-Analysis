@@ -5,8 +5,13 @@ def getMemberNames(encounters: list) -> set:
             members.append(member.name)
     return set(members)
 
-
-
+def getRolledItemNames(encounters: list) -> list:
+    loot = []
+    for encounter in encounters:
+        for item in encounter.items:
+            loot.append(item.name)
+    return loot
+    
 def winRatios(members, rolls):
     memberWinRatios = {}
     for member in members:
