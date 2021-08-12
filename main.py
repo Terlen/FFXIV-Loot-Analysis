@@ -37,22 +37,14 @@ if __name__ == "__main__":
 
     rolledItems = aggregate.getRolledItemNames(encounters)
 
-    # print("LOOT!")
     sortedLoot = [(key, value) for key,value in Counter(rolledItems).most_common()]
 
-    rolls = []
-    for encounter in encounters:
-        for roll in encounter.rolls:
-            rolls.append(int(roll.value))
-    # print("\nMEAN ROLL!")
-    # print(f'{mean(rolls):.2f}')
-    # print("\nMEDIAN ROLL!")
-    # print(median(rolls))
-    # print("\nMODE ROLL!")
-    rollCount = Counter(rolls)
+    rolledNumbers = aggregate.getRolledValues(encounters)
+
+    rollCount = Counter(rolledNumbers)
     maxRollCount = max(rollCount.values())
-    meanRolls = mean(rolls)
-    medianRolls = median(rolls)
+    meanRolls = mean(rolledNumbers)
+    medianRolls = median(rolledNumbers)
     modeRolls = [roll[0] for roll in rollCount.items() if roll[1] == maxRollCount]
     # print(modeRolls, maxRollCount)
 

@@ -11,7 +11,16 @@ def getRolledItemNames(encounters: list) -> list:
         for item in encounter.items:
             loot.append(item.name)
     return loot
+
+def getRolledValues(encounters: list) -> list:
+    rolls = []
+    for encounter in encounters:
+        for roll in encounter.rolls:
+            rolls.append(int(roll.value))
+    return rolls
     
+
+
 def winRatios(members, rolls):
     memberWinRatios = {}
     for member in members:
