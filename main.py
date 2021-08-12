@@ -12,38 +12,28 @@ if __name__ == "__main__":
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
     argParser.add_argument('data', type=str, help='The path of the data file to be analyzed. Supports .txt and .csv files.')
     argParser.add_argument('logger', type=str, help='The name of the player who captured the data file.')
+    argParser.add_argument('-outputPath', type=str, default='output', help="The desired directory for output files. Default 'output'.")
     args = argParser.parse_args()
 
     dataFile = args.data
     fileLogger = args.logger
+    outputFolder = args.outputPath + '/'
+
 
     if '.csv' in dataFile:
-        print("THIS IS A CSV, DATAREAD")
         data = reader.dataRead(dataFile)
     elif '.txt' in dataFile:
-        print("THIS IS A TXT, TEXTPARSER")
         data = reader.textParser(dataFile, fileLogger)
     else:
-        print("UNSUPPORTED INPUT FILE")
+        print("Unsupported data file, please provide a .txt or .csv")
         exit()
-    
-
-
-
-    # TODO #9 Remove hardcoded input file and logger name and replace with argparse?
 
 
     encounters = reader.encounterSplitter(data, fileLogger)
-    encounters = [encounter for encounter in encounters]
-    outputFolder = 'output/'
     rollGraphFile = 'rolldistribution.png'
     pieChartFile = 'pie.png'
 
-    members = []
-    for encounter in encounters:
-        for member in encounter.members:
-            members.append(member.name)
-    uniqueMembers = set(members)
+    uniqueMembers = aggregate.getMemberNames(encounters)
 
     loot = []
     for encounter in encounters:

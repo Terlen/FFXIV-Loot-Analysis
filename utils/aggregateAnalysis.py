@@ -1,3 +1,12 @@
+def getMemberNames(encounters: list) -> set:
+    members = []
+    for encounter in encounters:
+        for member in encounter.members:
+            members.append(member.name)
+    return set(members)
+
+
+
 def winRatios(members, rolls):
     memberWinRatios = {}
     for member in members:
