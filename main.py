@@ -15,7 +15,7 @@ encounters = reader.encounterSplitter(data, logger)
 encounters = [encounter for encounter in encounters]
 outputFolder = 'output/'
 rollGraphFile = 'rolldistribution.png'
-
+pieChartFile = 'pie.png'
 
 members = []
 for encounter in encounters:
@@ -161,7 +161,7 @@ sizes.sort()
 fig2, ax2 = plt.subplots()
 ax2.pie(sizes,labels=labels, autopct='%1.0f%%', startangle=90, wedgeprops={'color':(1.0,1.0,1.0,0.0), 'edgecolor':'k'}, pctdistance=0.8, counterclock=False)
 ax2.axis('equal')
-plt.savefig(outputFolder+'pie.png', transparent=True)
+plt.savefig(outputFolder+pieChartFile, transparent=True)
 
 bestNeedWinPercentage = aggregate.getMembersBestRatio(needWinPercents)
 worstNeedWinPercentage = aggregate.getMembersWorstRatio(needWinPercents)
@@ -211,6 +211,8 @@ else:
     outputBestGreeders = """\n# Best Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in bestGreeders)
     outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
 
+outputPieChart = """\n![Pie chart of each member's need win percentage]({})""".format(pieChartFile)
+
 with open(outputFolder+'report.md', 'w') as f:
-    f.write(outputHeader + outputMembers +outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders)
+    f.write(outputHeader + outputMembers +outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders + outputPieChart)
     f.close()
