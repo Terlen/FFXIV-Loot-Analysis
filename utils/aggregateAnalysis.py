@@ -24,12 +24,24 @@ def getRolledValues(encounters: list) -> list:
             rolls.append(int(roll.value))
     return rolls
 
+def getRolls(encounters: list,type: str) -> list:
+    rolls = []
+    for encounter in encounters:
+        for roll in encounter.rolls:
+            if roll.type == type:
+               rolls.append(roll)
+    return rolls
+
 def countList(list: list) -> Counter:
     return Counter(list)
 
+def getCounterMaxCount(counter: Counter) -> int:
+    return counter.most_common()[0][1] if counter else None
+
+
 def rollStatistics(rolledNumbers: list) -> stats:
     rollCount = Counter(rolledNumbers)
-    maxRollCount = max(rollCount.values())
+    maxRollCount = getCounterMaxCount(rollCount)
     meanRolls = mean(rolledNumbers)
     medianRolls = median(rolledNumbers)
     rollMode = multimode(rolledNumbers)

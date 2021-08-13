@@ -48,24 +48,17 @@ if __name__ == "__main__":
         print("Unable to save roll distribution chart. Is the file open?")
         
     
+    greedrolls = aggregate.getRolls(encounters, "GreedLoot")
+    
+    memberGreedCount = aggregate.countList([roll.member.name for roll in greedrolls])
 
-    greedrolls = []
-    for encounter in encounters:
-        for roll in encounter.rolls:
-            if roll.type == "GreedLoot":
-                greedrolls.append(roll)
-    greedCount = Counter([roll.member.name for roll in greedrolls])
     try:
-        maxCount = max(greedCount.values())
+        maxCount = max(memberGreedCount.values())
     except ValueError:
         maxCount = 0
-    greediestPlayers  = [key for key, value in greedCount.items() if value == maxCount]
+    greediestPlayers  = [key for key, value in memberGreedCount.items() if value == maxCount]
 
-    needrolls = []
-    for encounter in encounters:
-        for roll in encounter.rolls:
-            if roll.type == "NeedLoot":
-                needrolls.append(roll)
+    needrolls = aggregate.getRolls(encounters, "NeedLoot")
     # print([(roll.member.name, roll.value) for roll in needrolls])
     needCount = Counter([roll.member.name for roll in needrolls])
     # print(needCount)
