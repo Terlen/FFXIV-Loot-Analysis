@@ -69,7 +69,7 @@ def getDroppedLoot(members: list, logger: str, sort : str ='asc') -> tuple[dict,
     sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     
-    return (sortedTotalEventLoot, sortedTotalPrivateLoot)
+    return (sortedTotalEventLoot.items(), sortedTotalPrivateLoot.items())
 
 def countList(list: list) -> Counter:
     return Counter(list)

@@ -2,8 +2,11 @@ from inspect import cleandoc
 from datetime import datetime
 
 class Section:
-    def __init__(self, title:str, nest:int =0, data=None):
-        self.title = "{markdownheading} {title}\n".format(markdownheading = '#'*(nest+1), title=title)
+    def __init__(self, title:str=None, nest:int =0, data=None):
+        if title != None:
+            self.title = "\n{markdownheading} {title}\n".format(markdownheading = '#'*(nest+1), title=title)
+        else:
+            self.title = ''
         self.data = ''        
         self.subSections = []
     def addSubSection(self, subsection):
@@ -17,25 +20,25 @@ class Section:
         return (section for section in self.subSections)
 
 class ListSection(Section):
-    def __init__(self, title:str, nest:int =1, data=None):
+    def __init__(self, title:str=None, nest:int =1, data=None):
         super().__init__(title,nest)
         if data != None:
             self.data = ''.join('- {}\n'*len(data)).format(*data)
 
 class ValueSection(Section):
-    def __init__(self, title: str, nest: int =1, data=None):
+    def __init__(self, title: str=None, nest: int =1, data=None):
         super().__init__(title, nest)
         if data != None:
             self.data = ''.join('{:.2f}\n').format(data)
 
 class GraphicSection(Section):
-    def __init__(self, title: str, nest: int=1, data=None, alttext=None):
+    def __init__(self, title: str=None, nest: int=1, data=None, alttext=None):
         super().__init__(title, nest)
         if data != None:
-            self.data = "![{}}]({})\n".format(alttext,data)
+            self.data = "![{}]({})\n".format(alttext,data)
 
 class Header(Section):
-    def __init__(self, title: str, nest: int=0, data=None):
+    def __init__(self, title: str= None, nest: int=0, data=None):
         super().__init__(title, nest)
         if data != None:
             self.data = cleandoc("""
@@ -54,6 +57,7 @@ class Report:
 
     def addSection(self, section):
         self.sections.append(section)
+        return section
     
     def export(self, exportPath, fileName):
         with open(exportPath+fileName, 'w') as file:
@@ -63,6 +67,3 @@ class Report:
         return exportPath+fileName
                 
                 
-    
-
-
