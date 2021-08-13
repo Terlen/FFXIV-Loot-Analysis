@@ -125,8 +125,6 @@ if __name__ == "__main__":
         reportNeedRolls.addSubSection(reportGen.ListSection("Worst Win Rate (wins/attempts)",nest = 2, data=worstNeeders))
         reportNeedRolls.addSubSection(reportGen.ListSection("Worst Win Percentage (wins/all member wins)",nest = 2, data=worstNeedWinPercentage ))
 
-
-
         visualize.pieChartPercentWins(needWinPercents, outputFolder, needPieChartFile)
 
         reportNeedRolls.addSubSection(reportGen.GraphicSection("Need Win Percent Chart", data= needPieChartFile, alttext="Need Roll Win Percentage Pie Chart"))
@@ -145,68 +143,7 @@ if __name__ == "__main__":
             reportPrivateLoot.addSubSection(reportGen.ListSection(data=totalPrivateLoot))
     
 
-
-    
-    
-
-
-   
-
-    
-
-
-    # outputHeader = """
-    #     # FFXIV Loot Analyzer Report
-    #     ## File: {}
-    #     ## Logged By: {}
-    #     """.format(dataFile, fileLogger)
-    # outputHeader = cleandoc(outputHeader)
-
-    # outputMembers = """\n# Participating Members""" + ''.join('\n- {}'.format(member) for member in uniqueMemberNames)
-
-    # outputPersonalLoot = """\n# Personal Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalPrivateLoot.items())
-
-    # outputRolledLoot ="""\n# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in rolledItemCounts.most_common())
-
-    # outputEventLoot = """\n# Dropped Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalEventLoot.items())
-
-    # outputMean = """\n# Mean Roll""" + ''.join('\n{:.2f}').format(rollStatistics.mean)
-
-    # outputMedian = """\n# Median Roll""" + ''.join('\n{:.2f}').format(rollStatistics.median)
-
-    # outputMode = """\n# Mode Rolls""" + ''.join('\n- {}'.format(roll) for roll in rollStatistics.mode[0]) + """\n\nRolled {} times""".format(rollStatistics.mode[1])
-
-    # outputRollGraph = """\n![Graph of roll distributions]({})""".format(rollGraphFile)
-
-    # # If bestNeeders/bestGreeders is a str, it means there were no need/greed roll-offs.
     # # TODO #11
 
-    # bestNeedersHeader = """\n # Best Needers"""
-
-    # noRolls = "\nThere were no need roll-offs!"
-    # if bestNeeders == None:
-    #     outputBestNeeders, outputWorstNeeders =  (noRolls,noRolls)
-    # else:
-    #     BestNeedWinRate = """\n## Best win rate (wins/attempts)""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2%}'.format(*needer) for needer in bestNeeders)
-    #     BestNeedPercentage = """\n## Most Need wins (individual wins / total need wins)""" + ''.join('\n- {} Wins:{} Total Wins:{} Win Percentage:{:.2%}'.format(*needer) for needer in bestNeedWinPercentage)
-
-    #     outputBestNeeders = bestNeedersHeader + BestNeedWinRate + BestNeedPercentage
-
-    #     outputWorstNeeders = """\n# Worst Needers""" + ''.join('\n- {} Wins:{} Rolls:{} Win Rate:{:.2%}'.format(*needer) for needer in worstNeeders)
-
-    # if bestGreeders == None:
-    #     outputBestGreeders = """\n# Best Greeders""" + noRolls
-    #     outputWorstGreeders = """\n# Worst Greeders""" + noRolls
-    # else:
-    #     outputBestGreeders = """\n# Best Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in bestGreeders)
-    #     outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
-
-    # outputPieChart = """\n![Pie chart of each member's need win percentage]({})""".format(needPieChartFile)
-
-    # with open(outputFolder+'report.md', 'w') as f:
-    #     f.write(outputHeader + outputMembers +outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders + outputPieChart)
-    #     f.close()
-    # reportTemplate = report.loadTemplate('templates/report.md')
-    # reportText = report.reportBuilder(dataFile, fileLogger, uniqueMemberNames,reportTemplate)
-    # report.reportSave(outputFolder, reportText)
+  
     report.export(outputFolder,reportName)
