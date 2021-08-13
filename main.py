@@ -1,10 +1,10 @@
 import utils.dataReader as reader
-from collections import Counter
 import utils.aggregateAnalysis as aggregate
 import matplotlib.pyplot as plt
 from collections import defaultdict
 import argparse
 import utils.visualizations as visualize
+from inspect import cleandoc
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
@@ -115,12 +115,14 @@ if __name__ == "__main__":
     worstNeedWinPercentage = aggregate.getMembersWorstRatio(needWinPercents)
 
 
-    outputHeader = """# FFXIV Loot Analyzer Report
-    ## File: {}
-    ## Logged By: {}
-    """.format(dataFile, fileLogger)
+    outputHeader = """
+        # FFXIV Loot Analyzer Report
+        ## File: {}
+        ## Logged By: {}
+        """.format(dataFile, fileLogger)
+    outputHeader = cleandoc(outputHeader)
 
-    outputMembers = """# Participating Members""" + ''.join('\n- {}'.format(member) for member in uniqueMemberNames)
+    outputMembers = """\n# Participating Members""" + ''.join('\n- {}'.format(member) for member in uniqueMemberNames)
 
     outputPersonalLoot = """\n# Personal Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalPrivateLoot.items())
 
