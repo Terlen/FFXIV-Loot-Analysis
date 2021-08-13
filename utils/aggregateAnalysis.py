@@ -3,11 +3,18 @@ from statistics import mean, median, multimode
 
 stats = namedtuple('rollStats', ['mean', 'median', 'mode'])
 
-def getMemberNames(encounters: list) -> set:
+def getMemberList(encounters: list) -> list:
     members = []
     for encounter in encounters:
         for member in encounter.members:
-            members.append(member.name)
+            members.append(member)
+    return members
+
+
+def getMemberNames(memberList: list) -> set:
+    members = []
+    for member in memberList:
+        members.append(member.name)
     return set(members)
 
 def getRolledItemNames(encounters: list) -> list:
