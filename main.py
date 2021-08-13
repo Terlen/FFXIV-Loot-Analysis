@@ -43,11 +43,7 @@ if __name__ == "__main__":
 
     rollStatistics = aggregate.rollStatistics(rolledNumbers)
 
-    try:
-        visualize.rollDistributionChart(rolledNumberCount, rollStatistics, outputFolder, rollGraphFile)
-    except OSError:
-        print("Unable to save roll distribution chart. Is the file open?")
-        
+    visualize.rollDistributionChart(rolledNumberCount, rollStatistics, outputFolder, rollGraphFile)
     
     greedrolls = aggregate.getRolls(encounters, "GreedLoot")
     

@@ -32,5 +32,7 @@ def rollDistributionChart(rolledNumberCount: Counter, rollStatistics: stats, out
     ax.xaxis.set_minor_formatter(formatter)
     ax.tick_params(axis='x', which='minor', length=15)
     ax.autoscale(enable=True, axis='x',tight=True)
-
-    plt.savefig(outputFolder+rollGraphFile, transparent=True)
+    try:
+        plt.savefig(outputFolder+rollGraphFile, transparent=True)
+    except OSError:
+        print("Unable to save roll distribution chart. Is the file open?")
