@@ -76,11 +76,14 @@ if __name__ == "__main__":
     eventLoot = []
     privateLoot = []
     for member in members:
-        for item in member.loot:
-            if 'gil' not in item.name and 'tomestone' not in item.name:
-                eventLoot.append(item)
-            else:
-                privateLoot.append(item)
+        if member.name != fileLogger:
+            eventLoot += member.loot
+        else:
+            for item in member.loot:
+                if 'gil' not in item.name and 'tomestone' not in item.name:
+                    eventLoot.append(item)
+                else:
+                    privateLoot.append(item)
 
     totalEventLoot = defaultdict(int)
     for item in eventLoot:
