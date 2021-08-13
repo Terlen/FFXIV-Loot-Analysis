@@ -3,6 +3,7 @@ import utils.aggregateAnalysis as aggregate
 import argparse
 import utils.visualizations as visualize
 from inspect import cleandoc
+import utils.reportGenerator as report
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
@@ -130,3 +131,6 @@ if __name__ == "__main__":
     with open(outputFolder+'report.md', 'w') as f:
         f.write(outputHeader + outputMembers +outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders + outputPieChart)
         f.close()
+    # reportTemplate = report.loadTemplate('templates/report.md')
+    # reportText = report.reportBuilder(dataFile, fileLogger, uniqueMemberNames,reportTemplate)
+    # report.reportSave(outputFolder, reportText)
