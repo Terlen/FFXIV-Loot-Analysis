@@ -4,13 +4,19 @@ from typing import Union
 from collections.abc import Sequence
 
 class Section:
-    
     def __init__(self, title:str, nest:int =0, data=None):
-        self.title = "{heading} {title}\n".format(heading = '#'*(nest+1), title=title)
+        self.title = "{markdownheading} {title}\n".format(markdownheading = '#'*(nest+1), title=title)
         self.data = ''        
         self.subSections = []
     def addSubSection(self, subsection):
         self.subSections.append(subsection)
+    def writeOut(self):
+        text = self.title+self.data
+        for subsection in self.getSubSections():
+            text += subsection.writeOut()
+        return text
+    def getSubSections(self):
+        return (section for section in self.subSections)
 
 class ListSection(Section):
     def __init__(self, title:str, nest:int =1, data=None):
@@ -34,28 +40,20 @@ class GraphicSection(Section):
 
 
 class Report:
-    
+    def __init__(self):
+        self.sections = []
 
-    def loadTemplate(templateDir: str):
-        with open(templateDir, 'r') as template:
-            format = Template(template.read())
-            template.close()
-        return format
-
-    def listFormat(iterable : Union[list,set]):
-        return ''.join('\n- {}'.format(item) for item in iterable)
-
+    def addSection(self, section):
+        self.sections.append(section)
     
-    def __init__(self, template: str):
-        self.template = self.loadTemplate(template)
-        self.templateMap = {}
-    
-def reportBuilder(flags:list):
-    header = Section('header', )
+    def export(self, exportPath, fileName):
+        with open(exportPath+fileName, 'w') as file:
+            for section in self.sections:
+                file.write(section.writeOut())
+            file.close()
+        return exportPath+fileName
+                
+                
     
 
 
-def reportSave(outfolder, data):
-    with open(outfolder+'report.md', 'w') as f:
-        f.write(data)
-        f.close()
