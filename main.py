@@ -31,7 +31,8 @@ if __name__ == "__main__":
     rollGraphFile = 'rolldistribution.png'
     pieChartFile = 'pie.png'
 
-    uniqueMembers = aggregate.getMemberNames(encounters)
+    members = aggregate.getMemberList(encounters)
+    uniqueMemberNames = aggregate.getMemberNames(members)
 
     rolledItems = aggregate.getRolledItemNames(encounters)
 
@@ -58,10 +59,8 @@ if __name__ == "__main__":
     memberNeedCount = aggregate.countList([roll.member.name for roll in needrolls])
     neediestPlayers = aggregate.getCounterKeysWithValue(memberNeedCount, aggregate.getCounterMaxCount(memberNeedCount))
 
-    needWins = list(Counter([roll.member.name for roll in needrolls if roll.win]))
-
-    needRatios = aggregate.winRatios(uniqueMembers, needrolls)
-    greedRatios = aggregate.winRatios(uniqueMembers, greedrolls)
+    needRatios = aggregate.winRatios(uniqueMemberNames, needrolls)
+    greedRatios = aggregate.winRatios(uniqueMemberNames, greedrolls)
 
     bestNeeders = aggregate.getMembersBestRatio(needRatios)
     worstNeeders = aggregate.getMembersWorstRatio(needRatios)
@@ -77,10 +76,7 @@ if __name__ == "__main__":
         return string.translate(translate_table)
 
     # Show loot that wasn't rolled for
-    members = []
-    for encounter in encounters:
-        for member in encounter.members:
-            members.append(member)
+    
     eventLoot = []
     privateLoot = []
     for member in members:
@@ -103,8 +99,8 @@ if __name__ == "__main__":
     sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=True)}
 
     # Calculate what percentage of greed/need wins each member has won
-    needWinPercents = aggregate.percentWins(uniqueMembers, needrolls)
-    greedWinPercents = aggregate.percentWins(uniqueMembers, greedrolls)
+    needWinPercents = aggregate.percentWins(uniqueMemberNames, needrolls)
+    greedWinPercents = aggregate.percentWins(uniqueMemberNames, greedrolls)
 
 
     labels = sorted([key for key in needWinPercents.keys()], key= lambda key: needWinPercents[key])
@@ -124,7 +120,7 @@ if __name__ == "__main__":
     ## Logged By: {}
     """.format(dataFile, fileLogger)
 
-    outputMembers = """# Participating Members""" + ''.join('\n- {}'.format(member) for member in uniqueMembers)
+    outputMembers = """# Participating Members""" + ''.join('\n- {}'.format(member) for member in uniqueMemberNames)
 
     outputPersonalLoot = """\n# Personal Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalPrivateLoot.items())
 
