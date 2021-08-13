@@ -65,11 +65,6 @@ if __name__ == "__main__":
     bestGreeders = aggregate.getMembersBestRatio(greedRatios)
     worstGreeders = aggregate.getMembersWorstRatio(greedRatios)
 
-    # Convert unicode char indicating HQ to 'HQ'
-    def translate_HQ(string, translation= u'HQ'):
-        hqChar = u'\ue03c'
-        translate_table = dict((ord(char), translation) for char in hqChar)
-        return string.translate(translate_table)
 
     totalEventLoot, totalPrivateLoot = aggregate.getDroppedLoot(members, fileLogger)
 

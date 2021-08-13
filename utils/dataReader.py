@@ -5,6 +5,12 @@ from utils.encounter import Encounter
 specialUnicodeChar = u"\ue0bb"
 stringList = ["added to the loot list","casts his lot","casts her lot","cast your lot","You roll Greed","You roll Need","rolls Greed","rolls Need", "obtains", "You obtain"]
 
+# Convert unicode char indicating HQ to 'HQ'
+def translate_HQ(string, translation= u'HQ'):
+    hqChar = u'\ue03c'
+    translate_table = dict((ord(char), translation) for char in hqChar)
+    return string.translate(translate_table)
+
 def logLineFilter(lines: list) -> list:
     filteredLog = []
     for line in lines:
@@ -22,7 +28,7 @@ def cleanItemName(line, lineFormat):
         endIndexofItemName =line.find(" has")
         substring = line[startIndexofItemName+1:endIndexofItemName]
         firstCapitalIndex = findCapitalLetters(substring)[0]
-        return substring[firstCapitalIndex:]
+        outputString = substring[firstCapitalIndex:]
     elif lineFormat == "CastLoot" or lineFormat == "ObtainLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         if startIndexofItemName == -1:
@@ -37,32 +43,33 @@ def cleanItemName(line, lineFormat):
                     indexOfItem = indexOfObtain -1
                     substring = line[len(line)-indexOfItem:]
                     if len(substring.split(' ')) == 2:
-                        return substring.split(' ')[1][:-1]
+                        outputString = substring.split(' ')[1][:-1]
                     else:
-                        return substring
+                        outputString = substring
                 elif reversedSlice[-1] == 's':
                     indexOfItem = indexOfObtain -2
                     substring = line[len(line)-indexOfItem:]
                     if len(substring.split(' ')) == 2:
-                        return substring.split(' ')[1][:-1]
+                        outputString = substring.split(' ')[1][:-1]
                     else:
-                        return substring
+                        outputString = substring
             else:
                 itemCapitalIndex = itemCapitalIndex[1]
                 endIndexofItemName = -1
                 substring = line[itemCapitalIndex: endIndexofItemName]
-                return substring
+                outputString = substring
         else:
             endIndexofItemName = -1
             substring = line[startIndexofItemName+1: endIndexofItemName]
-            return substring
+            outputString = substring
     elif lineFormat == "GreedLoot" or lineFormat == "NeedLoot":
         startIndexofItemName = line.find(specialUnicodeChar)
         reversedString = line[::-1]
         endIndexofItemName = len(line) - 1 - reversedString.find(".")
 
         substring = line[startIndexofItemName+1: endIndexofItemName]
-        return substring
+        outputString = substring
+    return translate_HQ(outputString)
 
 def getItemQuantity(line):
     itemCharacterIndex = line.find(specialUnicodeChar)
