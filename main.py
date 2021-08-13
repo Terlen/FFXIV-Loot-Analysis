@@ -2,9 +2,9 @@ import utils.dataReader as reader
 from collections import Counter
 import utils.aggregateAnalysis as aggregate
 import matplotlib.pyplot as plt
-from matplotlib import ticker
 from collections import defaultdict
 import argparse
+import utils.visualizations as visualize
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
@@ -42,37 +42,12 @@ if __name__ == "__main__":
 
     rollStatistics = aggregate.rollStatistics(rolledNumbers)
 
-    # Plot roll distribution
-    column_names = [str(x) for x in range(1,100)]
-    possibleRolls = list(range(1,100))
-    # values = []
-    # for x in possibleRolls:
-    #     if x in rollCount:
-    #         values.append(rollCount[x])
-    #     else:
-    #         values.append(0)
-    def tickFormatter(x, pos):
-        return minorTickLabels[pos]
-    formatter = ticker.FuncFormatter(tickFormatter)
-    # Because minor labels start at x=-1, add an extra 0 to the start of the label list
-    minorTickLabels = [0]+possibleRolls[1::2]
-    minorTickLabels.append(100)
-    minorTickLabels.append(102)
-    values = [rolledNumberCount[x] if x in rolledNumberCount else 0 for x in possibleRolls]
-    plt.figure(figsize=(15,4),dpi=100)
-    plt.bar(column_names, values)
-    # Unclear why, but have to shift median and mean lines left 1 due to unexplainable offset
-    plt.axvline(rollStatistics.mean-1, color='red', label='Mean Roll')
-    plt.axvline(rollStatistics.median-1, color='black', label='Median Roll')
-    plt.legend()
-    ax = plt.gca()
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
-    ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
-    ax.xaxis.set_minor_formatter(formatter)
-    ax.tick_params(axis='x', which='minor', length=15)
-    ax.autoscale(enable=True, axis='x',tight=True)
-
-    plt.savefig(outputFolder+rollGraphFile, transparent=True)
+    try:
+        visualize.rollDistributionChart(rolledNumberCount, rollStatistics, outputFolder, rollGraphFile)
+    except OSError:
+        print("Unable to save roll distribution chart. Is the file open?")
+        
+    
 
     greedrolls = []
     for encounter in encounters:
