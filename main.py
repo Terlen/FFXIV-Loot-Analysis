@@ -1,7 +1,5 @@
 import utils.dataReader as reader
 import utils.aggregateAnalysis as aggregate
-import matplotlib.pyplot as plt
-from collections import defaultdict
 import argparse
 import utils.visualizations as visualize
 from inspect import cleandoc
@@ -29,7 +27,8 @@ if __name__ == "__main__":
 
     encounters = reader.encounterSplitter(data, fileLogger)
     rollGraphFile = 'rolldistribution.png'
-    pieChartFile = 'pie.png'
+    needPieChartFile = 'needPie.png'
+    greedPieChartFile = 'greedPie.png'
 
     members = aggregate.getMemberList(encounters)
     uniqueMemberNames = aggregate.getMemberNames(members)
@@ -74,13 +73,7 @@ if __name__ == "__main__":
     greedWinPercents = aggregate.percentWins(uniqueMemberNames, greedrolls)
 
 
-    labels = sorted([key for key in needWinPercents.keys()], key= lambda key: needWinPercents[key])
-    sizes = [value[2] for value in needWinPercents.values()]
-    sizes.sort()
-    fig2, ax2 = plt.subplots()
-    ax2.pie(sizes,labels=labels, autopct='%1.0f%%', startangle=90, wedgeprops={'color':(1.0,1.0,1.0,0.0), 'edgecolor':'k'}, pctdistance=0.8, counterclock=False)
-    ax2.axis('equal')
-    plt.savefig(outputFolder+pieChartFile, transparent=True)
+    visualize.pieChartPercentWins(needWinPercents, outputFolder, needPieChartFile)
 
     bestNeedWinPercentage = aggregate.getMembersBestRatio(needWinPercents)
     worstNeedWinPercentage = aggregate.getMembersWorstRatio(needWinPercents)
@@ -132,7 +125,7 @@ if __name__ == "__main__":
         outputBestGreeders = """\n# Best Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in bestGreeders)
         outputWorstGreeders = """\n# Worst Greeders""" + ''.join('\n- {} {}'.format(*greeder) for greeder in worstGreeders)
 
-    outputPieChart = """\n![Pie chart of each member's need win percentage]({})""".format(pieChartFile)
+    outputPieChart = """\n![Pie chart of each member's need win percentage]({})""".format(needPieChartFile)
 
     with open(outputFolder+'report.md', 'w') as f:
         f.write(outputHeader + outputMembers +outputPersonalLoot + outputRolledLoot + outputEventLoot + outputMean + outputMedian + outputMode + outputRollGraph + outputBestNeeders + outputWorstNeeders + outputBestGreeders + outputWorstGreeders + outputPieChart)

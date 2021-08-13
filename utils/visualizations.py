@@ -4,7 +4,7 @@ from typing import Counter
 from utils.aggregateAnalysis import stats
 
  # Plot roll distribution
-def rollDistributionChart(rolledNumberCount: Counter, rollStatistics: stats, outputFolder: str, rollGraphFile: str):
+def rollDistributionChart(rolledNumberCount: Counter, rollStatistics: stats, outputFolder: str, rollGraphFile: str) -> None:
     
     def tickFormatter(x, pos):
         return minorTickLabels[pos]
@@ -36,3 +36,12 @@ def rollDistributionChart(rolledNumberCount: Counter, rollStatistics: stats, out
         plt.savefig(outputFolder+rollGraphFile, transparent=True)
     except OSError:
         print("Unable to save roll distribution chart. Is the file open?")
+
+def pieChartPercentWins(winPercents: dict, outputFolder: str, pieChartFile: str) -> None:
+    labels = sorted([key for key in winPercents.keys()], key= lambda key: winPercents[key])
+    sizes = [value[2] for value in winPercents.values()]
+    sizes.sort()
+    fig2, ax2 = plt.subplots()
+    ax2.pie(sizes,labels=labels, autopct='%1.0f%%', startangle=90, wedgeprops={'color':(1.0,1.0,1.0,0.0), 'edgecolor':'k'}, pctdistance=0.8, counterclock=False)
+    ax2.axis('equal')
+    plt.savefig(outputFolder+pieChartFile, transparent=True)
