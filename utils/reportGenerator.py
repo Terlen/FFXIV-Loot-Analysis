@@ -1,7 +1,5 @@
-from string import Template
 from inspect import cleandoc
-from typing import Union
-from collections.abc import Sequence
+from datetime import datetime
 
 class Section:
     def __init__(self, title:str, nest:int =0, data=None):
@@ -31,17 +29,28 @@ class ValueSection(Section):
             self.data = ''.join('{:.2f}\n').format(data)
 
 class GraphicSection(Section):
-    def __init__(self, title: str, nest: int=1, data=None):
+    def __init__(self, title: str, nest: int=1, data=None, alttext=None):
         super().__init__(title, nest)
         if data != None:
-            self.data = "![Graph of roll distributions]({})\n".format(data)
+            self.data = "![{}}]({})\n".format(alttext,data)
 
-        
+class Header(Section):
+    def __init__(self, title: str, nest: int=0, data=None):
+        super().__init__(title, nest)
+        if data != None:
+            self.data = cleandoc("""
+                Report Generated: {}\n
+                Input File: {}\n
+                Logger: {}\n
+            """).format(*data)
+
 
 
 class Report:
-    def __init__(self):
+    def __init__(self, logger, file):
         self.sections = []
+        headerInfo = [datetime.now().isoformat(), file, logger]
+        self.addSection(Header("FFXIV Loot Analyzer",data = headerInfo))
 
     def addSection(self, section):
         self.sections.append(section)
