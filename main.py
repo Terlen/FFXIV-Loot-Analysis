@@ -1,12 +1,10 @@
-from os import truncate
 import utils.dataReader as reader
 import utils.aggregateAnalysis as aggregate
 import argparse
 import utils.visualizations as visualize
-from inspect import cleandoc
 import utils.reportGenerator as reportGen
 
-if __name__ == "__main__":
+def main():
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
     argParser.add_argument('data', type=str, help='The path of the data file to be analyzed. Supports .txt and .csv files.')
     argParser.add_argument('logger', type=str, help='The name of the player who captured the data file.')
@@ -20,7 +18,6 @@ if __name__ == "__main__":
     
     # Instantiate a report
     report = reportGen.Report(fileLogger,dataFile)
-    reportListSection = reportGen.ListSection
 
 
     if '.csv' in dataFile:
@@ -147,3 +144,7 @@ if __name__ == "__main__":
 
   
     report.export(outputFolder,reportName)
+
+if __name__ == "__main__":
+    main()
+    
