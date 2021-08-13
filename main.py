@@ -71,19 +71,7 @@ if __name__ == "__main__":
         translate_table = dict((ord(char), translation) for char in hqChar)
         return string.translate(translate_table)
 
-    # Show loot that wasn't rolled for
-    
-    eventLoot = []
-    privateLoot = []
-    for member in members:
-        if member.name != fileLogger:
-            eventLoot += member.loot
-        else:
-            for item in member.loot:
-                if 'gil' not in item.name and 'tomestone' not in item.name:
-                    eventLoot.append(item)
-                else:
-                    privateLoot.append(item)
+    eventLoot, privateLoot = aggregate.getDroppedLoot(members, fileLogger)
 
     totalEventLoot = defaultdict(int)
     for item in eventLoot:

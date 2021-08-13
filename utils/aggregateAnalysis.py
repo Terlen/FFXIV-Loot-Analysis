@@ -39,6 +39,23 @@ def getRolls(encounters: list,type: str) -> list:
                rolls.append(roll)
     return rolls
 
+def getDroppedLoot(members: list, logger: str) -> tuple:
+    # Show loot that wasn't rolled for
+    eventLoot = []
+    privateLoot = []
+    for member in members:
+        if member.name != logger:
+            eventLoot += member.loot
+        else:
+            # The log file will contain the logger's private loot (gil, tomestones) that each player receives individually.
+            # This loot needs to be separated from the randomly dropped eventLoot
+            for item in member.loot:
+                if 'gil' not in item.name and 'tomestone' not in item.name:
+                    eventLoot.append(item)
+                else:
+                    privateLoot.append(item)
+    return (eventLoot, privateLoot)
+
 def countList(list: list) -> Counter:
     return Counter(list)
 
