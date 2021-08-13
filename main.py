@@ -71,19 +71,8 @@ if __name__ == "__main__":
         translate_table = dict((ord(char), translation) for char in hqChar)
         return string.translate(translate_table)
 
-    eventLoot, privateLoot = aggregate.getDroppedLoot(members, fileLogger)
+    totalEventLoot, totalPrivateLoot = aggregate.getDroppedLoot(members, fileLogger)
 
-    totalEventLoot = defaultdict(int)
-    for item in eventLoot:
-        name = translate_HQ(item.name)
-        totalEventLoot[name] += item.quantity
-    totalPrivateLoot = defaultdict(int)
-    for item in privateLoot:
-        totalPrivateLoot[item.name] += item.quantity
-
-
-    sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=True)}
-    sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=True)}
 
     # Calculate what percentage of greed/need wins each member has won
     needWinPercents = aggregate.percentWins(uniqueMemberNames, needrolls)
@@ -115,7 +104,7 @@ if __name__ == "__main__":
 
     outputRolledLoot ="""\n# Rolled Loot""" + ''.join('\n- {} {}'.format(*item) for item in rolledItemCounts.most_common())
 
-    outputEventLoot = """\n# Dropped Loot""" + ''.join('\n- {} {}'.format(*item) for item in sortedTotalEventLoot.items())
+    outputEventLoot = """\n# Dropped Loot""" + ''.join('\n- {} {}'.format(*item) for item in totalEventLoot.items())
 
     outputMean = """\n# Mean Roll""" + ''.join('\n{:.2f}').format(rollStatistics.mean)
 

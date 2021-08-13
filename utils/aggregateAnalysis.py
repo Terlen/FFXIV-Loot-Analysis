@@ -1,4 +1,4 @@
-from collections import Counter, namedtuple
+from collections import Counter, namedtuple, defaultdict
 from statistics import mean, median, multimode
 
 stats = namedtuple('rollStats', ['mean', 'median', 'mode'])
@@ -39,7 +39,7 @@ def getRolls(encounters: list,type: str) -> list:
                rolls.append(roll)
     return rolls
 
-def getDroppedLoot(members: list, logger: str) -> tuple:
+def getDroppedLoot(members: list, logger: str, sort : str ='asc') -> tuple[dict,dict]:
     # Show loot that wasn't rolled for
     eventLoot = []
     privateLoot = []
@@ -54,7 +54,22 @@ def getDroppedLoot(members: list, logger: str) -> tuple:
                     eventLoot.append(item)
                 else:
                     privateLoot.append(item)
-    return (eventLoot, privateLoot)
+
+    totalEventLoot = defaultdict(int)
+    totalPrivateLoot = defaultdict(int)
+    for item in eventLoot:
+        totalEventLoot[item.name] += item.quantity
+    for item in privateLoot:
+        totalPrivateLoot[item.name] += item.quantity
+    
+    if sort == 'desc':
+        sortReverse = True
+    else:
+        sortReverse = False
+    sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
+    sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
+    
+    return (sortedTotalEventLoot, sortedTotalPrivateLoot)
 
 def countList(list: list) -> Counter:
     return Counter(list)
