@@ -36,8 +36,10 @@ def countList(list: list) -> Counter:
     return Counter(list)
 
 def getCounterMaxCount(counter: Counter) -> int:
-    return counter.most_common()[0][1] if counter else None
+    return counter.most_common()[0][1] if counter else 0
 
+def getCounterKeysWithValue(counter: Counter, count: int) -> list:
+    return [key for key,value in counter.items() if value == count]
 
 def rollStatistics(rolledNumbers: list) -> stats:
     rollCount = Counter(rolledNumbers)

@@ -52,22 +52,11 @@ if __name__ == "__main__":
     
     memberGreedCount = aggregate.countList([roll.member.name for roll in greedrolls])
 
-    try:
-        maxCount = max(memberGreedCount.values())
-    except ValueError:
-        maxCount = 0
-    greediestPlayers  = [key for key, value in memberGreedCount.items() if value == maxCount]
+    greediestPlayers = aggregate.getCounterKeysWithValue(memberGreedCount, aggregate.getCounterMaxCount(memberGreedCount))
 
     needrolls = aggregate.getRolls(encounters, "NeedLoot")
-    # print([(roll.member.name, roll.value) for roll in needrolls])
-    needCount = Counter([roll.member.name for roll in needrolls])
-    # print(needCount)
-    try:
-        maxCount = max(needCount.values())
-    except ValueError:
-        maxCount = 0
-        noNeed = "\nNo Need roll-offs!"
-    neediestPlayers  = [key for key, value in needCount.items() if value == maxCount]
+    memberNeedCount = aggregate.countList([roll.member.name for roll in needrolls])
+    neediestPlayers = aggregate.getCounterKeysWithValue(memberNeedCount, aggregate.getCounterMaxCount(memberNeedCount))
 
     needWins = list(Counter([roll.member.name for roll in needrolls if roll.win]))
 
