@@ -69,7 +69,10 @@ def getDroppedLoot(members: list, logger: str, sort : str ='asc') -> tuple[dict,
     sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     
-    return (sortedTotalEventLoot.items(), sortedTotalPrivateLoot.items())
+    lootTuple = namedtuple('loot', ['item','quantity'])
+    sortedTotalEventLoot = [lootTuple(item[0],item[1]) for item in sortedTotalEventLoot.items()]
+    sortedTotalPrivateLoot = [lootTuple(item[0],item[1]) for item in sortedTotalPrivateLoot.items()]
+    return (sortedTotalEventLoot, sortedTotalPrivateLoot)
 
 def countList(list: list) -> Counter:
     return Counter(list)
