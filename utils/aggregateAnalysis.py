@@ -2,6 +2,7 @@ from collections import Counter, namedtuple, defaultdict
 from statistics import mean, median, multimode
 
 stats = namedtuple('rollStats', ['mean', 'median', 'mode'])
+lootTuple = namedtuple('loot', ['item','quantity'])
 
 def getMemberList(encounters: list) -> list:
     members = []
@@ -17,11 +18,13 @@ def getMemberNames(memberList: list) -> set:
         members.append(member.name)
     return set(members)
 
-def getRolledItemNames(encounters: list) -> list:
+def getRolledItems(encounters: list) -> list:
     loot = []
     for encounter in encounters:
         for item in encounter.items:
             loot.append(item.name)
+    loot = countList(loot).most_common()
+    loot = [lootTuple(item[0],item[1]) for item in loot]
     return loot
 
 def getRolledValues(encounters: list) -> list:
@@ -69,7 +72,7 @@ def getDroppedLoot(members: list, logger: str, sort : str ='asc') -> tuple[dict,
     sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     
-    lootTuple = namedtuple('loot', ['item','quantity'])
+    
     sortedTotalEventLoot = [lootTuple(item[0],item[1]) for item in sortedTotalEventLoot.items()]
     sortedTotalPrivateLoot = [lootTuple(item[0],item[1]) for item in sortedTotalPrivateLoot.items()]
     return (sortedTotalEventLoot, sortedTotalPrivateLoot)

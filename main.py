@@ -50,8 +50,8 @@ def main():
         
     
     if args.norolledloot != True:
-        rolledItems = aggregate.getRolledItemNames(encounters)
-        rolledItemCounts = aggregate.countList(rolledItems)
+        rolledItems = aggregate.getRolledItems(encounters)
+        
         
 
     if args.norolls != True:
@@ -112,7 +112,7 @@ def main():
 
         if args.norolledloot != True:
             reportRolledLoot = report.addSection(reportGen.Section(title="Rolled Loot"))
-            reportRolledLoot.addSubSection(reportGen.ListSection(data=rolledItemCounts.most_common()))
+            reportRolledLoot.addSubSection(reportGen.TableSection(data=rolledItems))
 
         if args.norolls != True:
             reportRollDistribution = report.addSection(reportGen.Section(title="Roll Distribution"))
@@ -147,17 +147,17 @@ def main():
   
         if args.nodroppedloot != True:
             reportDroppedLoot = report.addSection(reportGen.Section(title="Dropped Loot"))
-            reportDroppedLoot.addSubSection(reportGen.ListSection(data=totalEventLoot))
+            reportDroppedLoot.addSubSection(reportGen.TableSection(data=totalEventLoot))
         if args.noprivateloot != True:
             reportPrivateLoot = report.addSection(reportGen.Section(title="Private Loot"))
-            reportPrivateLoot.addSubSection(reportGen.ListSection(data=totalPrivateLoot))
+            reportPrivateLoot.addSubSection(reportGen.TableSection(data=totalPrivateLoot))
     
     reportName = args.reportfile+'.md'
     report.export(outputFolder,reportName)
 
     if args.html == True:
         htmlReport = args.reportfile+'.html'
-        html = markdown_path(outputFolder+reportName)
+        html = markdown_path(outputFolder+reportName, extras=['tables'])
         with open(outputFolder+htmlReport, 'w') as reportHtml:
             reportHtml.write(html)
             reportHtml.close()
