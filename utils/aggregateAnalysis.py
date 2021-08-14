@@ -1,3 +1,94 @@
+from collections import Counter, namedtuple, defaultdict
+from statistics import mean, median, multimode
+
+stats = namedtuple('rollStats', ['mean', 'median', 'mode'])
+
+def getMemberList(encounters: list) -> list:
+    members = []
+    for encounter in encounters:
+        for member in encounter.members:
+            members.append(member)
+    return members
+
+
+def getMemberNames(memberList: list) -> set:
+    members = []
+    for member in memberList:
+        members.append(member.name)
+    return set(members)
+
+def getRolledItemNames(encounters: list) -> list:
+    loot = []
+    for encounter in encounters:
+        for item in encounter.items:
+            loot.append(item.name)
+    return loot
+
+def getRolledValues(encounters: list) -> list:
+    rolls = []
+    for encounter in encounters:
+        for roll in encounter.rolls:
+            rolls.append(int(roll.value))
+    return rolls
+
+def getRolls(encounters: list,type: str) -> list:
+    rolls = []
+    for encounter in encounters:
+        for roll in encounter.rolls:
+            if roll.type == type:
+               rolls.append(roll)
+    return rolls
+
+def getDroppedLoot(members: list, logger: str, sort : str ='asc') -> tuple[dict,dict]:
+    # Show loot that wasn't rolled for
+    eventLoot = []
+    privateLoot = []
+    for member in members:
+        if member.name != logger:
+            eventLoot += member.loot
+        else:
+            # The log file will contain the logger's private loot (gil, tomestones) that each player receives individually.
+            # This loot needs to be separated from the randomly dropped eventLoot
+            for item in member.loot:
+                if 'gil' not in item.name and 'tomestone' not in item.name:
+                    eventLoot.append(item)
+                else:
+                    privateLoot.append(item)
+
+    totalEventLoot = defaultdict(int)
+    totalPrivateLoot = defaultdict(int)
+    for item in eventLoot:
+        totalEventLoot[item.name] += item.quantity
+    for item in privateLoot:
+        totalPrivateLoot[item.name] += item.quantity
+    
+    if sort == 'desc':
+        sortReverse = True
+    else:
+        sortReverse = False
+    sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
+    sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
+    
+    return (sortedTotalEventLoot.items(), sortedTotalPrivateLoot.items())
+
+def countList(list: list) -> Counter:
+    return Counter(list)
+
+def getCounterMaxCount(counter: Counter) -> int:
+    return counter.most_common()[0][1] if counter else 0
+
+def getCounterKeysWithValue(counter: Counter, count: int) -> list:
+    return [key for key,value in counter.items() if value == count]
+
+def rollStatistics(rolledNumbers: list) -> stats:
+    rollCount = Counter(rolledNumbers)
+    maxRollCount = getCounterMaxCount(rollCount)
+    meanRolls = mean(rolledNumbers)
+    medianRolls = median(rolledNumbers)
+    rollMode = multimode(rolledNumbers)
+    return stats(meanRolls,medianRolls,(rollMode, maxRollCount))
+
+
 def winRatios(members, rolls):
     memberWinRatios = {}
     for member in members:
