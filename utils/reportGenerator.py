@@ -25,6 +25,18 @@ class ListSection(Section):
         if data != None:
             self.data = ''.join('- {}\n'*len(data)).format(*data)
 
+
+class TableSection(Section):
+    def __init__(self, title:str=None, nest:int=1, data=None):
+        super().__init__(title,nest)
+        if data != None:
+            exampleItem = data[0]
+            self.data = ''.join('| {} '*len(exampleItem)+'|\n').format(*exampleItem._fields)
+            self.data += ''.join('| ---'*len(exampleItem)+'|\n')
+            for item in data:
+                
+                self.data += ''.join('| {} '*len(item)+'| \n').format(*item)
+
 class ValueSection(Section):
     def __init__(self, title: str=None, nest: int =1, data=None):
         super().__init__(title, nest)

@@ -3,7 +3,7 @@ import utils.aggregateAnalysis as aggregate
 import argparse
 import utils.visualizations as visualize
 import utils.reportGenerator as reportGen
-from markdown import markdownFromFile
+from markdown2 import markdown_path
 
 def main():
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
@@ -50,8 +50,8 @@ def main():
         
     
     if args.norolledloot != True:
-        rolledItems = aggregate.getRolledItemNames(encounters)
-        rolledItemCounts = aggregate.countList(rolledItems)
+        rolledItems = aggregate.getRolledItems(encounters)
+        
         
 
     if args.norolls != True:
@@ -112,7 +112,7 @@ def main():
 
         if args.norolledloot != True:
             reportRolledLoot = report.addSection(reportGen.Section(title="Rolled Loot"))
-            reportRolledLoot.addSubSection(reportGen.ListSection(data=rolledItemCounts.most_common()))
+            reportRolledLoot.addSubSection(reportGen.TableSection(data=rolledItems))
 
         if args.norolls != True:
             reportRollDistribution = report.addSection(reportGen.Section(title="Roll Distribution"))
@@ -147,17 +147,20 @@ def main():
   
         if args.nodroppedloot != True:
             reportDroppedLoot = report.addSection(reportGen.Section(title="Dropped Loot"))
-            reportDroppedLoot.addSubSection(reportGen.ListSection(data=totalEventLoot))
+            reportDroppedLoot.addSubSection(reportGen.TableSection(data=totalEventLoot))
         if args.noprivateloot != True:
             reportPrivateLoot = report.addSection(reportGen.Section(title="Private Loot"))
-            reportPrivateLoot.addSubSection(reportGen.ListSection(data=totalPrivateLoot))
+            reportPrivateLoot.addSubSection(reportGen.TableSection(data=totalPrivateLoot))
     
     reportName = args.reportfile+'.md'
     report.export(outputFolder,reportName)
 
     if args.html == True:
         htmlReport = args.reportfile+'.html'
-        markdownFromFile(input=outputFolder+reportName,output=outputFolder+htmlReport)
+        html = markdown_path(outputFolder+reportName, extras=['tables'])
+        with open(outputFolder+htmlReport, 'w') as reportHtml:
+            reportHtml.write(html)
+            reportHtml.close()
 if __name__ == "__main__":
     main()
     
