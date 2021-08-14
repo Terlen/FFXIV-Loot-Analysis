@@ -3,7 +3,7 @@ import utils.aggregateAnalysis as aggregate
 import argparse
 import utils.visualizations as visualize
 import utils.reportGenerator as reportGen
-from markdown import markdownFromFile
+from markdown2 import markdown_path
 
 def main():
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
@@ -157,7 +157,10 @@ def main():
 
     if args.html == True:
         htmlReport = args.reportfile+'.html'
-        markdownFromFile(input=outputFolder+reportName,output=outputFolder+htmlReport)
+        html = markdown_path(outputFolder+reportName)
+        with open(outputFolder+htmlReport, 'w') as reportHtml:
+            reportHtml.write(html)
+            reportHtml.close()
 if __name__ == "__main__":
     main()
     
