@@ -1,6 +1,6 @@
 import asyncio
 import pyxivapi
-import logging
+import json
 
 import requests
 
@@ -10,19 +10,32 @@ async def example():
     item = await client.index_search(
         name = "gazelle leather",
         indexes=["item"],
-        columns=['ID','Name'],
+        columns=['ID'],
         page=0
 
     
     )
-    print(item)
     await client.session.close()
+    return item
 
-def main():
-    logging.basicConfig(level=logging.INFO, format='%(message)s')
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(example())
-    r = requests.get('https://universalis.app/api/adamantoise/19997')
-    print(r.content)
+async def main():
+    
+    item = await example()
+    item_id = item["Results"][0]["ID"]
+    r = requests.get(f'https://universalis.app/api/history/adamantoise/{item_id}').content
+    
+    market_board_history = json.loads(r.decode('utf-8'))
+    
+    # print(market_board_history)
+
+
+    # print(market_board_history.keys())
+    print(market_board_history['entries'][0])
+    # print(datetime.utcfromtimestamp(market_board_history['entries'][0]['timestamp']).strftime('%Y-%m-%d %H:%M:%S'))
+    # print(datetime.utcfromtimestamp(market_board_history['entries'][-1]['timestamp']).strftime('%Y-%m-%d %H:%M:%S'))
+
+if __name__ == "__main__":
+    # logging.basicConfig(level=logging.INFO, format='%(message)s')
+    asyncio.run(main())
 
 
