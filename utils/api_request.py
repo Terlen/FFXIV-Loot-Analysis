@@ -28,20 +28,10 @@ async def universalis_fetch(item_id:dict) -> list[dict]:
                 last_sales[item] = entry
                 break
 
-            # if 'HQ' in item:
-            #     if entry['hq']:
-            #         print(entry)
-            #         break
-            # else:
-            #     if not entry['hq']:
-            #         print(entry)
-            #         break
-    
     return last_sales
 
 async def main(items:list[str]) -> list[dict]:
     item_ids = await get_item_id(items)
-    print(item_ids)
     sale_data = await universalis_fetch(item_ids)
     print(sale_data)
 
