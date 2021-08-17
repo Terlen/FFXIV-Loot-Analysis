@@ -69,6 +69,11 @@ def cleanItemName(line, lineFormat):
 
         substring = line[startIndexofItemName+1: endIndexofItemName]
         outputString = substring
+    try:
+        if outputString.split()[1] == 'of':
+            outputString = outputString[outputString.index(' of ')+4:]
+    except IndexError:
+        pass
     return translate_HQ(outputString)
 
 def getItemQuantity(line):
