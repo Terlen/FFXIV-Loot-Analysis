@@ -77,7 +77,7 @@ class Test_encounterSplit_Unit:
         assert isinstance(result[0], Encounter)
 
 class Test_textParser_Unit:
-    testfile = "testChatLog.txt"
+    testfile = "tests/test_data/testChatLog.txt"
 
     expected_output = [
         ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'Allagan tomestones of poetics', '0', '12'],
@@ -95,11 +95,11 @@ class Test_textParser_Unit:
         ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Culverin of Crags', '0', '1'],
         ['0:0:0', 'NeedLoot', 'Luwu Xp', 'Culverin of Crags', '43', '1'],
         ['0:0:0', 'ObtainLoot', 'Luwu Xp', 'Culverin of Crags', '0', '1'],
-        ['0:0:0', 'AddLoot', '', 'pair of Dark Divinity brok', '0', '1'],
-        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '0', '1'],
-        ['0:0:0', 'CastLoot', 'Akiva Cookiepouch', 'pair of Dark Divinity brok', '0', '1'],
-        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '49', '1'],
-        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'pair of Dark Divinity brok', '0', '1']
+        ['0:0:0', 'AddLoot', '', 'Dark Divinity brok', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Karou Cookiepouch', 'Dark Divinity brok', '0', '1'],
+        ['0:0:0', 'CastLoot', 'Akiva Cookiepouch', 'Dark Divinity brok', '0', '1'],
+        ['0:0:0', 'GreedLoot', 'Karou Cookiepouch', 'Dark Divinity brok', '49', '1'],
+        ['0:0:0', 'ObtainLoot', 'Karou Cookiepouch', 'Dark Divinity brok', '0', '1']
     ]
 
     def test_textParser(self):

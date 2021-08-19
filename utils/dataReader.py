@@ -69,8 +69,11 @@ def cleanItemName(line, lineFormat):
 
         substring = line[startIndexofItemName+1: endIndexofItemName]
         outputString = substring
+    
+    # Filter out additional item description IE: "pair of Cool Pants" should become "Cool Pants"
+    # Probably not a perfect solution, may require more testing
     try:
-        if outputString.split()[1] == 'of':
+        if outputString.split()[1] == 'of' and outputString[0].islower():
             outputString = outputString[outputString.index(' of ')+4:]
     except IndexError:
         pass
