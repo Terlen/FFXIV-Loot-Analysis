@@ -29,7 +29,7 @@ async def getRolledItems(encounters: list, get_loot_value: bool) -> list:
     if get_loot_value:
         prices = await get_item_market_price([item[0] for item in loot])
         
-        loot = [lootTupleValued(item[0], item[1], prices[item[0]]['pricePerUnit'], int(prices[item[0]]['pricePerUnit']) * item[1]) for item in loot]
+        loot = [lootTupleValued(item[0], item[1], prices[item[0]], prices[item[0]] * item[1]) for item in loot]
     else:
         loot = [lootTupleNoVal(item[0],item[1]) for item in loot]
     return loot
@@ -80,7 +80,7 @@ async def getDroppedLoot(members: list, logger: str, get_loot_value : bool, sort
     sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     if get_loot_value:
         prices = await get_item_market_price(list(sortedTotalEventLoot.keys()))
-        sortedTotalEventLoot = [lootTupleValued(item[0],item[1],prices[item[0]]['pricePerUnit'], int(prices[item[0]]['pricePerUnit'])*item[1]) for item in sortedTotalEventLoot.items()]
+        sortedTotalEventLoot = [lootTupleValued(item[0],item[1],prices[item[0]], prices[item[0]]*item[1]) for item in sortedTotalEventLoot.items()]
         sortedTotalPrivateLoot = [lootTupleNoVal(item[0],item[1]) for item in sortedTotalPrivateLoot.items()]
         
         pass

@@ -3,6 +3,21 @@ from json.decoder import JSONDecodeError
 import pyxivapi
 import json
 import requests
+import datetime
+from statistics import median
+
+def get_week_median_unit_price(item_name: str,sales_history: list[dict]):
+    week_timestamp = (datetime.datetime.now() - datetime.timedelta(7)).timestamp()
+    
+    weekly_sales = [entry['pricePerUnit'] for entry in sales_history if entry['timestamp'] > week_timestamp and entry['hq'] == ('HQ' in item_name)]
+    
+    # Return median unitPrice for the last week. If there weren't any sales in the last week, instead return most recent unitPrice
+    if len(weekly_sales) >= 1:
+        return median(weekly_sales)
+    else:
+        return sales_history[0]['pricePerUnit']
+
+
 
 async def get_item_id(items:list[str]):
     client = pyxivapi.XIVAPIClient(api_key='c43151f09079460b81b20a18b65e3ab0d6541c6cc6ad4fd4b09c709f544c38d3')
@@ -28,26 +43,18 @@ async def get_item_id(items:list[str]):
     return item_ids
 
 async def universalis_fetch(item_id:dict) -> list[dict]:
-    last_sales = {}
+    median_sale_prices = {}
     for item,id in item_id.items():
-        print (item,id)
         r = requests.get(f'https://universalis.app/api/history/adamantoise/{id}').content
         try:
             market_board_history = json.loads(r.decode('utf-8'))
-            print(type(market_board_history))
-            print(market_board_history.keys())
-            for entry in market_board_history['entries']:
-                if entry['hq'] == ('HQ' in item):
-                    last_sales[item] = entry
-                    break
+            median_sale_prices[item] = get_week_median_unit_price(item, market_board_history['entries'])
+            
         except (JSONDecodeError, KeyError):
-            if r == b'Not Found':
-                last_sales[item] = {'pricePerUnit':0}
-            else:
-                last_sales[item] = {'pricePerUnit':0}
-        
+            median_sale_prices[item] = 0
+           
 
-    return last_sales
+    return median_sale_prices
 
 async def get_item_market_price(items:list[str]) -> list[dict]:
     item_ids = await get_item_id(items)
