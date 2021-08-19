@@ -3,7 +3,7 @@ from statistics import mean, median, multimode
 from utils.api_request import get_item_market_price
 
 stats = namedtuple('rollStats', ['mean', 'median', 'mode'])
-lootTupleValued = namedtuple('lootVal', ['item','quantity','median_weekly_price','total_value'])
+lootTupleValued = namedtuple('lootVal', ['item','quantity','median_weekprice','total_value'])
 lootTupleNoVal = namedtuple('loot', ['item','quantity'])
 
 def getMemberList(encounters: list) -> list:
