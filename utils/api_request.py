@@ -30,18 +30,21 @@ async def get_item_id(items:list[str]):
 async def universalis_fetch(item_id:dict) -> list[dict]:
     last_sales = {}
     for item,id in item_id.items():
+        print (item,id)
         r = requests.get(f'https://universalis.app/api/history/adamantoise/{id}').content
         try:
             market_board_history = json.loads(r.decode('utf-8'))
+            print(type(market_board_history))
+            print(market_board_history.keys())
             for entry in market_board_history['entries']:
                 if entry['hq'] == ('HQ' in item):
                     last_sales[item] = entry
                     break
-        except JSONDecodeError:
+        except (JSONDecodeError, KeyError):
             if r == b'Not Found':
-                last_sales[item] = {'pricePerUnit':"None"}
+                last_sales[item] = {'pricePerUnit':0}
             else:
-                last_sales[item] = {'pricePerUnit':"Error"}
+                last_sales[item] = {'pricePerUnit':0}
         
 
     return last_sales
