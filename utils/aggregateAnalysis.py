@@ -24,7 +24,8 @@ async def getRolledItems(encounters: list, get_loot_value: bool) -> list:
     loot = []
     for encounter in encounters:
         for item in encounter.items:
-            loot.append(item.name)
+            for i in range(item.quantity):
+                loot.append(item.name)
     loot = countList(loot).most_common()
     if get_loot_value:
         prices = await get_item_market_price([item[0] for item in loot])

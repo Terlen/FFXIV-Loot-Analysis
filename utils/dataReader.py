@@ -117,9 +117,9 @@ def getCharacterName(line, lineFormat):
         words = noTimestamp.split(" ")
         return words[0] + " " + words[1]
 
-def addLoot(data, itemName, index):
+def addLoot(data, itemName, itemQty):
     lineType = "AddLoot"
-    formattedLine = ["0:0:0", lineType, "", itemName, "0", "1"]
+    formattedLine = ["0:0:0", lineType, "", itemName, "0", itemQty]
     data.insert(len(data), formattedLine)
 
 
@@ -129,39 +129,39 @@ def stringsToCSV(lines: list, logger: str, data : list) -> list:
         if stringList[0] in line:
             lineType = "AddLoot"
             itemName = cleanItemName(line, lineType)
-            formattedLine = ["0:0:0", lineType, "", itemName, "1", "0"]
+            formattedLine = ["0:0:0", lineType, "", itemName, getItemQuantity(line), "0"]
             items.append(itemName)
         elif stringList[1] in line or stringList[2] in line:
             lineType = "CastLoot"
             itemName = cleanItemName(line, lineType)
             if itemName in items:
-                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
+                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, getItemQuantity(line), "0"]
             elif itemName not in items:
-                addLoot(data, itemName, index)
-                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, "1", "0"]
+                addLoot(data, itemName, getItemQuantity(line))
+                formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), itemName, getItemQuantity(line), "0"]
                 items.append(itemName)
                 
         elif stringList[3] in line:
             lineType = "CastLoot"
             itemName = cleanItemName(line, lineType)
             if itemName in items:
-                formattedLine = ["0:0:0", lineType, logger, itemName, "1", "0"]
+                formattedLine = ["0:0:0", lineType, logger, itemName, getItemQuantity(line), "0"]
             elif itemName not in items:
-                addLoot(data, itemName, index)
-                formattedLine = ["0:0:0", lineType, logger, itemName, "1", "0"]
+                addLoot(data, itemName, getItemQuantity(line))
+                formattedLine = ["0:0:0", lineType, logger, itemName, getItemQuantity(line), "0"]
                 items.append(itemName)
         elif stringList[4] in line:
             lineType = "GreedLoot"
-            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), "1", getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), getItemQuantity(line), getRollValue(line)]
         elif stringList[5] in line:
             lineType = "NeedLoot"
-            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), "1", getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, logger, cleanItemName(line, lineType), getItemQuantity(line), getRollValue(line)]
         elif stringList[6] in line:
             lineType = "GreedLoot"
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), "1", getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), getItemQuantity(line), getRollValue(line)]
         elif stringList[7] in line:
             lineType = "NeedLoot"
-            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), "1", getRollValue(line)]
+            formattedLine = ["0:0:0", lineType, getCharacterName(line, lineType), cleanItemName(line, lineType), getItemQuantity(line), getRollValue(line)]
         elif stringList[8] in line:
             lineType = "ObtainLoot"
             itemName = cleanItemName(line, lineType)
@@ -186,8 +186,7 @@ def textParser(file: TextIO, logger: str) -> list:
         lines = [line for line in source]
         filteredLines = logLineFilter(lines)
         for line in stringsToCSV(filteredLines, logger, data):
-            # print(line)
-            swapItemandQuantity = [line[0],line[1],line[2],line[3],line[5],line[4]] 
+            swapItemandQuantity = [line[0],line[1],line[2],line[3],line[5],line[4]]
             data.append(swapItemandQuantity)
     return data
 
