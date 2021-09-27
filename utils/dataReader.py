@@ -73,7 +73,7 @@ def cleanItemName(line, lineFormat):
     # Filter out additional item description IE: "pair of Cool Pants" should become "Cool Pants"
     # Probably not a perfect solution, may require more testing
     try:
-        if outputString.split()[1] == 'of' and outputString[0].islower():
+        if outputString.split()[1] == 'of' and outputString[0].islower() and "tincture" not in outputString.split()[0]:
             outputString = outputString[outputString.index(' of ')+4:]
     except IndexError:
         pass
