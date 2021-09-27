@@ -4,8 +4,9 @@ import argparse
 import utils.visualizations as visualize
 import utils.reportGenerator as reportGen
 from markdown2 import markdown_path
+import asyncio
 
-def main():
+async def main():
     argParser = argparse.ArgumentParser(description="Perform analysis on FFXIV loot data.")
     argParser.add_argument('file', type=str, help='The path of the data file to be analyzed. Supports .txt and .csv files.')
     argParser.add_argument('logger', type=str, help='The name of the player who captured the data file.')
@@ -22,6 +23,7 @@ def main():
     argParser.add_argument('--noneed', action='store_true', help='Disable reporting of Need data.')
     argParser.add_argument('--nodroppedloot', action ='store_true', help='Disable reporting of dropped loot.')
     argParser.add_argument('--noprivateloot', action='store_true', help='Disable reporting of private loot.')
+    argParser.add_argument('--nomarketboard', action='store_true', help ='Disable estimation of item marketboard prices.')
 
     args = argParser.parse_args()
 
@@ -50,7 +52,7 @@ def main():
         
     
     if args.norolledloot != True:
-        rolledItems = aggregate.getRolledItems(encounters)
+        rolledItems = await aggregate.getRolledItems(encounters, not args.nomarketboard)
         
         
 
@@ -99,7 +101,7 @@ def main():
 
 
     if args.nodroppedloot != True or args.noprivateloot != True:
-        totalEventLoot, totalPrivateLoot = aggregate.getDroppedLoot(members, fileLogger)
+        totalEventLoot, totalPrivateLoot = await aggregate.getDroppedLoot(members, fileLogger, not args.nomarketboard)
         
     # # TODO #11
     if args.noreport != True:
@@ -161,6 +163,8 @@ def main():
         with open(outputFolder+htmlReport, 'w') as reportHtml:
             reportHtml.write(html)
             reportHtml.close()
+
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
+    
     

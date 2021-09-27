@@ -1,8 +1,10 @@
 from collections import Counter, namedtuple, defaultdict
 from statistics import mean, median, multimode
+from utils.api_request import get_item_market_price
 
 stats = namedtuple('rollStats', ['mean', 'median', 'mode'])
-lootTuple = namedtuple('loot', ['item','quantity'])
+lootTupleValued = namedtuple('lootVal', ['item','quantity','median_weekprice','total_value'])
+lootTupleNoVal = namedtuple('loot', ['item','quantity'])
 
 def getMemberList(encounters: list) -> list:
     members = []
@@ -18,13 +20,19 @@ def getMemberNames(memberList: list) -> set:
         members.append(member.name)
     return set(members)
 
-def getRolledItems(encounters: list) -> list:
+async def getRolledItems(encounters: list, get_loot_value: bool) -> list:
     loot = []
     for encounter in encounters:
         for item in encounter.items:
             loot.append(item.name)
     loot = countList(loot).most_common()
-    loot = [lootTuple(item[0],item[1]) for item in loot]
+    if get_loot_value:
+        prices = await get_item_market_price([item[0] for item in loot])
+        
+        loot = [lootTupleValued(item[0], item[1], prices[item[0]], prices[item[0]] * item[1]) for item in loot]
+        loot.sort(key= lambda item: item.total_value, reverse=True)
+    else:
+        loot = [lootTupleNoVal(item[0],item[1]) for item in loot]
     return loot
 
 def getRolledValues(encounters: list) -> list:
@@ -42,7 +50,7 @@ def getRolls(encounters: list,type: str) -> list:
                rolls.append(roll)
     return rolls
 
-def getDroppedLoot(members: list, logger: str, sort : str ='asc') -> tuple[dict,dict]:
+async def getDroppedLoot(members: list, logger: str, get_loot_value : bool, sort : str ='asc' ) -> tuple[list,list]:
     # Show loot that wasn't rolled for
     eventLoot = []
     privateLoot = []
@@ -71,10 +79,16 @@ def getDroppedLoot(members: list, logger: str, sort : str ='asc') -> tuple[dict,
         sortReverse = False
     sortedTotalEventLoot = {k:v for k,v in sorted(totalEventLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
     sortedTotalPrivateLoot = {k:v for k,v in sorted(totalPrivateLoot.items(), key= lambda item: item[1], reverse=sortReverse)}
-    
-    
-    sortedTotalEventLoot = [lootTuple(item[0],item[1]) for item in sortedTotalEventLoot.items()]
-    sortedTotalPrivateLoot = [lootTuple(item[0],item[1]) for item in sortedTotalPrivateLoot.items()]
+    if get_loot_value:
+        prices = await get_item_market_price(list(sortedTotalEventLoot.keys()))
+        sortedTotalEventLoot = [lootTupleValued(item[0],item[1],prices[item[0]], prices[item[0]]*item[1]) for item in sortedTotalEventLoot.items()]
+        sortedTotalPrivateLoot = [lootTupleNoVal(item[0],item[1]) for item in sortedTotalPrivateLoot.items()]
+        sortedTotalEventLoot.sort(key= lambda item: item.total_value, reverse=True)
+        
+        pass
+    else:
+        sortedTotalEventLoot = [lootTupleNoVal(item[0],item[1]) for item in sortedTotalEventLoot.items()]
+        sortedTotalPrivateLoot = [lootTupleNoVal(item[0],item[1]) for item in sortedTotalPrivateLoot.items()]
     return (sortedTotalEventLoot, sortedTotalPrivateLoot)
 
 def countList(list: list) -> Counter:
